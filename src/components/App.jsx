@@ -15,8 +15,7 @@ import {
   CalciteShellPanel, 
   CalcitePanel, 
   CalciteActionBar, 
-  CalciteAction,
-  CalciteActionPad } from "@esri/calcite-components-react";
+  CalciteAction } from "@esri/calcite-components-react";
 
 // CSS
 import '@esri/calcite-components/dist/calcite/calcite.css';
