@@ -17,7 +17,7 @@
 
   "appThemes": [
     {
-        "paramValue": "oblastni_parkovani",
+        "paramValue": "oblasti_parkovani",
         "visibleLayers": ["oblasti parkování aktuální", "oblasti parkování připravované"]
     },
     {
