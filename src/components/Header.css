@@ -1,0 +1,36 @@
+.app-header {
+    color: var(--color-four);
+    height: var(--app-header-height);
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    .logo {
+        height: var(--app-header-height);
+    }
+
+    img {
+        height: var(--app-header-height);
+        width: auto;
+    }
+
+    .title {
+        font-size: 20px;
+        margin: 5px 10px;
+        padding-top: 1px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+}
+
+@media only screen and (max-width: 576px) {
+    .app-header {
+
+        .title {
+            padding-top: 2px;
+            font-size: 15px;
+        }
+    }
+}

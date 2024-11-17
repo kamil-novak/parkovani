@@ -1,0 +1,25 @@
+@import 'https://js.arcgis.com/4.30/@arcgis/core/assets/esri/themes/light/main.css';
+
+:root {
+  /* Font */
+  --font-family-one: Roboto;
+  --font-size-one: 14px;
+  /* Colors */
+  --color-one: #CA1517;
+  --color-two: #e7181c;
+  --color-three: #FFFFFF;
+  --color-four: #666666;
+  --color-five: #D3D3D3;
+  --color-six: #151515;
+  /* Layout */
+  --app-header-height: 45px;
+}
+
+
+@media only screen and (max-width: 576px) {
+  :root:not(:has(.desktop-map)) {
+    --calcite-shell-panel-width: calc(100vw - 49px) !important;
+    --calcite-shell-panel-max-width: calc(100vw - 49px) !important;
+    --calcite-shell-panel-min-width: calc(100vw - 49px) !important;
+  }
+}

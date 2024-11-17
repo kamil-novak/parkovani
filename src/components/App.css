@@ -1,0 +1,21 @@
+@import 'https://fonts.googleapis.com/css?family=Roboto';
+
+body {
+  padding: 0px;
+  margin: 0px;
+  font-family: var(--font-family-one);
+}
+
+#root > calcite-loader {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-self: center;
+  justify-self: center;
+  padding: 0px;
+  position: relative;
+  background-color: var(--color-one);
+  z-index: 100;
+  stroke: white !important;
+}
+
