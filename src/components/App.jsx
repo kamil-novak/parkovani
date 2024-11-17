@@ -25,7 +25,8 @@ import "./App.css";
 // Components
 import Header from "./Header"
 import Map from "./Map"
-import Legend from "./Legend"
+import Legend from "./widgets/Legend"
+import Themes from "./widgets/Themes"
 
 function App() {
 
@@ -49,8 +50,8 @@ function App() {
     setView(view)
   }
 
-  // Action Bar
-  const handleActionBar = (target) => {
+  // Panel - toggle widgets in panel
+  const handlePanel = (target) => {
     const thisAction = target.target
     if (thisAction.tagName !== "CALCITE-ACTION") {
       return;
@@ -95,9 +96,9 @@ function App() {
         </div>
 
         <CalciteShellPanel slot="panel-start" display-mode="overlay" collapsed={!activePanel}>
-          <CalciteActionBar slot="action-bar" ref={actionBarRef} onClick={handleActionBar}>
-            <CalciteAction text="Legenda" icon="legend" data-action-id="legend" arctive={activePanel === "legend"}></CalciteAction>
-            <CalciteAction text="Téma" icon="apps" data-action-id="theme"></CalciteAction>
+          <CalciteActionBar slot="action-bar" ref={actionBarRef}>
+            <CalciteAction text="Téma" icon="apps" data-action-id="themes" arctive={activePanel === "themes"} onClick={handlePanel}></CalciteAction>
+            <CalciteAction text="Legenda" icon="legend" data-action-id="legend" arctive={activePanel === "legend"} onClick={handlePanel}></CalciteAction>
             <CalciteAction text="Undo" icon="undo" data-action-id="undo"></CalciteAction>
             <CalciteAction text="Redo" icon="redo" data-action-id="redo"></CalciteAction>
           </CalciteActionBar>
@@ -105,6 +106,11 @@ function App() {
           { activePanel === "legend" && 
             <CalcitePanel heading="Legenda" height-scale="l" data-panel-id="legend" closable onCalcitePanelClose={handleClosePanel}> 
               {view && <Legend view={view} />}
+            </CalcitePanel> 
+          }
+          { activePanel === "themes" && 
+            <CalcitePanel heading="Téma" height-scale="l" data-panel-id="themes" closable onCalcitePanelClose={handleClosePanel}> 
+              {<Themes />}
             </CalcitePanel> 
           }
         </CalciteShellPanel>
