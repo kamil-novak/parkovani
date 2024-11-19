@@ -30,11 +30,13 @@ import Themes from "./widgets/Themes"
 function App() {
 
   // State
-  const [urlParams, setUrlParams] = useState(new URLSearchParams(window.location.search));
+  const [urlParamTheme, setUrlParamTheme] = useState(new URLSearchParams(window.location.search).get("theme"));
+  const mobileScreen = 576
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 
   const [config, setConfig] = useState(null)
   const [appIsLoaded, setAppIsLoaded] = useState(false)
-  const [activePanel, setActivePanel] = useState(null)
+  const [activePanel, setActivePanel] = useState(screenWidth > mobileScreen ? "themes" : null)
   const [view, setView] = useState(null)
 
   // Refs
@@ -73,6 +75,21 @@ function App() {
     return response.json();
   }
 
+  // URL params
+  const handleUrlParamTheme = (param) => {
+    const appTheme = config?.appThemes.filter((themeItem) => {
+      if (themeItem.paramValue === param) {
+        return themeItem
+      }
+    })
+    if (appTheme?.length > 0) {
+      return appTheme[0]
+    }
+    else {
+      return config?.appThemes[0]
+    }
+  }
+
   useEffect(() => {
 
     (async () => {
@@ -82,6 +99,11 @@ function App() {
       setConfig( initConfig )
 
     })()
+
+    // Responsive layout solution
+    const handleResize = () => setScreenWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
    
   }, []);
 
@@ -94,27 +116,43 @@ function App() {
           <Header appTitle={config ? config.appTitle : ""} appLogoLink={config ? config.appLogoLink : ""} />
         </div>
 
-        <CalciteShellPanel slot="panel-start" display-mode="overlay" collapsed={!activePanel}>
-          <CalciteActionBar slot="action-bar" ref={actionBarRef}>
-            <CalciteAction text="Téma" icon="apps" data-action-id="themes" arctive={activePanel === "themes"} onClick={handlePanel}></CalciteAction>
-            <CalciteAction text="Legenda" icon="legend" data-action-id="legend" arctive={activePanel === "legend"} onClick={handlePanel}></CalciteAction>
-            <CalciteAction text="Undo" icon="undo" data-action-id="undo"></CalciteAction>
-            <CalciteAction text="Redo" icon="redo" data-action-id="redo"></CalciteAction>
+        <CalciteShellPanel 
+          slot="panel-start"
+          layout="vertical"
+          display-mode="float"
+          collapsed={!activePanel}>
+          <CalciteActionBar slot="action-bar" ref={actionBarRef} onClick={handlePanel}>
+            <CalciteAction 
+              text="Téma" 
+              icon="apps" 
+              data-action-id="themes" 
+              active={activePanel === "themes" ? true : null} 
+              >
+            </CalciteAction>
+            <CalciteAction 
+              text="Legenda" 
+              icon="legend" 
+              data-action-id="legend" 
+              active={activePanel === "legend" ? true : null} 
+              >
+            </CalciteAction>
+            <CalciteAction text="Undo" icon="undo"></CalciteAction>
+            <CalciteAction text="Redo" icon="redo"></CalciteAction>
           </CalciteActionBar>
 
           { activePanel === "legend" && 
-            <CalcitePanel heading="Legenda" height-scale="l" data-panel-id="legend" closable onCalcitePanelClose={handleClosePanel}> 
+            <CalcitePanel heading="Legenda" scale="s" data-panel-id="legend" closable onCalcitePanelClose={handleClosePanel}> 
               {view && <Legend view={view} />}
             </CalcitePanel> 
           }
           { activePanel === "themes" && 
-            <CalcitePanel heading="Téma" height-scale="l" data-panel-id="themes" closable onCalcitePanelClose={handleClosePanel}> 
-              {<Themes />}
+            <CalcitePanel heading="Téma" scale="s" data-panel-id="themes" closable onCalcitePanelClose={handleClosePanel}> 
+              {<Themes config={config} urlParamTheme={handleUrlParamTheme(urlParamTheme)} />}
             </CalcitePanel> 
           }
         </CalciteShellPanel>
        
-        {config && <Map config={config} urlParams={urlParams} loaded={handleAppLoadingState} view={handleView} /> }
+        {config && <Map config={config} urlParamTheme={handleUrlParamTheme(urlParamTheme)} loaded={handleAppLoadingState} view={handleView} /> }
       </CalciteShell>
     </>
   );

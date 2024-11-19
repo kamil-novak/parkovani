@@ -6,6 +6,13 @@
 }
 
 .toggle-basemap-container {
-  padding: 5px;
-  background-color: rgb(from var(--color-three) r g b / 0.8) !important;
+  padding: 2.7px;
+  width: 56.2px;
+  height: 56.2px;
+  background-color: rgb(from var(--color-three) r g b / 1) !important;
+}
+
+.toggle-basemap-container .esri-basemap-toggle__container {
+  width: 45px;
+  height: 45px;
 }

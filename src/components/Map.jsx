@@ -19,25 +19,14 @@ function Map(props) {
 
   // Set visible layers according to the configuration
   const setVisibleLayers = (view) => {
-    if (props.urlParams.size > 0 && ( props.urlParams.get("theme") || props.urlParams.get("THEME"))) {
-
-      const appThemeName = props.urlParams.get("theme") || props.urlParams.get("THEME")
-      const appTheme = props.config.appThemes.filter((themeItem) => {
-        if (themeItem.paramValue.toLowerCase() === appThemeName.toLowerCase()) {
-          return themeItem
+    view.map.layers.forEach((layer) => {
+      layer.visible = false
+      if (props.urlParamTheme) {
+        if (props.urlParamTheme.visibleLayers.includes(layer.title)) {
+          layer.visible = true
         }
-      })
-
-      if (appTheme.length > 0) {
-        view.map.layers.forEach((layer) => {
-          layer.visible = false
-          
-          if (appTheme[0].visibleLayers.includes(layer.title)) {
-            layer.visible = true
-          }
-        })
       }
-    }
+    })
   }
 
   useEffect(() => {

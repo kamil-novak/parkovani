@@ -13,13 +13,22 @@
   --color-six: #151515;
   /* Layout */
   --app-header-height: 45px;
+  --panel-width: 220px;
+  --panel-mobile-width-delta: 65px;
+  --calcite-shell-panel-width: var(--panel-width);
+  --calcite-shell-panel-max-width: var(--panel-width);
+  --calcite-shell-panel-min-width: var(--panel-width);
+
 }
 
+calcite-action-bar {
+  overflow: auto;
+}
 
 @media only screen and (max-width: 576px) {
   :root:not(:has(.desktop-map)) {
-    --calcite-shell-panel-width: calc(100vw - 49px) !important;
-    --calcite-shell-panel-max-width: calc(100vw - 49px) !important;
-    --calcite-shell-panel-min-width: calc(100vw - 49px) !important;
+    --calcite-shell-panel-width: calc(100vw - var(--panel-mobile-width-delta));
+    --calcite-shell-panel-max-width: calc(100vw - var(--panel-mobile-width-delta));
+    --calcite-shell-panel-min-width: calc(100vw - var(--panel-mobile-width-delta));
   }
 }
