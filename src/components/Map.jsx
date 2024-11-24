@@ -17,18 +17,6 @@ function Map(props) {
 	// Refs
   const mapDiv = useRef(null);
 
-  // Set visible layers according to the configuration
-  const setVisibleLayers = (view) => {
-    view.map.layers.forEach((layer) => {
-      layer.visible = false
-      if (props.urlParamTheme) {
-        if (props.urlParamTheme.visibleLayers.includes(layer.title)) {
-          layer.visible = true
-        }
-      }
-    })
-  }
-
   useEffect(() => {
       if (mapDiv.current && props.config) {
  
@@ -50,7 +38,6 @@ function Map(props) {
             left: 49
           }
         })
-        props.view(view)
 
 				// Home widget
 				const homeWidget = new Home({
@@ -123,7 +110,8 @@ function Map(props) {
           props.loaded(true)
 
           // Layer visibility - app theme
-          setVisibleLayers(view)
+          props.setVisibleLayers(view, null)
+          props.view(view)
           
 				});
 

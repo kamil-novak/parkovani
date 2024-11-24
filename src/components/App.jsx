@@ -9,7 +9,6 @@ import "@esri/calcite-components/dist/components/calcite-shell-panel.js";
 import "@esri/calcite-components/dist/components/calcite-panel.js";
 import "@esri/calcite-components/dist/components/calcite-action-bar.js";
 import "@esri/calcite-components/dist/components/calcite-action.js";
-import "@esri/calcite-components/dist/components/calcite-action-pad.js";
 import { 
   CalciteShell, 
   CalciteShellPanel, 
@@ -30,7 +29,7 @@ import Themes from "./widgets/Themes"
 function App() {
 
   // State
-  const [urlParamTheme, setUrlParamTheme] = useState(new URLSearchParams(window.location.search).get("theme"));
+  const [actualTheme, setActualTheme] = useState(new URLSearchParams(window.location.search).get("theme"));
   const mobileScreen = 576
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 
@@ -75,10 +74,10 @@ function App() {
     return response.json();
   }
 
-  // URL params
-  const handleUrlParamTheme = (param) => {
+  // Get actual theme info from config
+  const getActualThemeInfo = (param) => {
     const appTheme = config?.appThemes.filter((themeItem) => {
-      if (themeItem.paramValue === param) {
+      if (themeItem.name === param) {
         return themeItem
       }
     })
@@ -90,6 +89,25 @@ function App() {
     }
   }
 
+  // Set actual theme
+  const handleSetActualTheme = (actualTheme) => {
+    setActualTheme(actualTheme)
+  }
+
+  // Set visible layers according to the configuration
+  const setVisibleLayers = (initView, theme) => {
+    let viewFc = view
+    let themeFc = theme ? getActualThemeInfo(theme) : getActualThemeInfo(actualTheme) 
+    if(initView) {viewFc = initView}
+
+    viewFc.map.layers.forEach((layer) => {
+      layer.visible = false
+        if (themeFc.visibleLayers.includes(layer.title)) {
+          layer.visible = true
+        }
+    })
+  }
+
   useEffect(() => {
 
     (async () => {
@@ -97,7 +115,7 @@ function App() {
       // Load app config
       const initConfig = await getData()
       setConfig( initConfig )
-
+     
     })()
 
     // Responsive layout solution
@@ -119,7 +137,7 @@ function App() {
         <CalciteShellPanel 
           slot="panel-start"
           layout="vertical"
-          display-mode="float"
+          display-mode="float-content"
           collapsed={!activePanel}>
           <CalciteActionBar slot="action-bar" ref={actionBarRef} onClick={handlePanel}>
             <CalciteAction 
@@ -146,13 +164,26 @@ function App() {
             </CalcitePanel> 
           }
           { activePanel === "themes" && 
-            <CalcitePanel heading="Téma" scale="s" data-panel-id="themes" closable onCalcitePanelClose={handleClosePanel}> 
-              {<Themes config={config} urlParamTheme={handleUrlParamTheme(urlParamTheme)} />}
+            <CalcitePanel 
+              heading="Téma" 
+              scale="s" 
+              data-panel-id="themes" 
+              closable onCalcitePanelClose={handleClosePanel}> 
+              {<Themes 
+                config={config} 
+                setActualTheme={handleSetActualTheme} 
+                actualThemeInfo={getActualThemeInfo(actualTheme)} 
+                setVisibleLayers={setVisibleLayers}
+                />}
             </CalcitePanel> 
           }
         </CalciteShellPanel>
        
-        {config && <Map config={config} urlParamTheme={handleUrlParamTheme(urlParamTheme)} loaded={handleAppLoadingState} view={handleView} /> }
+        {config && <Map 
+          config={config} 
+          loaded={handleAppLoadingState} 
+          setVisibleLayers={setVisibleLayers}
+          view={handleView} /> }
       </CalciteShell>
     </>
   );

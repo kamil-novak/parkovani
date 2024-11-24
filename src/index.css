@@ -18,7 +18,6 @@
   --calcite-shell-panel-width: var(--panel-width);
   --calcite-shell-panel-max-width: var(--panel-width);
   --calcite-shell-panel-min-width: var(--panel-width);
-
 }
 
 calcite-action-bar {

@@ -18,12 +18,12 @@
   "appThemes": [
     {
         "label": "Oblasti parkování",
-        "paramValue": "oblasti_parkovani",
+        "name": "oblasti_parkovani",
         "visibleLayers": ["oblasti parkování aktuální", "oblasti parkování připravované"]
     },
     {
       "label": "Střednědobé parkování",
-      "paramValue": "strednedobe_parkovani",
+      "name": "strednedobe_parkovani",
       "visibleLayers": ["oblasti parkování (join)", "aktuálně platné oblasti parkování"]
   }
   ]
