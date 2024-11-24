@@ -3,7 +3,10 @@
         padding: 0px;
     }
     
-    h3.esri-widget__heading, h4.esri-widget__heading, h5.esri-widget__heading, h6.esri-widget__heading {
+    h3.esri-widget__heading, 
+    h4.esri-widget__heading, 
+    h5.esri-widget__heading, 
+    h6.esri-widget__heading {
         font-weight: 500;
         font-size: 14px;
         font-family: Roboto;

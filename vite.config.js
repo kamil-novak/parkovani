@@ -7,18 +7,16 @@ process.env.BROWSER = "chrome"
 export default defineConfig({
   
   plugins: [react(), viteStaticCopy({
-    targets: [
-      {
-        src: 'config.json',
-        dest: ''
-      }
-    ]
-  })],
-  build: {
-    chunkSizeWarningLimit: 2000,
-
-  },
-  server: {
-    open: true
-  }
+    targets: [{
+        src: './config.json',
+        dest: './'
+      }]
+    })],
+    build: {
+      chunkSizeWarningLimit: 2000
+    },
+    server: {
+      open: true
+    },
+    base: './'
 })

@@ -70,7 +70,7 @@ function App() {
 
   // Get app config
   const getData = async () => {
-    const response = await fetch('/config.json')
+    const response = await fetch('./config.json')
     return response.json();
   }
 
