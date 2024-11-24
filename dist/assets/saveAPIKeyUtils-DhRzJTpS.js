@@ -1,0 +1,1 @@
+import{ar as o,a_ as p,s}from"./index-BkgwewGo.js";function r(a){if(o.apiKey&&p(a.portal.url))throw new s("save-api-key-utils:api-key-not-supported",`Saving is not supported on ${a.portal.url} when using an api key`)}export{r as i};

@@ -1,0 +1,30 @@
+{
+  "appTitle": "Parkování ve městě",
+  "appLogoLink": "https://www.jihlava.cz/projekty-pro-verejnost/d-465410",
+  "portal": "https://gis.jihlava-city.cz/portal",
+  "webMapId": "75cff0970fa2487e82d4b74414c5f08f",
+
+  "search": {
+    "layerUrl": "https://gis.jihlava-city.cz/server/rest/services/ost/ORP_RUIAN/MapServer/0",
+    "definitionExpression": "obec_kod=586846",
+    "searchFields": ["adresa", "adresa_o"],
+    "displayField": "adresa"
+  },
+
+  "nextBasemap": {
+    "portalItemId": "2327e031337941f1a56e06da9c39267f" 
+  },
+
+  "appThemes": [
+    {
+        "label": "Oblasti parkování",
+        "name": "oblasti_parkovani",
+        "visibleLayers": ["oblasti parkování aktuální", "oblasti parkování připravované"]
+    },
+    {
+      "label": "Střednědobé parkování",
+      "name": "strednedobe_parkovani",
+      "visibleLayers": ["oblasti parkování (join)", "aktuálně platné oblasti parkování"]
+  }
+  ]
+}
