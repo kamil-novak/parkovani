@@ -23,7 +23,6 @@ import "./App.css";
 // Components
 import Header from "./Header"
 import Map from "./Map"
-import Legend from "./widgets/Legend"
 import Themes from "./widgets/Themes"
 
 function App() {
@@ -31,11 +30,12 @@ function App() {
   // State
   const [actualTheme, setActualTheme] = useState(new URLSearchParams(window.location.search).get("theme"));
   const mobileScreen = 576
-  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth)
+  const [isMobile, setIsMobile] = useState(screenWidth > mobileScreen ? true : false)
 
   const [config, setConfig] = useState(null)
   const [appIsLoaded, setAppIsLoaded] = useState(false)
-  const [activePanel, setActivePanel] = useState(screenWidth > mobileScreen ? "themes" : null)
+  const [activePanel, setActivePanel] = useState(isMobile ? "themes" : null)
   const [view, setView] = useState(null)
 
   // Refs
@@ -158,11 +158,6 @@ function App() {
             <CalciteAction text="Redo" icon="redo"></CalciteAction>
           </CalciteActionBar>
 
-          { activePanel === "legend" && 
-            <CalcitePanel heading="Legenda" scale="s" data-panel-id="legend" closable onCalcitePanelClose={handleClosePanel}> 
-              {view && <Legend view={view} />}
-            </CalcitePanel> 
-          }
           { activePanel === "themes" && 
             <CalcitePanel 
               heading="Téma" 
@@ -171,9 +166,11 @@ function App() {
               closable onCalcitePanelClose={handleClosePanel}> 
               {<Themes 
                 config={config} 
+                isMobile={isMobile}
                 setActualTheme={handleSetActualTheme} 
                 actualThemeInfo={getActualThemeInfo(actualTheme)} 
                 setVisibleLayers={setVisibleLayers}
+                view={view}
                 />}
             </CalcitePanel> 
           }

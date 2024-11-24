@@ -1,3 +1,6 @@
+// CSS
+import "./Legend.css";
+
 import React, { useEffect, useRef } from "react"
 
 import LegendWidget from "@arcgis/core/widgets/Legend"
