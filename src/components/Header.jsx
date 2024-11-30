@@ -14,7 +14,12 @@ function Header(props) {
             </a>
         </div>
         <div className="title">
-            {props.appTitle}
+          <div className="main-title title-item">
+              {props.appTitle}
+          </div>
+          <div className="sub-title title-item">
+            {props.actualThemeInfo?.label}
+          </div>
         </div>
     </div>
   );

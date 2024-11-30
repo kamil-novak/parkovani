@@ -131,7 +131,11 @@ function App() {
       <CalciteShell content-behind >
 
         <div slot="header">
-          <Header appTitle={config ? config.appTitle : ""} appLogoLink={config ? config.appLogoLink : ""} />
+          <Header 
+            appTitle={config ? config.appTitle : ""} 
+            appLogoLink={config ? config.appLogoLink : ""} 
+            actualThemeInfo={getActualThemeInfo(actualTheme)}
+            />
         </div>
 
         <CalciteShellPanel 
