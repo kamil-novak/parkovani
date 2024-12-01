@@ -16,13 +16,11 @@
   --app-header-height: 45px;
   --panel-width: 220px;
   --panel-mobile-width-delta: 65px;
-  --calcite-shell-panel-width: var(--panel-width);
-  --calcite-shell-panel-max-width: var(--panel-width);
-  --calcite-shell-panel-min-width: var(--panel-width);
+  --esri-widget-panel-max-height: 100% !important;
 }
 
-calcite-action-bar {
-  overflow: auto;
+.esri-expand__panel {
+  height: 70vh!important;
 }
 
 @media only screen and (max-width: 576px) {

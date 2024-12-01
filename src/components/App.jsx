@@ -5,16 +5,9 @@ setAssetPath('https://js.arcgis.com/calcite-components/2.13.2/assets')
 import { setAssetPath } from '@esri/calcite-components/dist/components';
 
 import "@esri/calcite-components/dist/components/calcite-shell.js";
-import "@esri/calcite-components/dist/components/calcite-shell-panel.js";
-import "@esri/calcite-components/dist/components/calcite-panel.js";
-import "@esri/calcite-components/dist/components/calcite-action-bar.js";
-import "@esri/calcite-components/dist/components/calcite-action.js";
 import { 
-  CalciteShell, 
-  CalciteShellPanel, 
-  CalcitePanel, 
-  CalciteActionBar, 
-  CalciteAction } from "@esri/calcite-components-react";
+  CalciteShell
+} from "@esri/calcite-components-react";
 
 // CSS
 import '@esri/calcite-components/dist/calcite/calcite.css';
@@ -23,7 +16,6 @@ import "./App.css";
 // Components
 import Header from "./Header"
 import Map from "./Map"
-import Themes from "./widgets/Themes"
 
 function App() {
 
@@ -35,37 +27,11 @@ function App() {
 
   const [config, setConfig] = useState(null)
   const [appIsLoaded, setAppIsLoaded] = useState(false)
-  const [activePanel, setActivePanel] = useState(isMobile ? "themes" : null)
   const [view, setView] = useState(null)
-
-  // Refs
-  const actionBarRef = useRef(null);
 
   // Callbacks
   const handleAppLoadingState = (loaded) => {
     setAppIsLoaded(loaded)
-  }
-
-  const handleView = (view) => {
-    setView(view)
-  }
-
-  // Panel - toggle widgets in panel
-  const handlePanel = (target) => {
-    const thisAction = target.target
-    if (thisAction.tagName !== "CALCITE-ACTION") {
-      return;
-    }
-    if ( activePanel !== thisAction["data-action-id"] ) {
-      setActivePanel(thisAction["data-action-id"])
-    }
-    else {
-      setActivePanel(null)
-    }
-  }
-
-  const handleClosePanel = () => {
-    setActivePanel(null)
   }
 
   // Get app config
@@ -95,12 +61,10 @@ function App() {
   }
 
   // Set visible layers according to the configuration
-  const setVisibleLayers = (initView, theme) => {
-    let viewFc = view
+  const setVisibleLayers = (view, theme) => {
     let themeFc = theme ? getActualThemeInfo(theme) : getActualThemeInfo(actualTheme) 
-    if(initView) {viewFc = initView}
 
-    viewFc.map.layers.forEach((layer) => {
+    view.map.layers.forEach((layer) => {
       layer.visible = false
         if (themeFc.visibleLayers.includes(layer.title)) {
           layer.visible = true
@@ -112,7 +76,7 @@ function App() {
 
     (async () => {
 
-      // Load app config
+      // Load app config 
       const initConfig = await getData()
       setConfig( initConfig )
      
@@ -137,54 +101,15 @@ function App() {
             actualThemeInfo={getActualThemeInfo(actualTheme)}
             />
         </div>
-
-        <CalciteShellPanel 
-          slot="panel-start"
-          layout="vertical"
-          display-mode="float-content"
-          collapsed={!activePanel}>
-          <CalciteActionBar slot="action-bar" ref={actionBarRef} onClick={handlePanel}>
-            <CalciteAction 
-              text="Téma" 
-              icon="apps" 
-              data-action-id="themes" 
-              active={activePanel === "themes" ? true : null} 
-              >
-            </CalciteAction>
-            <CalciteAction 
-              text="Legenda" 
-              icon="legend" 
-              data-action-id="legend" 
-              active={activePanel === "legend" ? true : null} 
-              >
-            </CalciteAction>
-            <CalciteAction text="Undo" icon="undo"></CalciteAction>
-            <CalciteAction text="Redo" icon="redo"></CalciteAction>
-          </CalciteActionBar>
-
-          { activePanel === "themes" && 
-            <CalcitePanel 
-              heading="Téma" 
-              scale="s" 
-              data-panel-id="themes" 
-              closable onCalcitePanelClose={handleClosePanel}> 
-              {<Themes 
-                config={config} 
-                isMobile={isMobile}
-                setActualTheme={handleSetActualTheme} 
-                actualThemeInfo={getActualThemeInfo(actualTheme)} 
-                setVisibleLayers={setVisibleLayers}
-                view={view}
-                />}
-            </CalcitePanel> 
-          }
-        </CalciteShellPanel>
-       
+            
         {config && <Map 
           config={config} 
           loaded={handleAppLoadingState} 
           setVisibleLayers={setVisibleLayers}
-          view={handleView} /> }
+          setActualTheme={handleSetActualTheme} 
+          actualThemeInfo={getActualThemeInfo(actualTheme)} 
+          /> }
+
       </CalciteShell>
     </>
   );

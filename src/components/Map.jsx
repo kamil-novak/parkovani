@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from "react"
+import React, { useEffect, useRef, useState } from "react"
+import ReactDOM from "react-dom/client";
 
 import MapView from "@arcgis/core/views/MapView"
 import WebMap from "@arcgis/core/WebMap"
@@ -8,16 +9,28 @@ import FeatureLayer from "@arcgis/core/layers/FeatureLayer"
 import Locate from "@arcgis/core/widgets/Locate"
 import BasemapToggle from "@arcgis/core/widgets/BasemapToggle"
 import Basemap from "@arcgis/core/Basemap"
+import Expand from "@arcgis/core/widgets/Expand"
+
+import Themes from "./widgets/Themes"
 
 // CSS
 import "./Map.css";
 
 function Map(props) {
 
+  // State
+  const [mapView, setMapView] = useState(null);
+  const [appWidgetRoot, setAppWidgetRoot] = useState(null);
+
 	// Refs
   const mapDiv = useRef(null);
+  const appWidgetDiv = useRef(document.createElement("div"));
+  
+  // Test
+  const testEl = <div>Další App widget element</div>
 
   useEffect(() => {
+  
       if (mapDiv.current && props.config) {
  
         // Map
@@ -33,11 +46,36 @@ function Map(props) {
 				// View
         const view = new MapView({
           container: mapDiv.current,
-          map,
-          padding: {
-            left: 49
-          }
+          map
         })
+
+        // App widget
+        const appWidget = new Expand({
+          view,
+          label: "Témata a oblasti parkování",
+          expandTooltip: "Témata a oblasti parkování",
+          collapseTooltip: "Sbalit Témata a oblasti parkování",
+					content: appWidgetDiv.current,
+          placement: "left-start",
+          group: "top-left",
+          expandIcon: "apps",
+          collapseIconClass: "app-widget-icon-collapsed"
+				})
+        if (!appWidgetRoot) { 
+          const newAppWidgetRoot = ReactDOM.createRoot(appWidgetDiv.current) 
+          setAppWidgetRoot(newAppWidgetRoot)
+          newAppWidgetRoot.render(
+            <>
+              {testEl}
+              <Themes 
+                view={view}
+                config={props.config} 
+                setActualTheme={props.setActualTheme} 
+                actualThemeInfo={props.actualThemeInfo}
+                setVisibleLayers={props.setVisibleLayers}
+              />
+            </>); 
+        } 
 
 				// Home widget
 				const homeWidget = new Home({
@@ -98,10 +136,11 @@ function Map(props) {
         })
 				
         // Add widgets
-        view.ui.add(searchWidget, "top-trailing")
-				view.ui.add(homeWidget, "top-right")
-				view.ui.move([ "zoom" ], "top-right")
-				view.ui.add(locateWidget, "top-right")
+        view.ui.add(searchWidget, "top-right")
+        view.ui.add(appWidget, "top-left")
+				view.ui.add(homeWidget, "top-left")
+				view.ui.move([ "zoom" ], "top-left")
+				view.ui.add(locateWidget, "top-left")
 				view.ui.add(basemapContainer, "bottom-right")
 
         view.when(() => {
@@ -111,12 +150,28 @@ function Map(props) {
 
           // Layer visibility - app theme
           props.setVisibleLayers(view, null)
-          props.view(view)
+          setMapView(view)
           
 				});
 
       }
   }, [mapDiv])
+
+  useEffect(() => { 
+    if (appWidgetRoot) { 
+      appWidgetRoot.render( 
+        <>
+          {testEl}
+          <Themes 
+            view={mapView} 
+            config={props.config} 
+            setActualTheme={props.setActualTheme} 
+            actualThemeInfo={props.actualThemeInfo} 
+            setVisibleLayers={props.setVisibleLayers} 
+          /> 
+        </>)
+    } 
+  }, [ appWidgetRoot, props.actualThemeInfo, mapView ])
 
   return (
     <div className="map-div" ref={mapDiv}></div>

@@ -23,7 +23,7 @@ function Themes(props) {
 
   const handleChangeTheme = (e) => {
     props.setActualTheme(e.target.value)
-    props.setVisibleLayers(null, e.target.value)
+    props.setVisibleLayers(props.view, e.target.value)
     setInit(true)
   }
 
@@ -34,7 +34,7 @@ function Themes(props) {
   return (
         <CalciteBlock
           collapsible
-          open={ props.isMobile && !init ? null : true }
+          open={true}
           heading={props.actualThemeInfo?.label} >
           <CalciteBlockSection open text="Zvolit jiné téma">
             <CalciteRadioButtonGroup
@@ -58,9 +58,6 @@ function Themes(props) {
                 })
               }
             </CalciteRadioButtonGroup>
-          </CalciteBlockSection>
-          <CalciteBlockSection text="Legenda">
-            {props.view && <Legend view={props.view} />}
           </CalciteBlockSection>
         </CalciteBlock> 
   );
