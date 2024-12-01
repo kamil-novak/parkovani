@@ -33,7 +33,7 @@
 
   .sub-title {
     color: var(--color-four);
-    background-color: var(--color-five);
+    background-color: var(--color-six);
     font-size: 12px;
     padding: 1.5px 5px 1px 5px;
     border-radius: 3px;
@@ -41,6 +41,15 @@
     -moz-border-radius: 3px;
     -ms-border-radius: 3px;
     -o-border-radius: 3px;
+
+    img {
+      position: relative;
+      top: 2px;
+      left: 0px;
+      margin-right: 4px;
+      width: 12px;
+      height: auto;
+    }
   }
 }
 
@@ -59,6 +68,11 @@
 
     .sub-title {
       font-size: 10px;
+
+      img {
+        width: 10px;
+        top: 1.5px;
+      }
     }
   }
 }

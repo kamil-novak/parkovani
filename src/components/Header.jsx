@@ -3,6 +3,7 @@ import "./Header.css";
 
 // Images
 import logo from "./../images/header-logo-jihlava.svg"
+import iconTag from "./../images/icon-tag.svg"
 
 function Header(props) {
 
@@ -18,6 +19,7 @@ function Header(props) {
               {props.appTitle}
           </div>
           <div className="sub-title title-item">
+            <img src={iconTag} alt="téma" />
             {props.actualThemeInfo?.label}
           </div>
         </div>
