@@ -1,62 +1,64 @@
 .app-header {
-    color: var(--color-four);
+  color: var(--color-four);
+  height: var(--app-header-height);
+  margin-right: 14px;
+  display: grid;
+  grid-template-columns: 103.5px 1fr;
+  column-gap: 10px;
+
+  .logo {
     height: var(--app-header-height);
-    margin-right: 14px;
-    display: grid;
-    grid-template-columns: 103.5px 1fr;
-    column-gap: 10px;
+  }
 
-    .logo {
-        height: var(--app-header-height);
-        
-    }
+  img {
+    height: var(--app-header-height);
+    width: auto;
+  }
 
-    img {
-        height: var(--app-header-height);
-        width: auto;
-    }
+  .title {
+    font-size: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-width: 0;
+    margin-top: 2px;
+    gap: 0px 10px;
+  }
 
-    .title {
-        font-size: 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items:center;
-        min-width: 0;
-        margin-top: 2px;
-        gap: 0px 10px;
-    }
+  .title-item {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
 
-    .title-item {
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
-    }
-
-    .sub-title {
-        color: var(--color-four);
-        background-color: var(--color-five);
-        font-size: 12px;
-        padding: 1.5px 5px 1px 5px;
-        border-radius: 3px;
-        -webkit-border-radius: 3px;
-        -moz-border-radius: 3px;
-        -ms-border-radius: 3px;
-        -o-border-radius: 3px;
-    }
+  .sub-title {
+    color: var(--color-four);
+    background-color: var(--color-five);
+    font-size: 12px;
+    padding: 1.5px 5px 1px 5px;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -o-border-radius: 3px;
+  }
 }
 
 @media only screen and (max-width: 576px) {
-    .app-header {
-
-        .title {
-            font-size: 15px;
-            flex-wrap: wrap;
-            margin-top: 7px;
-            margin-bottom: 5px;
-        }
-
-        .sub-title {
-            font-size: 10px;
-        }
+  .app-header {
+    .main-title {
+      flex-basis: 100%;
     }
+
+    .title {
+      font-size: 15px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+      margin-bottom: 6px;
+    }
+
+    .sub-title {
+      font-size: 10px;
+    }
+  }
 }
