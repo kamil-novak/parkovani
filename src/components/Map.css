@@ -7,16 +7,9 @@
 
 .toggle-basemap-container {
   padding: 2.7px;
-  width: 56.2px;
-  height: 56.2px;
   background-color: rgb(from var(--color-three) r g b / 1) !important;
   right: 15px;
   bottom: 30px;
-
-  .esri-basemap-toggle__container {
-    width: 45px;
-    height: 45px;
-  }
 }
 
 .app-button {
