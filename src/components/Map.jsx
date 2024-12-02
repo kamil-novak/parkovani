@@ -20,14 +20,15 @@ function Map(props) {
 
   // State
   const [mapView, setMapView] = useState(null);
-  const [appWidgetRoot, setAppWidgetRoot] = useState(null);
+  const [appWidgetOpened, setSppWidgetOpened] = useState(false);
 
 	// Refs
   const mapDiv = useRef(null);
-  const appWidgetDiv = useRef(document.createElement("div"));
   
-  // Test
-  const testEl = <div>Další App widget element</div>
+  // Toggle App Widget
+  const toggleAppWidget = () => {
+    appWidgetOpened ? setSppWidgetOpened(false) : setSppWidgetOpened(true)
+  }
 
   useEffect(() => {
   
@@ -49,35 +50,7 @@ function Map(props) {
           map
         })
 
-        // App widget
-        const appWidget = new Expand({
-          view,
-          label: "Témata a oblasti parkování",
-          expandTooltip: "Témata a oblasti parkování",
-          collapseTooltip: "Sbalit Témata a oblasti parkování",
-					content: appWidgetDiv.current,
-          placement: "left-start",
-          group: "top-left",
-          expandIcon: "apps",
-          collapseIconClass: "app-widget-icon-collapsed"
-				})
-        if (!appWidgetRoot) { 
-          const newAppWidgetRoot = ReactDOM.createRoot(appWidgetDiv.current) 
-          setAppWidgetRoot(newAppWidgetRoot)
-          newAppWidgetRoot.render(
-            <>
-              {testEl}
-              <Themes 
-                view={view}
-                config={props.config} 
-                setActualTheme={props.setActualTheme} 
-                actualThemeInfo={props.actualThemeInfo}
-                setVisibleLayers={props.setVisibleLayers}
-              />
-            </>); 
-        } 
-
-				// Home widget
+   		  // Home widget
 				const homeWidget = new Home({
 					view
 				})
@@ -136,12 +109,11 @@ function Map(props) {
         })
 				
         // Add widgets
-        view.ui.add(searchWidget, "top-right")
-        view.ui.add(appWidget, "top-left")
+        view.ui.add(searchWidget, "manual")
 				view.ui.add(homeWidget, "top-left")
 				view.ui.move([ "zoom" ], "top-left")
 				view.ui.add(locateWidget, "top-left")
-				view.ui.add(basemapContainer, "bottom-right")
+				view.ui.add(basemapContainer, "manual")
 
         view.when(() => {
    
@@ -157,24 +129,27 @@ function Map(props) {
       }
   }, [mapDiv])
 
-  useEffect(() => { 
-    if (appWidgetRoot) { 
-      appWidgetRoot.render( 
-        <>
-          {testEl}
-          <Themes 
-            view={mapView} 
-            config={props.config} 
-            setActualTheme={props.setActualTheme} 
-            actualThemeInfo={props.actualThemeInfo} 
-            setVisibleLayers={props.setVisibleLayers} 
-          /> 
-        </>)
-    } 
-  }, [ appWidgetRoot, props.actualThemeInfo, mapView ])
-
   return (
-    <div className="map-div" ref={mapDiv}></div>
+    <div className="map-div" ref={mapDiv}>
+      <div 
+        title="Témata a oblasti parkování" 
+        className="app-button" 
+        onClick={toggleAppWidget}
+      >
+        <div className="icon"></div>
+        <div className="label">Témata a oblasti parkování</div>
+      </div>
+
+      <Themes
+        opened={appWidgetOpened}
+        toggleAppWidget={toggleAppWidget}
+        view={mapView} 
+        config={props.config} 
+        setActualTheme={props.setActualTheme} 
+        actualThemeInfo={props.actualThemeInfo} 
+        setVisibleLayers={props.setVisibleLayers} 
+      />
+    </div>
   );
 }
 

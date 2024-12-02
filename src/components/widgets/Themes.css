@@ -1,5 +1,41 @@
-.widget-themes {
-    
-    
+.app-widget {
+  box-sizing: border-box;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background-color: var(--color-three);
+  min-width: 240px;
+  max-width: 40vw;
+  max-height: calc(100vh - 90px);
+  padding: 5px 10px;
+  overflow-y: auto;
+
+  .header {
+    font-size: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0px;
+    border-bottom: 1px solid var(--color-five);
+  }
 }
 
+.opened {
+  display: block;
+}
+
+.closed {
+  display: none;
+}
+
+@media only screen and (max-width: 576px) {
+  .app-widget { 
+    top: auto;
+    bottom: 0px;
+    right: 0px;
+    min-width: 100vw;
+    max-width: 100vw;
+    max-height: 55vh;
+    min-height: 0px;
+  }
+}

@@ -10,12 +10,14 @@ import "@esri/calcite-components/dist/components/calcite-block-section";
 import "@esri/calcite-components/dist/components/calcite-radio-button-group";
 import "@esri/calcite-components/dist/components/calcite-label";
 import "@esri/calcite-components/dist/components/calcite-radio-button";
+import "@esri/calcite-components/dist/components/calcite-icon";
 import { 
   CalciteBlock,
   CalciteBlockSection, 
   CalciteRadioButtonGroup,
   CalciteLabel, 
-  CalciteRadioButton } from "@esri/calcite-components-react";
+  CalciteRadioButton,
+  CalciteIcon } from "@esri/calcite-components-react";
 
 function Themes(props) {
   // State
@@ -32,6 +34,11 @@ function Themes(props) {
   }, []);
 
   return (
+      <div className={`app-widget ${props.opened ? "opened" : "closed"}`}>
+        <div className="header">
+          <div>Témata a oblasti parkování</div>
+          <CalciteIcon icon="x" scale="m" text-label="Zavřít" onClick={props.toggleAppWidget}></CalciteIcon>
+        </div>
         <CalciteBlock
           collapsible
           open={true}
@@ -60,6 +67,7 @@ function Themes(props) {
             </CalciteRadioButtonGroup>
           </CalciteBlockSection>
         </CalciteBlock> 
+       </div>
   );
 }
 
