@@ -22,8 +22,8 @@
         "visibleLayers": ["oblasti parkování aktuální", "oblasti parkování připravované"]
     },
     {
-      "label": "Střednědobé parkování",
-      "name": "strednedobe_parkovani",
+      "label": "Dojíždějící",
+      "name": "dojizdejici",
       "visibleLayers": ["oblasti parkování (join)", "aktuálně platné oblasti parkování"]
   }
   ]
