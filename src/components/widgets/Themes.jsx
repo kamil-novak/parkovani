@@ -15,12 +15,12 @@ import iconTagActive from "./../../images/icon-tag-active.svg"
 
 function Themes(props) {
   // State
-  const [init, setInit] = useState(false)
 
   const handleChangeTheme = (name) => {
     props.setActualTheme(name)
     props.setVisibleLayers(props.view, name)
-    setInit(true)
+   
+    window.history.replaceState(null, null, `?theme=${name}`);
   }
 
   useEffect(() => {
