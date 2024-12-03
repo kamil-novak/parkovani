@@ -56,7 +56,9 @@ function AppWidget(props) {
         {/* Zones */}
         <div className="zones section">
           <div className="section-title">Vyberte oblast, která se zvýrazní v mapě:</div>
-          <div className="section-content"></div>
+          <div className="section-content" style={{fontSize: "12px"}}>
+            Tady budou "květinky".
+          </div>
         </div>
       </div>
   );
