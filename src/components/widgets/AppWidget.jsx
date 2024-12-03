@@ -54,6 +54,10 @@ function AppWidget(props) {
           </div>
         </div>
         {/* Zones */}
+        <div className="zones section">
+          <div className="section-title">Vyberte oblast, která se zvýrazní v mapě:</div>
+          <div className="section-content"></div>
+        </div>
       </div>
   );
 }
