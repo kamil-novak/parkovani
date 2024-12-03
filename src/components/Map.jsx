@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react"
-import ReactDOM from "react-dom/client";
 
 import MapView from "@arcgis/core/views/MapView"
 import WebMap from "@arcgis/core/WebMap"
@@ -11,7 +10,7 @@ import BasemapToggle from "@arcgis/core/widgets/BasemapToggle"
 import Basemap from "@arcgis/core/Basemap"
 import Expand from "@arcgis/core/widgets/Expand"
 
-import Themes from "./widgets/Themes"
+import AppWidget from "./widgets/AppWidget"
 
 // CSS
 import "./Map.css";
@@ -20,15 +19,15 @@ function Map(props) {
 
   // State
   const [mapView, setMapView] = useState(null);
-  const [appWidgetOpened, setSppWidgetOpened] = useState(false);
+  const [appWidgetOpened, setAppWidgetOpened] = useState(false);
 
 	// Refs
   const mapDiv = useRef(null);
-  const themesEl = useRef(null)
+  const appWidgetEl = useRef(null)
   
   // Toggle App Widget
   const toggleAppWidget = () => {
-    appWidgetOpened ? setSppWidgetOpened(false) : setSppWidgetOpened(true)
+    appWidgetOpened ? setAppWidgetOpened(false) : setAppWidgetOpened(true)
   }
 
   useEffect(() => {
@@ -115,7 +114,7 @@ function Map(props) {
 				view.ui.move([ "zoom" ], "top-left")
 				view.ui.add(locateWidget, "top-left")
 				view.ui.add(basemapContainer, "manual")
-				view.ui.add(themesEl.current, "manual")
+				view.ui.add(appWidgetEl.current, "manual")
 
         view.when(() => {
    
@@ -133,7 +132,7 @@ function Map(props) {
 
   return (
     <div className="map-div" ref={mapDiv}>
-      <div ref={themesEl}
+      <div ref={appWidgetEl}
         title="Témata a oblasti parkování" 
         className="app-button" 
         onClick={toggleAppWidget}
@@ -142,7 +141,7 @@ function Map(props) {
         <div className="label">Témata a oblasti parkování</div>
       </div>
 
-      <Themes
+      <AppWidget
         opened={appWidgetOpened}
         toggleAppWidget={toggleAppWidget}
         view={mapView} 

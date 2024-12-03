@@ -1,5 +1,5 @@
 // CSS
-import "./Themes.css";
+import "./AppWidget.css";
 
 // Modules
 import React, { useEffect, useState } from "react"
@@ -13,7 +13,7 @@ import {
 import iconTag from "./../../images/icon-tag.svg"
 import iconTagActive from "./../../images/icon-tag-active.svg"
 
-function Themes(props) {
+function AppWidget(props) {
   // State
 
   const handleChangeTheme = (name) => {
@@ -58,4 +58,4 @@ function Themes(props) {
   );
 }
 
-export default Themes;
+export default AppWidget;
