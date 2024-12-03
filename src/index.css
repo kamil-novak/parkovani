@@ -23,7 +23,7 @@
   height: 70vh!important;
 }
 
-@media only screen and (max-width: 576px) {
+@media only screen and (max-width: 544px) {
   :root:not(:has(.desktop-map)) {
     --calcite-shell-panel-width: calc(100vw - var(--panel-mobile-width-delta));
     --calcite-shell-panel-max-width: calc(100vw - var(--panel-mobile-width-delta));

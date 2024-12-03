@@ -21,7 +21,7 @@ function App() {
 
   // State
   const [actualTheme, setActualTheme] = useState(new URLSearchParams(window.location.search).get("theme"));
-  const mobileScreen = 576
+  const mobileScreen = 544
   const [screenWidth, setScreenWidth] = useState(window.innerWidth)
   const [isMobile, setIsMobile] = useState(screenWidth > mobileScreen ? true : false)
 

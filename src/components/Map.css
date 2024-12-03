@@ -49,7 +49,7 @@
   left: 60px;
 }
 
-@media only screen and (max-width: 576px) {
+@media only screen and (max-width: 544px) {
   .app-button {
     top: auto;
     bottom: 0px;
@@ -91,12 +91,12 @@
     bottom: 15px;
   }
 
-  .esri-view-root {
-    margin-bottom: 45px !important;
-  }
-
   .esri-attribution {
     display: none !important;
+  }
+
+  .toggle-basemap-container {
+    bottom: 60px;
   }
 }
 

@@ -24,6 +24,7 @@ function Map(props) {
 
 	// Refs
   const mapDiv = useRef(null);
+  const themesEl = useRef(null)
   
   // Toggle App Widget
   const toggleAppWidget = () => {
@@ -114,6 +115,7 @@ function Map(props) {
 				view.ui.move([ "zoom" ], "top-left")
 				view.ui.add(locateWidget, "top-left")
 				view.ui.add(basemapContainer, "manual")
+				view.ui.add(themesEl.current, "manual")
 
         view.when(() => {
    
@@ -131,7 +133,7 @@ function Map(props) {
 
   return (
     <div className="map-div" ref={mapDiv}>
-      <div 
+      <div ref={themesEl}
         title="Témata a oblasti parkování" 
         className="app-button" 
         onClick={toggleAppWidget}
