@@ -1,31 +1,25 @@
 // CSS
 import "./Themes.css";
 
-import React, { useEffect, useRef, useState } from "react"
+// Modules
+import React, { useEffect, useState } from "react"
 
-import Legend from "./Legend";
-
-import "@esri/calcite-components/dist/components/calcite-block";
-import "@esri/calcite-components/dist/components/calcite-block-section";
-import "@esri/calcite-components/dist/components/calcite-radio-button-group";
-import "@esri/calcite-components/dist/components/calcite-label";
-import "@esri/calcite-components/dist/components/calcite-radio-button";
+// Calcite
 import "@esri/calcite-components/dist/components/calcite-icon";
 import { 
-  CalciteBlock,
-  CalciteBlockSection, 
-  CalciteRadioButtonGroup,
-  CalciteLabel, 
-  CalciteRadioButton,
   CalciteIcon } from "@esri/calcite-components-react";
+
+// Images
+import iconTag from "./../../images/icon-tag.svg"
+import iconTagActive from "./../../images/icon-tag-active.svg"
 
 function Themes(props) {
   // State
   const [init, setInit] = useState(false)
 
-  const handleChangeTheme = (e) => {
-    props.setActualTheme(e.target.value)
-    props.setVisibleLayers(props.view, e.target.value)
+  const handleChangeTheme = (name) => {
+    props.setActualTheme(name)
+    props.setVisibleLayers(props.view, name)
     setInit(true)
   }
 
@@ -35,39 +29,32 @@ function Themes(props) {
 
   return (
       <div className={`app-widget ${props.opened ? "opened" : "closed"}`}>
-        <div className="header">
+        {/* Themes */}
+        <div className="header section">
           <div>Témata a oblasti parkování</div>
           <CalciteIcon icon="x" scale="m" text-label="Zavřít" onClick={props.toggleAppWidget}></CalciteIcon>
         </div>
-        <CalciteBlock
-          collapsible
-          open={true}
-          heading={props.actualThemeInfo?.label} >
-          <CalciteBlockSection open text="Zvolit jiné téma">
-            <CalciteRadioButtonGroup
-              name="Options" 
-              layout="vertical" 
-              scale="s"
-              >
-              { 
-                props.config && props.config.appThemes.map((theme) => { 
-                  return(
-                    <CalciteLabel layout="inline" key={theme.name}>
-                      <CalciteRadioButton 
-                        value={theme.name} 
-                        onCalciteRadioButtonChange={handleChangeTheme}
-                        checked={theme.name === props.actualThemeInfo.name ? true : null}
-                        >
-                      </CalciteRadioButton>
-                      {theme.label}
-                    </CalciteLabel> 
-                  )
-                })
-              }
-            </CalciteRadioButtonGroup>
-          </CalciteBlockSection>
-        </CalciteBlock> 
-       </div>
+        <div className="themes section">
+          <div className="section-title">Zvolte téma mapy:</div>
+          <div className="section-content">
+            { 
+              props.config && props.config.appThemes.map((theme) => { 
+                return(
+                  <div 
+                    key={theme.name}
+                    className={`theme-item ${theme.name === props.actualThemeInfo.name ? 'active' : ''}`}
+                    onClick={() => {handleChangeTheme(theme.name)}}
+                  >
+                    <img src={theme.name === props.actualThemeInfo.name ? iconTagActive : iconTag} alt="téma" />
+                    {theme.label}
+                  </div> 
+                )
+              })
+            }
+          </div>
+        </div>
+        {/* Zones */}
+      </div>
   );
 }
 
