@@ -22,19 +22,26 @@ function App() {
   // State
   const [actualTheme, setActualTheme] = useState(new URLSearchParams(window.location.search).get("theme"));
   const mobileScreen = 544
-  const [screenWidth, setScreenWidth] = useState(window.innerWidth)
-  const [isMobile, setIsMobile] = useState(screenWidth > mobileScreen ? true : false)
 
   const [config, setConfig] = useState(null)
   const [appIsLoaded, setAppIsLoaded] = useState(false)
-  const [view, setView] = useState(null)
 
-  // Callbacks
+  // Check mobile resolution
+  const isMobile = () => {
+    if (window.innerWidth < mobileScreen) {
+      return true
+    }
+    else {
+      return false
+    }
+  }
+
+  // Loading
   const handleAppLoadingState = (loaded) => {
     setAppIsLoaded(loaded)
   }
 
-  // Get app config
+  // App config
   const getData = async () => {
     const response = await fetch('./config.json')
     return response.json();
@@ -81,11 +88,6 @@ function App() {
       setConfig( initConfig )
      
     })()
-
-    // Responsive layout solution
-    const handleResize = () => setScreenWidth(window.innerWidth);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
    
   }, []);
 

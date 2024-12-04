@@ -9,6 +9,8 @@ import Locate from "@arcgis/core/widgets/Locate"
 import BasemapToggle from "@arcgis/core/widgets/BasemapToggle"
 import Basemap from "@arcgis/core/Basemap"
 import Expand from "@arcgis/core/widgets/Expand"
+import Legend from "@arcgis/core/widgets/Legend"
+import * as reactiveUtils from "@arcgis/core/core/reactiveUtils.js"
 
 import AppWidget from "./widgets/AppWidget"
 
@@ -19,8 +21,9 @@ function Map(props) {
 
   // State
   const [mapView, setMapView] = useState(null);
-  const [appWidgetOpened, setAppWidgetOpened] = useState(props.isMobile && props.config.appWidget.openOnStartIfDesktop ? true : false);
-
+  const [legendWidgetSt, setLegendWidgetSt] = useState(null);
+  const [appWidgetOpened, setAppWidgetOpened] = useState(props.isMobile() && props.config.appWidget.openOnStartIfDesktop ? false : true);
+  
 	// Refs
   const mapDiv = useRef(null);
   const appWidgetEl = useRef(null)
@@ -29,6 +32,15 @@ function Map(props) {
   const toggleAppWidget = () => {
     appWidgetOpened ? setAppWidgetOpened(false) : setAppWidgetOpened(true)
   }
+
+  // Reactive Utils
+  reactiveUtils.watch(
+    () => legendWidgetSt?.expanded,
+    (expanded) => {
+      if (expanded && props.isMobile() && appWidgetOpened) {
+        setAppWidgetOpened(false)
+      }
+  });
 
   useEffect(() => {
   
@@ -59,6 +71,17 @@ function Map(props) {
 				const locateWidget = new Locate({
 					view
 				})
+
+        const legendWidget = new Expand({
+          collapseIcon: "legend",
+          collapseTooltip: "Zavřít legendu",
+          expandIcon: "legend",
+          expandTooltip: "Legenda",
+          group: "top-left",
+          view,
+          content: new Legend({view})
+        })
+        setLegendWidgetSt(legendWidget)
 
         // Basemap Toggle widget
         const basemapContainer = document.createElement("div")
@@ -113,18 +136,18 @@ function Map(props) {
 				view.ui.add(homeWidget, "top-left")
 				view.ui.move([ "zoom" ], "top-left")
 				view.ui.add(locateWidget, "top-left")
+				view.ui.add(legendWidget, "top-left")
 				view.ui.add(basemapContainer, "manual")
 				view.ui.add(appWidgetEl.current, "manual")
 
         view.when(() => {
-   
+       
           // Disable loader
           props.loaded(true)
 
           // Layer visibility - app theme
           props.setVisibleLayers(view, null)
           setMapView(view)
-          
 				});
 
       }
