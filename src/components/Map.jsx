@@ -138,7 +138,7 @@ function Map(props) {
         onClick={toggleAppWidget}
       >
         <div className="icon"></div>
-        <div className="label">Témata a oblasti parkování</div>
+        <div className="label">{props.config.appLabels.appWidgetTitle}</div>
       </div>
 
       <AppWidget

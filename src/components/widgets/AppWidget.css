@@ -15,6 +15,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    calcite-icon {
+      cursor: pointer;
+    }
   }
 
   .section {
@@ -79,4 +83,12 @@
     max-height: 55vh;
     min-height: 0px;
   }
+
+  .themes {
+    
+    .theme-item {
+      padding: 3px 10px !important;
+    }
+  }
+
 }

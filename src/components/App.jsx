@@ -96,7 +96,7 @@ function App() {
 
         <div slot="header">
           <Header 
-            appTitle={config ? config.appTitle : ""} 
+            appTitle={config ? config.appLabels.appTitle : ""} 
             appLogoLink={config ? config.appLogoLink : ""} 
             actualThemeInfo={getActualThemeInfo(actualTheme)}
             />

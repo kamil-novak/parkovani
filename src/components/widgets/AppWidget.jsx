@@ -31,11 +31,11 @@ function AppWidget(props) {
       <div className={`app-widget ${props.opened ? "opened" : "closed"}`}>
         {/* Themes */}
         <div className="header section">
-          <div>Témata a oblasti parkování</div>
+          <div>{props.config.appLabels.appWidgetTitle}</div>
           <CalciteIcon icon="x" scale="m" text-label="Zavřít" onClick={props.toggleAppWidget}></CalciteIcon>
         </div>
         <div className="themes section">
-          <div className="section-title">Zvolte téma mapy:</div>
+          <div className="section-title">{props.config.appLabels.appWidgetThemesTitle}:</div>
           <div className="section-content">
             { 
               props.config && props.config.appThemes.map((theme) => { 
@@ -55,7 +55,7 @@ function AppWidget(props) {
         </div>
         {/* Zones */}
         <div className="zones section">
-          <div className="section-title">Vyberte oblast, která se zvýrazní v mapě:</div>
+          <div className="section-title">{props.config.appLabels.appWidgetZonesTitle}:</div>
           <div className="section-content" style={{fontSize: "12px"}}>
             Tady budou "květinky".
           </div>

@@ -54,12 +54,13 @@
     top: auto;
     bottom: 0px;
     right: 0px;
-    border: 5px solid var(--color-three);
+    border: 6px solid var(--color-three);
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100vw;
-    height: 45px;
+    height: 55px;
+    font-size: 15px;
   
     .icon {
       width: 35px;
@@ -96,7 +97,7 @@
   }
 
   .toggle-basemap-container {
-    bottom: 60px;
+    bottom: 70px;
   }
 }
 

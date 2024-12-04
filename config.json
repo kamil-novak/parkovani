@@ -1,8 +1,14 @@
 {
-  "appTitle": "Parkování ve městě",
   "appLogoLink": "https://www.jihlava.cz/projekty-pro-verejnost/d-465410",
   "portal": "https://gis.jihlava-city.cz/portal",
   "webMapId": "75cff0970fa2487e82d4b74414c5f08f",
+
+  "appLabels": {
+    "appTitle": "Parkování ve městě",
+    "appWidgetTitle": "Témata a oblasti parkování",
+    "appWidgetThemesTitle": "Zvolte téma mapy",
+    "appWidgetZonesTitle": "Vyberte oblast, která se zvýrazní v mapě"
+  }, 
 
   "search": {
     "layerUrl": "https://gis.jihlava-city.cz/server/rest/services/ost/ORP_RUIAN/MapServer/0",
