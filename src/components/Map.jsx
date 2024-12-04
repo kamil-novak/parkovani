@@ -19,7 +19,7 @@ function Map(props) {
 
   // State
   const [mapView, setMapView] = useState(null);
-  const [appWidgetOpened, setAppWidgetOpened] = useState(false);
+  const [appWidgetOpened, setAppWidgetOpened] = useState(props.isMobile && props.config.appWidget.openOnStartIfDesktop ? true : false);
 
 	// Refs
   const mapDiv = useRef(null);
@@ -148,7 +148,7 @@ function Map(props) {
         config={props.config} 
         setActualTheme={props.setActualTheme} 
         actualThemeInfo={props.actualThemeInfo} 
-        setVisibleLayers={props.setVisibleLayers} 
+        setVisibleLayers={props.setVisibleLayers}
       />
     </div>
   );

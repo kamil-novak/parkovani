@@ -21,6 +21,10 @@
     "portalItemId": "2327e031337941f1a56e06da9c39267f" 
   },
 
+  "appWidget": {
+    "openOnStartIfDesktop": true
+  },
+
   "appThemes": [
     {
         "label": "Oblasti parkování",

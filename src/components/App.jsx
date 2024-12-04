@@ -108,6 +108,7 @@ function App() {
           setVisibleLayers={setVisibleLayers}
           setActualTheme={handleSetActualTheme} 
           actualThemeInfo={getActualThemeInfo(actualTheme)} 
+          isMobile={isMobile}
           /> }
 
       </CalciteShell>
