@@ -10,6 +10,7 @@ import BasemapToggle from "@arcgis/core/widgets/BasemapToggle"
 import Basemap from "@arcgis/core/Basemap"
 import Expand from "@arcgis/core/widgets/Expand"
 import Legend from "@arcgis/core/widgets/Legend"
+import LayerList from "@arcgis/core/widgets/LayerList.js"
 import * as reactiveUtils from "@arcgis/core/core/reactiveUtils.js"
 
 import AppWidget from "./widgets/AppWidget"
@@ -22,6 +23,7 @@ function Map(props) {
   // State
   const [mapView, setMapView] = useState(null);
   const [legendWidgetSt, setLegendWidgetSt] = useState(null);
+  const [layerListWidgetSt, setLayerListWidgetSt] = useState(null);
   const [appWidgetOpened, setAppWidgetOpened] = useState(props.isMobile() && props.config.appWidget.openOnStartIfDesktop ? false : true);
   
 	// Refs
@@ -35,9 +37,9 @@ function Map(props) {
 
   // Reactive Utils
   reactiveUtils.watch(
-    () => legendWidgetSt?.expanded,
+    () => [legendWidgetSt?.expanded, layerListWidgetSt?.expanded],
     (expanded) => {
-      if (expanded && props.isMobile() && appWidgetOpened) {
+      if (expanded.includes(true) && props.isMobile() && appWidgetOpened) {
         setAppWidgetOpened(false)
       }
   });
@@ -72,6 +74,8 @@ function Map(props) {
 					view
 				})
 
+        // Legend
+        const legend = new Legend({view})
         const legendWidget = new Expand({
           collapseIcon: "legend",
           collapseTooltip: "Zavřít legendu",
@@ -79,9 +83,24 @@ function Map(props) {
           expandTooltip: "Legenda",
           group: "top-left",
           view,
-          content: new Legend({view})
+          content: legend
         })
         setLegendWidgetSt(legendWidget)
+
+        // Layer List
+        const layerList = new LayerList({view})
+        const layerListWidget = new Expand({
+          collapseIcon: "layers",
+          collapseTooltip: "Zavřít vrstvy mapy",
+          expandIcon: "layers",
+          expandTooltip: "Vrstvy mapy",
+          group: "top-left",
+          view,
+          content: layerList
+        })
+        setLayerListWidgetSt(layerListWidget)
+        layerList.on("trigger-action", console.log("TODO: vypnout téma!"))
+
 
         // Basemap Toggle widget
         const basemapContainer = document.createElement("div")
@@ -136,6 +155,7 @@ function Map(props) {
 				view.ui.add(homeWidget, "top-left")
 				view.ui.move([ "zoom" ], "top-left")
 				view.ui.add(locateWidget, "top-left")
+				view.ui.add(layerListWidget, "top-left")
 				view.ui.add(legendWidget, "top-left")
 				view.ui.add(basemapContainer, "manual")
 				view.ui.add(appWidgetEl.current, "manual")
