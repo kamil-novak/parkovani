@@ -21,13 +21,14 @@ import "./Map.css";
 function Map(props) {
 
   // State
-  const [mapView, setMapView] = useState(null);
-  const [legendWidgetSt, setLegendWidgetSt] = useState(null);
-  const [layerListWidgetSt, setLayerListWidgetSt] = useState(null);
-  const [appWidgetOpened, setAppWidgetOpened] = useState(props.isMobile() && props.config.appWidget.openOnStartIfDesktop ? false : true);
+  const [view, setView] = useState(null)
+  const [legendExpand, setLegendExpand] = useState(null)
+  const [layerListExpand, setLayerListExpand] = useState(null)
+  const [layerListWidget, setLayerListWidget] = useState(null)
+  const [appWidgetOpened, setAppWidgetOpened] = useState(props.isMobile() && props.config.appWidget.openOnStartIfDesktop ? false : true)
   
 	// Refs
-  const mapDiv = useRef(null);
+  const mapDiv = useRef(null)
   const appWidgetEl = useRef(null)
   
   // Toggle App Widget
@@ -36,141 +37,144 @@ function Map(props) {
   }
 
   // Reactive Utils
+  // Hide App Widget, if other widget is expanded on mobile
   reactiveUtils.watch(
-    () => [legendWidgetSt?.expanded, layerListWidgetSt?.expanded],
+    () => [legendExpand?.expanded, layerListExpand?.expanded],
     (expanded) => {
       if (expanded.includes(true) && props.isMobile() && appWidgetOpened) {
         setAppWidgetOpened(false)
       }
   });
 
+  // ....
+  reactiveUtils.watch(
+    () => view?.allLayerViews,
+    (layers) => {
+      console.log(layers)
+  })
+
   useEffect(() => {
-  
-      if (mapDiv.current && props.config) {
+
+      if (!mapDiv.current && !props.config) return
  
-        // Map
-        const map = new WebMap({
+      // Map
+      const map = new WebMap({
+        portalItem: {
+          id: props.config.webMapId,
+          portal: {
+            url: props.config.portal
+          }
+        }
+      })
+
+      // View
+      const viewInit = new MapView({
+        container: mapDiv.current,
+        map
+      })
+
+      // Home widget
+      const homeWidget = new Home({
+        view: viewInit
+      })
+
+      // Locate widget
+      const locateWidget = new Locate({
+        view: viewInit
+      })
+
+      // Legend
+      const legendWidgetInit = new Legend({view: viewInit})
+      const legendExpandInit = new Expand({
+        collapseIcon: "legend",
+        collapseTooltip: "Zavřít legendu",
+        expandIcon: "legend",
+        expandTooltip: "Legenda",
+        group: "top-left",
+        view: viewInit,
+        content: legendWidgetInit
+      })
+      setLegendExpand(legendExpandInit)
+
+      // Layer List
+      const layerListWidgetInit = new LayerList({view: viewInit})
+      const layerListExpandInit = new Expand({
+        collapseIcon: "layers",
+        collapseTooltip: "Zavřít vrstvy mapy",
+        expandIcon: "layers",
+        expandTooltip: "Vrstvy mapy",
+        group: "top-left",
+        view: viewInit,
+        content: layerListWidgetInit
+      })
+      setLayerListExpand(layerListExpandInit)
+      setLayerListWidget(layerListWidgetInit)
+      
+      // Basemap Toggle widget
+      const basemapContainer = document.createElement("div")
+      basemapContainer.classList.add("toggle-basemap-container")
+      new BasemapToggle({
+        view: viewInit,
+        container: basemapContainer,
+        nextBasemap: new Basemap({
           portalItem: {
-            id: props.config.webMapId,
-            portal: {
-              url: props.config.portal
-            }
+            id: props.config.nextBasemap.portalItemId
           }
         })
+      })
 
-				// View
-        const view = new MapView({
-          container: mapDiv.current,
-          map
-        })
-
-   		  // Home widget
-				const homeWidget = new Home({
-					view
-				})
-
-				// Locate widget
-				const locateWidget = new Locate({
-					view
-				})
-
-        // Legend
-        const legend = new Legend({view})
-        const legendWidget = new Expand({
-          collapseIcon: "legend",
-          collapseTooltip: "Zavřít legendu",
-          expandIcon: "legend",
-          expandTooltip: "Legenda",
-          group: "top-left",
-          view,
-          content: legend
-        })
-        setLegendWidgetSt(legendWidget)
-
-        // Layer List
-        const layerList = new LayerList({view})
-        const layerListWidget = new Expand({
-          collapseIcon: "layers",
-          collapseTooltip: "Zavřít vrstvy mapy",
-          expandIcon: "layers",
-          expandTooltip: "Vrstvy mapy",
-          group: "top-left",
-          view,
-          content: layerList
-        })
-        setLayerListWidgetSt(layerListWidget)
-        layerList.on("trigger-action", console.log("TODO: vypnout téma!"))
-
-
-        // Basemap Toggle widget
-        const basemapContainer = document.createElement("div")
-        basemapContainer.classList.add("toggle-basemap-container")
-        new BasemapToggle({
-          view,
-          container: basemapContainer,
-          nextBasemap: new Basemap({
-            portalItem: {
-              id: props.config.nextBasemap.portalItemId
-            }
-          })
-        })
-
-				// Search widget 
-				const searchWidget = new Search({ 
-          view,
-          includeDefaultSources: false,
-          sources: [
-            {
-              layer: new FeatureLayer({
-								url: props.config.search.layerUrl,
-								outFields: ["*"],
-								definitionExpression: props.config.search.layerUrl.definitionExpression
-							}),
-              searchFields: props.config.search.layerUrl.searchFields,
-              displayField: props.config.search.layerUrl.displayField,
-              exactMatch: false,
+      // Search widget 
+      const searchWidget = new Search({ 
+        view: viewInit,
+        includeDefaultSources: false,
+        sources: [
+          {
+            layer: new FeatureLayer({
+              url: props.config.search.layerUrl,
               outFields: ["*"],
-              name: "Adresní místa",
-              placeholder: "Hledat adresu",
-              maxResults: 6,
-              maxSuggestions: 6,
-              suggestionsEnabled: true,
-              minSuggestCharacters: 3,
-              popupEnabled: false,
-              resultSymbol: {
-                type: "simple-marker",
-                size: "12px",  
-                color: [0, 0, 0, 0],
-                outline: {  
-                  color: [217, 0, 18],
-                  width: 2  
-                }
+              definitionExpression: props.config.search.layerUrl.definitionExpression
+            }),
+            searchFields: props.config.search.layerUrl.searchFields,
+            displayField: props.config.search.layerUrl.displayField,
+            exactMatch: false,
+            outFields: ["*"],
+            name: "Adresní místa",
+            placeholder: "Hledat adresu",
+            maxResults: 6,
+            maxSuggestions: 6,
+            suggestionsEnabled: true,
+            minSuggestCharacters: 3,
+            popupEnabled: false,
+            resultSymbol: {
+              type: "simple-marker",
+              size: "12px",  
+              color: [0, 0, 0, 0],
+              outline: {  
+                color: [217, 0, 18],
+                width: 2  
               }
             }
-          ]
-        })
-				
-        // Add widgets
-        view.ui.add(searchWidget, "manual")
-				view.ui.add(homeWidget, "top-left")
-				view.ui.move([ "zoom" ], "top-left")
-				view.ui.add(locateWidget, "top-left")
-				view.ui.add(layerListWidget, "top-left")
-				view.ui.add(legendWidget, "top-left")
-				view.ui.add(basemapContainer, "manual")
-				view.ui.add(appWidgetEl.current, "manual")
+          }
+        ]
+      })
+      
+      // Add widgets
+      viewInit.ui.add(searchWidget, "manual")
+      viewInit.ui.add(homeWidget, "top-left")
+      viewInit.ui.move([ "zoom" ], "top-left")
+      viewInit.ui.add(locateWidget, "top-left")
+      viewInit.ui.add(layerListExpandInit, "top-left")
+      viewInit.ui.add(legendExpandInit, "top-left")
+      viewInit.ui.add(basemapContainer, "manual")
+      viewInit.ui.add(appWidgetEl.current, "manual")
 
-        view.when(() => {
-       
-          // Disable loader
-          props.loaded(true)
-
-          // Layer visibility - app theme
-          props.setVisibleLayers(view, null)
-          setMapView(view)
-				});
-
-      }
+      viewInit.when(() => {
+        // Disable loader
+        props.loaded(true)
+        // Layer visibility - app theme
+        props.checkVisibleLayers(viewInit, null)
+        setView(viewInit)
+      });
   }, [mapDiv])
 
   return (
@@ -187,11 +191,11 @@ function Map(props) {
       <AppWidget
         opened={appWidgetOpened}
         toggleAppWidget={toggleAppWidget}
-        view={mapView} 
+        view={view} 
         config={props.config} 
         setActualTheme={props.setActualTheme} 
         actualThemeInfo={props.actualThemeInfo} 
-        setVisibleLayers={props.setVisibleLayers}
+        checkVisibleLayers={props.checkVisibleLayers}
       />
     </div>
   );

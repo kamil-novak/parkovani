@@ -68,10 +68,11 @@ function App() {
   }
 
   // Set visible layers according to the configuration
-  const setVisibleLayers = (view, theme) => {
+  const checkVisibleLayers = (view, theme) => {
     let themeFc = theme ? getActualThemeInfo(theme) : getActualThemeInfo(actualTheme) 
 
     view.map.layers.forEach((layer) => {
+
       layer.visible = false
         if (themeFc.visibleLayers.includes(layer.title)) {
           layer.visible = true
@@ -107,7 +108,7 @@ function App() {
         {config && <Map 
           config={config} 
           loaded={handleAppLoadingState} 
-          setVisibleLayers={setVisibleLayers}
+          checkVisibleLayers={checkVisibleLayers}
           setActualTheme={handleSetActualTheme} 
           actualThemeInfo={getActualThemeInfo(actualTheme)} 
           isMobile={isMobile}

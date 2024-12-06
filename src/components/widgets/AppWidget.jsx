@@ -18,7 +18,7 @@ function AppWidget(props) {
 
   const handleChangeTheme = (name) => {
     props.setActualTheme(name)
-    props.setVisibleLayers(props.view, name)
+    props.checkVisibleLayers(props.view, name)
    
     window.history.replaceState(null, null, `?theme=${name}`);
   }
