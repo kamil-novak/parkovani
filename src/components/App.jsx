@@ -92,6 +92,18 @@ function App() {
       if (themeFc.visibleLayers.includes(layer.title)) {
         layer.visible = true
       }
+  
+      if (layer.allSublayers) {
+      
+        layer.when(() => {
+          layer.allSublayers.forEach((sublayer) => {
+            sublayer.visible = false
+            if (themeFc.visibleLayers.includes(sublayer.title)) {
+              sublayer.visible = true
+            }
+          })
+        })
+      }
     })
 
     // Set watching switching layers
@@ -100,6 +112,18 @@ function App() {
       const switchLayerHandlerLocal = layer.watch("visible", () => {
         setActualTheme("[no-theme]")
       })
+
+      if (layer.allSublayers) {
+        
+        layer.when(() => {
+          layer.allSublayers.forEach((sublayer) => {
+            const switchSublayerHandlerLocal = sublayer.watch("visible", () => {
+              setActualTheme("[no-theme]")
+            })
+            switchLayerHandlersLocal.push(switchSublayerHandlerLocal)
+          })
+        })
+      }
       switchLayerHandlersLocal.push(switchLayerHandlerLocal)
     })
     setSwitchLayerHandlers(switchLayerHandlersLocal)

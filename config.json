@@ -34,7 +34,7 @@
     {
       "label": "Dojíždějící",
       "name": "dojizdejici",
-      "visibleLayers": ["oblasti parkování (join)", "aktuálně platné oblasti parkování"]
+      "visibleLayers": ["oblasti parkování (join)", "aktuálně platné oblasti parkování", "parkování"]
   }
   ]
 }
