@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // Calcite
 setAssetPath('https://js.arcgis.com/calcite-components/2.13.2/assets')
@@ -22,10 +22,13 @@ function App() {
   // State
   const [actualTheme, setActualTheme] = useState(new URLSearchParams(window.location.search).get("theme"))
   const [switchLayerHandlers, setSwitchLayerHandlers] = useState()
-  const mobileScreen = 544
-
   const [config, setConfig] = useState(null)
   const [appIsLoaded, setAppIsLoaded] = useState(false)
+  const [zonesLayer, setZonesLayer] = useState(null)
+  const [zonesFeatures, setZonesFeatures] = useState(null)
+
+  // Mobile resolution settings
+  const mobileScreen = 544
 
   // Check mobile resolution
   const isMobile = () => {
@@ -129,6 +132,41 @@ function App() {
     setSwitchLayerHandlers(switchLayerHandlersLocal)
   }
 
+  // Zones layer
+  const getZonesLayer = (view) => {
+    view.map.layers.forEach((layer) => {
+      // If zones are congigured
+      if (config.appZones.fromLayer) {
+        // If zones in layer
+        if (layer.title === config.appZones.fromLayer) {
+          setZonesLayer(layer)
+          getZoneFeatures(layer)
+        }
+        // If zones in sublayer
+        if (layer.allSublayers) {
+          layer.when(() => {
+            layer.allSublayers.forEach((subLayer) => {
+              if (subLayer.title === config.appZones.fromLayer ) {
+                setZonesLayer(subLayer)
+                getZoneFeatures(subLayer)
+              }
+            })
+          })
+        }
+      }
+    })
+  }
+
+  // Zone features
+  const getZoneFeatures = (zonesLayer) => {
+    const zones = []
+    zonesLayer.queryFeatures({where: "1=1", outFields: [config.appZones.oidAttr, config.appZones.zoneNameAttr], returnGeometry: false})
+    .then((results) => {
+      results.features.forEach((feature) => {zones.push(feature)})
+    }) 
+    setZonesFeatures(zones)
+  }
+
   useEffect(() => {
 
     (async () => {
@@ -161,6 +199,10 @@ function App() {
           setActualTheme={handleSetActualTheme} 
           actualThemeInfo={getActualThemeInfo(actualTheme)} 
           isMobile={isMobile}
+          getZonesLayer={getZonesLayer}
+          getZoneFeatures={getZoneFeatures}
+          zonesLayer={zonesLayer}
+          zoneFeatures={zonesFeatures}
           /> }
 
       </CalciteShell>

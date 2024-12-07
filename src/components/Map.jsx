@@ -46,7 +46,7 @@ function Map(props) {
       }
   });
 
-  // ....
+  // Hide App Widget, if popup is opened
   reactiveUtils.watch(
     () => view?.popup.selectedFeature,
     (selectedFeature) => {
@@ -173,8 +173,11 @@ function Map(props) {
       viewInit.when(() => {
         // Disable loader
         props.loaded(true)
-        // Layer visibility - app theme
+        // Handle layers visibility
         props.checkVisibleLayers(viewInit, null)
+        // Zones
+        props.getZonesLayer(viewInit)
+        
         setView(viewInit)
       });
   }, [mapDiv])
@@ -184,8 +187,7 @@ function Map(props) {
       <div ref={appWidgetEl}
         title="Témata a oblasti parkování" 
         className="app-button" 
-        onClick={toggleAppWidget}
-      >
+        onClick={toggleAppWidget}>
         <div className="icon"></div>
         <div className="label">{props.config.appLabels.appWidgetTitle}</div>
       </div>
@@ -198,6 +200,8 @@ function Map(props) {
         setActualTheme={props.setActualTheme} 
         actualThemeInfo={props.actualThemeInfo} 
         checkVisibleLayers={props.checkVisibleLayers}
+        zonesLayer={props.zonesLayer}
+        zoneFeatures={props.zoneFeatures}
       />
     </div>
   );

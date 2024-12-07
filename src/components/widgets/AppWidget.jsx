@@ -56,8 +56,18 @@ function AppWidget(props) {
         {/* Zones */}
         <div className="zones section">
           <div className="section-title">{props.config.appLabels.appWidgetZonesTitle}:</div>
-          <div className="section-content" style={{fontSize: "12px"}}>
-            Tady budou "květinky".
+          <div className="section-content">
+            {props.zoneFeatures &&
+              props.zoneFeatures.map((feature) => {
+                return (
+                  <div 
+                    key={feature.attributes[props.config.appZones.oidAttr]}
+                    className="zones-item">
+                    <img src={iconTag} alt="téma" />
+                    {feature.attributes[props.config.appZones.zoneNameAttr]}
+                  </div>)
+              })
+            }
           </div>
         </div>
       </div>
