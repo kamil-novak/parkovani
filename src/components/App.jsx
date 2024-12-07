@@ -160,11 +160,16 @@ function App() {
   // Zone features
   const getZoneFeatures = (zonesLayer) => {
     const zones = []
-    zonesLayer.queryFeatures({where: "1=1", outFields: [config.appZones.oidAttr, config.appZones.zoneNameAttr], returnGeometry: false})
+    zonesLayer.queryFeatures({
+      where: "1=1", 
+      outFields: [config.appZones.codeAttr, config.appZones.zoneNameAttr], 
+      returnGeometry: false,
+      orderByFields: [`${config.appZones.zoneNameAttr} ASC`]
+    })
     .then((results) => {
       results.features.forEach((feature) => {zones.push(feature)})
+      setZonesFeatures(zones)
     }) 
-    setZonesFeatures(zones)
   }
 
   useEffect(() => {

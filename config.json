@@ -40,7 +40,7 @@
 
   "appZones": {
     "fromLayer": "oblasti parkování aktuální",
-    "oidAttr": "objectid",
+    "codeAttr": "kod",
     "zoneNameAttr": "popis"
   }
 }
