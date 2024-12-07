@@ -64,8 +64,6 @@
 
     .sub-title {
       font-size: 10px;
-      height: 17px;
-      box-sizing: border-box;
 
       img {
         width: 10px;
@@ -74,8 +72,8 @@
     }
 
     .no-sub-title { 
-      height: 17px;
-      box-sizing: border-box;
+      position: relative;
+      top: 2px;
     }
   }
 }
