@@ -48,9 +48,11 @@ function Map(props) {
 
   // ....
   reactiveUtils.watch(
-    () => view?.allLayerViews,
-    (layers) => {
-      console.log(layers)
+    () => view?.popup.selectedFeature,
+    (selectedFeature) => {
+      if (selectedFeature && appWidgetOpened && props.isMobile()) {
+        setAppWidgetOpened(false)
+      }
   })
 
   useEffect(() => {

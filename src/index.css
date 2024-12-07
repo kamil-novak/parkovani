@@ -22,6 +22,10 @@
   --esri-widget-panel-max-height: 100% !important;
 }
 
+.esri-expand__panel {
+  height: 65vh!important;
+}
+
 @media only screen and (max-width: 544px) {
   :root:not(:has(.desktop-map)) {
     --calcite-shell-panel-width: calc(100vw - var(--panel-mobile-width-delta));
