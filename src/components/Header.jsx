@@ -18,10 +18,11 @@ function Header(props) {
           <div className="main-title title-item">
               {props.appTitle}
           </div>
+          {props.actualThemeInfo &&
           <div className="sub-title title-item">
-            <img src={iconTagActive} alt="téma" />
+            <img src={iconTagActive} alt="téma" /> 
             {props.actualThemeInfo?.label}
-          </div>
+          </div> || <div className="no-sub-title"></div>}
         </div>
     </div>
   );

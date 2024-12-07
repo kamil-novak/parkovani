@@ -20,7 +20,8 @@ import Map from "./Map"
 function App() {
 
   // State
-  const [actualTheme, setActualTheme] = useState(new URLSearchParams(window.location.search).get("theme"));
+  const [actualTheme, setActualTheme] = useState(new URLSearchParams(window.location.search).get("theme"))
+  const [switchLayerHandlers, setSwitchLayerHandlers] = useState()
   const mobileScreen = 544
 
   const [config, setConfig] = useState(null)
@@ -48,17 +49,22 @@ function App() {
   }
 
   // Get actual theme info from config
-  const getActualThemeInfo = (param) => {
-    const appTheme = config?.appThemes.filter((themeItem) => {
-      if (themeItem.name === param) {
-        return themeItem
+  const getActualThemeInfo = (theme) => {
+    if(theme !== "[no-theme]") {
+      const appTheme = config?.appThemes.filter((themeItem) => {
+        if (themeItem.name === theme) {
+          return themeItem
+        }
+      })
+      if (appTheme?.length > 0) {
+        return appTheme[0]
       }
-    })
-    if (appTheme?.length > 0) {
-      return appTheme[0]
+      else {
+        return config?.appThemes[0]
+      }
     }
     else {
-      return config?.appThemes[0]
+      return null // Layer is switched outside of App Widget
     }
   }
 
@@ -67,17 +73,36 @@ function App() {
     setActualTheme(actualTheme)
   }
 
+
   // Set visible layers according to the configuration
   const checkVisibleLayers = (view, theme) => {
     let themeFc = theme ? getActualThemeInfo(theme) : getActualThemeInfo(actualTheme) 
 
+    // Remove watching switching layers
+    if (switchLayerHandlers) {
+      switchLayerHandlers.forEach((handler) => {
+        handler.remove()
+      })
+    }
+
+    // Handle switch theme
     view.map.layers.forEach((layer) => {
 
       layer.visible = false
-        if (themeFc.visibleLayers.includes(layer.title)) {
-          layer.visible = true
-        }
+      if (themeFc.visibleLayers.includes(layer.title)) {
+        layer.visible = true
+      }
     })
+
+    // Set watching switching layers
+    let switchLayerHandlersLocal = []
+    view.map.layers.forEach((layer) => {
+      const switchLayerHandlerLocal = layer.watch("visible", () => {
+        setActualTheme("[no-theme]")
+      })
+      switchLayerHandlersLocal.push(switchLayerHandlerLocal)
+    })
+    setSwitchLayerHandlers(switchLayerHandlersLocal)
   }
 
   useEffect(() => {

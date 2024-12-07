@@ -42,10 +42,10 @@ function AppWidget(props) {
                 return(
                   <div 
                     key={theme.name}
-                    className={`theme-item ${theme.name === props.actualThemeInfo.name ? 'active' : ''}`}
+                    className={`theme-item ${theme.name === props.actualThemeInfo?.name ? 'active' : ''}`}
                     onClick={() => {handleChangeTheme(theme.name)}}
                   >
-                    <img src={theme.name === props.actualThemeInfo.name ? iconTagActive : iconTag} alt="téma" />
+                    <img src={theme.name === props.actualThemeInfo?.name ? iconTagActive : iconTag} alt="téma" />
                     {theme.label}
                   </div> 
                 )
