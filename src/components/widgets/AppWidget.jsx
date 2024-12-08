@@ -89,10 +89,10 @@ function AppWidget(props) {
         geometry: feature.geometry,
         symbol: { 
           type: "simple-fill",
-          color: "#33cc33",
+          color: [202,21,23,0.6],
           outline: { 
-            color: "#33cc33",  
-            width: "4px" 
+            color: [202,21,23,1],  
+            width: 4 
           } 
         }
       })
