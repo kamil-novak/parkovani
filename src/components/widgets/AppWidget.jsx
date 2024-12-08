@@ -81,22 +81,21 @@ function AppWidget(props) {
     })
     .then((results) => {
       const feature = results.features[0]
-      feature.symbol = { 
-        type: "simple-fill", 
-        color: [202,21,23,1],
-        outline: { 
-          color: [202,21,23,1],  
-          width: 4 
-        } 
+      const graphic = {
+        attributes: feature.attributes,
+        geometry: feature.geometry,
+        symbol: { 
+          type: "simple-fill", 
+          color: [202,21,23,0.6],
+          outline: { 
+            color: [202,21,23,1],  
+            width: 4 
+          } 
+        }
       }
-      console.log(feature)
-      props.view.graphics.add(feature);
-      console.log(props.view.graphics)
-      props.view.goTo(feature.geometry.extent.expand(2)) 
-      props.view.popup.open({ 
-        features: [feature], 
-        location: feature.geometry.centroid 
-      }) 
+
+      props.view.graphics.add(graphic);
+      props.view.goTo(graphic.geometry.extent.expand(2)) 
     })
   }
 
@@ -134,7 +133,7 @@ function AppWidget(props) {
         <div className="zones section flex-list">
           <div className="section-title">{props.config.appLabels.appWidgetZonesTitle}:</div>
           <CalciteFilter 
-            scale="m"
+            scale="m" 
             placeholder='př. "centrum" nebo "32"' 
             onCalciteFilterChange={filterZones}>
           </CalciteFilter>
