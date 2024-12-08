@@ -80,17 +80,18 @@ function AppWidget(props) {
       outFields: ["*"]
     })
     .then((results) => {
-      let feature = results.features[0]
+      const feature = results.features[0]
       feature.symbol = { 
         type: "simple-fill", 
-        color: [202, 21, 23, 0.6],
+        color: [202,21,23,0.6],
         outline: { 
-          color: [202, 21, 23, 1],  
+          color: [202,21,23,1],  
           width: 4 
         } 
       }
-
+      console.log(feature)
       props.view.graphics.add(feature);
+      console.log(props.view.graphics)
       props.view.goTo(feature.geometry.extent.expand(2)) 
       props.view.popup.open({ 
         features: [feature], 
