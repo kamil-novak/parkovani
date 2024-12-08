@@ -2,12 +2,14 @@
 import "./AppWidget.css";
 
 // Modules
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useRef } from "react"
+import deburr from 'lodash/deburr'
 
 // Calcite
 import "@esri/calcite-components/dist/components/calcite-icon";
+import "@esri/calcite-components/dist/components/calcite-filter";
 import { 
-  CalciteIcon } from "@esri/calcite-components-react";
+  CalciteIcon, CalciteFilter } from "@esri/calcite-components-react";
 
 // Images
 import iconTag from "./../../images/icon-tag.svg"
@@ -16,12 +18,40 @@ import iconPolygon from "./../../images/icon-polygon.svg"
 
 function AppWidget(props) {
   // State
+  const [zonesElementHeight, setZonesElementHeight] = useState(null)
 
+  // Ref
+  const zonesRef = useRef(null)
+
+  // Theme
   const handleChangeTheme = (name) => {
     props.setActualTheme(name)
     props.checkVisibleLayers(props.view, name)
    
     window.history.replaceState(null, null, `?theme=${name}`);
+  }
+
+  // Filter zones
+  const filterZones = (e) => {
+    // Default height
+    if (!zonesElementHeight) {
+      setZonesElementHeight(zonesRef.current.offsetHeight)
+      zonesRef.current.style.height = zonesRef.current.offsetHeight + "px"
+    }
+    
+    // Query
+    const filterQuery = deburr(e.target.value.toLowerCase().replace(/\s/g,''))
+
+    // Search
+    for (const zone of zonesRef.current.children) {
+      const zoneText = deburr(zone.innerText.toLowerCase().replace(/\s/g,''))
+      if (!zoneText.includes(filterQuery)) {
+        zone.style.display = "none"
+      }
+      else {
+        zone.style.display = "flex"
+      }
+    }
   }
 
   useEffect(() => {
@@ -57,7 +87,12 @@ function AppWidget(props) {
         {/* Zones */}
         <div className="zones section flex-list">
           <div className="section-title">{props.config.appLabels.appWidgetZonesTitle}:</div>
-          <div className="section-content">
+          <CalciteFilter 
+            scale="s" 
+            placeholder='př. "centrum" nebo "32"' 
+            onCalciteFilterChange={filterZones}>
+          </CalciteFilter>
+          <div className="section-content" ref={zonesRef}>
             {props.zoneFeatures ?
               props.zoneFeatures.map((feature) => {
                 return (

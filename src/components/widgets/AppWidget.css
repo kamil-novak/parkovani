@@ -8,6 +8,7 @@
   max-height: calc(100vh - 180px);
   padding: 5px 10px;
   overflow-y: auto;
+  overflow-x: hidden;
 
   .header {
     font-size: 15px;
@@ -32,6 +33,11 @@
 
     &:last-child {
       border-bottom: none;
+    }
+
+    calcite-filter {
+      margin: -7px 0px 4px -12px;
+      width: calc(100% + 24px);
     }
   }
 
