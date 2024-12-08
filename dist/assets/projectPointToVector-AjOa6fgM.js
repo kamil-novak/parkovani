@@ -1,0 +1,1 @@
+import{cO as i,e2 as o,e3 as p,aV as s}from"./index-DxNBHqwQ.js";function x(r,t,e,c){if(i(r.spatialReference,e)){a[0]=r.x,a[1]=r.y;const f=r.z;return a[2]=f??c??0,o(a,r.spatialReference,0,t,e,0)}const n=p(r,e);return!!n&&(t[0]=n==null?void 0:n.x,t[1]=n==null?void 0:n.y,t[2]=(n==null?void 0:n.z)??c??0,!0)}const a=s();export{x as c};

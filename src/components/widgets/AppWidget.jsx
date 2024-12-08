@@ -1,6 +1,10 @@
 // CSS
 import "./AppWidget.css";
 
+// ArcGIS Modules
+import Graphic from "@arcgis/core/Graphic"
+import Symbol from "@arcgis/core/symbols/Symbol"
+
 // Modules
 import React, { useEffect, useState, useRef } from "react"
 import deburr from 'lodash/deburr'
@@ -81,18 +85,18 @@ function AppWidget(props) {
     })
     .then((results) => {
       const feature = results.features[0]
-      const graphic = {
+      const graphic = new Graphic ({
         attributes: feature.attributes,
         geometry: feature.geometry,
         symbol: { 
-          type: "simple-fill", 
+          type: "simple-fill",
           color: [202,21,23,0.6],
           outline: { 
             color: [202,21,23,1],  
             width: 4 
           } 
         }
-      }
+      })
 
       props.view.graphics.add(graphic);
       props.view.goTo(graphic.geometry.extent.expand(2)) 
@@ -134,7 +138,7 @@ function AppWidget(props) {
           <div className="section-title">{props.config.appLabels.appWidgetZonesTitle}:</div>
           <CalciteFilter 
             scale="m" 
-            placeholder='př. "centrum" nebo "32"' 
+            placeholder='př. "centrum", "32"' 
             onCalciteFilterChange={filterZones}>
           </CalciteFilter>
           <div className="section-content" ref={zonesRef}>
