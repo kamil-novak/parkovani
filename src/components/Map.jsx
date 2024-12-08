@@ -204,6 +204,7 @@ function Map(props) {
         checkVisibleLayers={props.checkVisibleLayers}
         zonesLayer={props.zonesLayer}
         zoneFeatures={props.zoneFeatures}
+        isMobile={props.isMobile}
       />
     </div>
   );

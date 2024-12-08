@@ -134,7 +134,7 @@ function AppWidget(props) {
         <div className="zones section flex-list">
           <div className="section-title">{props.config.appLabels.appWidgetZonesTitle}:</div>
           <CalciteFilter 
-            scale="s" 
+            scale="m"
             placeholder='př. "centrum" nebo "32"' 
             onCalciteFilterChange={filterZones}>
           </CalciteFilter>
