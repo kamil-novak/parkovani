@@ -83,7 +83,7 @@ function AppWidget(props) {
       const feature = results.features[0]
       feature.symbol = { 
         type: "simple-fill", 
-        color: [202,21,23,0.6],
+        color: [202,21,23,1],
         outline: { 
           color: [202,21,23,1],  
           width: 4 
