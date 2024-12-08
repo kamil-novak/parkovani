@@ -15,10 +15,12 @@ import {
 import iconTag from "./../../images/icon-tag.svg"
 import iconTagActive from "./../../images/icon-tag-active.svg"
 import iconPolygon from "./../../images/icon-polygon.svg"
+import iconPolygonActive from "./../../images/icon-polygon-active.svg"
 
 function AppWidget(props) {
   // State
   const [zonesElementHeight, setZonesElementHeight] = useState(null)
+  const [selectedZoneOid, setSelectedZoneOid]  = useState(null)
 
   // Ref
   const zonesRef = useRef(null)
@@ -56,7 +58,22 @@ function AppWidget(props) {
 
   // Show zone in the map
   const showZone = (e) => {
+    // This zone
     const featureOid = e.target.getAttribute('data-key')
+
+    // Remove selected zone
+    props.view.graphics.removeAll()
+
+    // Disable selected feature
+    if (featureOid == selectedZoneOid) {
+      setSelectedZoneOid(null)
+      return
+    }
+
+    // Set selected feature to state
+    setSelectedZoneOid(featureOid)
+
+    // Select feature in the map
     props.zonesLayer.queryFeatures({
       where: `${props.config.appZones.oidAttr} = ${featureOid}`,
       returnGeometry: true,
@@ -64,17 +81,21 @@ function AppWidget(props) {
     })
     .then((results) => {
       const feature = results.features[0]
-      console.log(feature)
+      feature.symbol = { 
+        type: "simple-fill", 
+        color: [202, 21, 23, 0.6],
+        outline: { 
+          color: [202, 21, 23, 1],  
+          width: 4 
+        } 
+      }
 
-      props.view.whenLayerView(props.zonesLayer).then((layerView) => { 
-        layerView.highlight(feature)
-        props.view.goTo(feature.geometry.extent.expand(2)) 
-        props.view.popup.open({ features: [feature], location: feature.geometry.centroid 
-
-        }) 
-      })
-
-
+      props.view.graphics.add(feature);
+      props.view.goTo(feature.geometry.extent.expand(2)) 
+      props.view.popup.open({ 
+        features: [feature], 
+        location: feature.geometry.centroid 
+      }) 
     })
   }
 
@@ -97,7 +118,7 @@ function AppWidget(props) {
                 return(
                   <div 
                     key={theme.name}
-                    className={`flex-item theme-item ${theme.name === props.actualThemeInfo?.name ? 'active' : ''}`}
+                    className={`flex-item theme-item ${theme.name === props.actualThemeInfo?.name ? 'active-theme' : ''}`}
                     onClick={() => {handleChangeTheme(theme.name)}}
                   >
                     <img src={theme.name === props.actualThemeInfo?.name ? iconTagActive : iconTag} alt="téma" />
@@ -123,9 +144,9 @@ function AppWidget(props) {
                   <div 
                     key={feature.attributes[props.config.appZones.oidAttr]}
                     data-key={feature.attributes[props.config.appZones.oidAttr]}
-                    className="flex-item zones-item"
+                    className={`flex-item zones-item ${selectedZoneOid == feature.attributes[props.config.appZones.oidAttr] ? 'active-zone' : ''}`}
                     onClick={showZone}>
-                    <img src={iconPolygon} alt="téma" />
+                    <img src={selectedZoneOid == feature.attributes[props.config.appZones.oidAttr] ?iconPolygonActive : iconPolygon} alt="zóna" />
                     {feature.attributes[props.config.appZones.zoneNameAttr]}
                   </div>)
               }) : <div>Načítám oblasti...</div>
@@ -133,7 +154,7 @@ function AppWidget(props) {
           </div>
         </div>
       </div>
-  );
+  )
 }
 
 export default AppWidget;
