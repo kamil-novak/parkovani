@@ -3,7 +3,6 @@ import "./AppWidget.css";
 
 // ArcGIS Modules
 import Graphic from "@arcgis/core/Graphic"
-import Symbol from "@arcgis/core/symbols/Symbol"
 
 // Modules
 import React, { useEffect, useState, useRef } from "react"
