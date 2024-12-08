@@ -161,8 +161,8 @@ function App() {
   const getZoneFeatures = (zonesLayer) => {
     const zones = []
     zonesLayer.queryFeatures({
-      where: "1=1", 
-      outFields: [config.appZones.codeAttr, config.appZones.zoneNameAttr], 
+      where: !config.appZones.whereCondition ? "1=1" : config.appZones.whereCondition, 
+      outFields: [config.appZones.codeAttr, config.appZones.zoneNameAttr, config.appZones.oidAttr], 
       returnGeometry: false,
       orderByFields: [`${config.appZones.zoneNameAttr} ASC`]
     })

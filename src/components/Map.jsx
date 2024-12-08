@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react"
 
 import MapView from "@arcgis/core/views/MapView"
+import Popup from "@arcgis/core/widgets/Popup"
 import WebMap from "@arcgis/core/WebMap"
 import Home from "@arcgis/core/widgets/Home"
 import Search from "@arcgis/core/widgets/Search"
@@ -74,6 +75,7 @@ function Map(props) {
         container: mapDiv.current,
         map
       })
+      viewInit.popup = new Popup()
 
       // Home widget
       const homeWidget = new Home({

@@ -54,6 +54,30 @@ function AppWidget(props) {
     }
   }
 
+  // Show zone in the map
+  const showZone = (e) => {
+    const featureOid = e.target.getAttribute('data-key')
+    props.zonesLayer.queryFeatures({
+      where: `${props.config.appZones.oidAttr} = ${featureOid}`,
+      returnGeometry: true,
+      outFields: ["*"]
+    })
+    .then((results) => {
+      const feature = results.features[0]
+      console.log(feature)
+
+      props.view.whenLayerView(props.zonesLayer).then((layerView) => { 
+        layerView.highlight(feature)
+        props.view.goTo(feature.geometry.extent.expand(2)) 
+        props.view.popup.open({ features: [feature], location: feature.geometry.centroid 
+
+        }) 
+      })
+
+
+    })
+  }
+
   useEffect(() => {
 
   }, []);
@@ -97,8 +121,10 @@ function AppWidget(props) {
               props.zoneFeatures.map((feature) => {
                 return (
                   <div 
-                    key={`${feature.attributes[props.config.appZones.codeAttr]}-${Math.floor(Math.random() * 1000)}`}
-                    className="flex-item zones-item">
+                    key={feature.attributes[props.config.appZones.oidAttr]}
+                    data-key={feature.attributes[props.config.appZones.oidAttr]}
+                    className="flex-item zones-item"
+                    onClick={showZone}>
                     <img src={iconPolygon} alt="téma" />
                     {feature.attributes[props.config.appZones.zoneNameAttr]}
                   </div>)
