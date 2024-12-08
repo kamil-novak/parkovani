@@ -80,7 +80,7 @@ function AppWidget(props) {
       outFields: ["*"]
     })
     .then((results) => {
-      const feature = results.features[0]
+      let feature = results.features[0]
       feature.symbol = { 
         type: "simple-fill", 
         color: [202, 21, 23, 0.6],
