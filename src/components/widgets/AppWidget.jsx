@@ -99,6 +99,10 @@ function AppWidget(props) {
 
       props.view.graphics.add(graphic);
       props.view.goTo(graphic.geometry.extent.expand(2)) 
+      console.log("Graphic added to view: ", props.view.graphics)
+    })
+    .catch((error) => {
+      console.error("Query failed: ", error)
     })
   }
 
