@@ -162,9 +162,9 @@ function App() {
     const zones = []
     zonesLayer.queryFeatures({
       where: !config.appZones.whereCondition ? "1=1" : config.appZones.whereCondition, 
-      outFields: [config.appZones.codeAttr, config.appZones.zoneNameAttr, config.appZones.oidAttr], 
+      outFields: [config.appZones.zoneCodeAttr, config.appZones.zoneNameAttr, config.appZones.oidAttr], 
       returnGeometry: false,
-      orderByFields: [`${config.appZones.zoneNameAttr} ASC`]
+      orderByFields: [`${config.appZones.zoneCodeAttr} ASC`]
     })
     .then((results) => {
       results.features.forEach((feature) => {zones.push(feature)})

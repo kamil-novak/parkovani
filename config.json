@@ -29,12 +29,16 @@
     {
         "label": "Oblasti parkování",
         "name": "oblasti_parkovani",
-        "visibleLayers": ["oblasti parkování aktuální", "oblasti parkování připravované"]
+        "visibleLayers": ["oblasti parkování aktuální", "oblasti parkování připravované"],
+        "isAppZonesTheme": true,
+        "showLayerList": true
     },
     {
       "label": "Dojíždějící",
       "name": "dojizdejici",
-      "visibleLayers": ["oblasti parkování (join)", "aktuálně platné oblasti parkování", "parkování"]
+      "visibleLayers": ["oblasti parkování (join)", "aktuálně platné oblasti parkování", "parkování"],
+      "isAppZonesTheme": false,
+      "showLayerList": true
     }
   ],
 
@@ -42,7 +46,8 @@
     "fromLayer": "oblasti parkování aktuální",
     "whereCondition": "stav_prvku = 'Stávající'", 
     "oidAttr": "objectid",
-    "codeAttr": "kod",
-    "zoneNameAttr": "popis"
+    "zoneCodeAttr": "kod_text",
+    "zoneNameAttr": "popis",
+    "correspondingZonesAttr": "kvetinka"
   }
 }
