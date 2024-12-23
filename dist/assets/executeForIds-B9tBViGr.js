@@ -1,0 +1,1 @@
+import{ce as c,gG as f,gw as r,gH as e}from"./index-DKZ740yB.js";async function p(a,s,t){const n=c(a),{data:o}=await f(n,r.from(s),t);return o.count}async function u(a,s,t){const n=c(a),{data:o}=await e(n,r.from(s),t);return o.objectIds}export{u as a,p as s};
