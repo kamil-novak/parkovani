@@ -108,13 +108,25 @@ function AppWidget(props) {
   return (
       <div className={`app-widget ${props.opened ? "opened" : "closed"}`}>
         {/* Header */}
-        <div className="header section">
+        <div className="header">
           <div>{props.config.appLabels.appWidgetTitle}</div>
-          <CalciteIcon icon="x" scale="m" text-label="Zavřít" onClick={props.toggleAppWidget}></CalciteIcon>
+          <CalciteIcon icon="x" scale="s" text-label="Zavřít" onClick={props.toggleAppWidget}></CalciteIcon>
         </div>
         {/* Themes */}
           <div className="themes section">
-            <div className="section-title" onClick={() => {setThemesExpanded(!themesExpanded)}}>{props.config.appLabels.appWidgetThemesTitle}:</div>
+            <div 
+              className="section-title" 
+              onClick={() => {setThemesExpanded(!themesExpanded)}}
+              >
+              <span>{props.config.appLabels.appWidgetThemesTitle}:</span>
+              <span>
+              {
+                themesExpanded
+                ? <CalciteIcon icon="chevron-up" scale="s" text-label="Sbalit"></CalciteIcon>
+                : <CalciteIcon icon="chevron-down" scale="s" text-label="Rozbalit"></CalciteIcon>
+              }
+              </span>
+            </div>
             <div className={`section-content flex-list ${themesExpanded ? "" : "closed"}`}>
               { 
                 props.config && props.config.appThemes.map((theme) => { 
@@ -134,7 +146,19 @@ function AppWidget(props) {
           </div>
         {/* Zones */}
         <div className="zones section">
-          <div className="section-title" onClick={() => setZonesExpanded(!zonesExpanded)}>{props.config.appLabels.appWidgetZonesTitle}:</div>
+          <div 
+            className="section-title" 
+            onClick={() => setZonesExpanded(!zonesExpanded)}
+          >
+          <span>{props.config.appLabels.appWidgetZonesTitle}:</span>
+          <span>
+            {
+              zonesExpanded
+              ? <CalciteIcon icon="chevron-up" scale="s" text-label="Sbalit"></CalciteIcon>
+              : <CalciteIcon icon="chevron-down" scale="s" text-label="Rozbalit"></CalciteIcon>
+            }
+          </span>
+          </div>
           <div className={`section-content ${zonesExpanded ? "" : "closed"}`}>
             <CalciteFilter 
               scale="m" 
