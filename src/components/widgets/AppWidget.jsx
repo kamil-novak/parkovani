@@ -161,22 +161,20 @@ function AppWidget(props) {
             }
           </span>
           </div>
-          <div className={`section-content ${zonesExpanded ? "" : "closed"}`}>
-            <div className="flex-list-grid" ref={zonesRef}>
-              {props.zoneFeatures ?
-                props.zoneFeatures.map((feature) => {
-                  return (
-                    <div 
-                      key={feature.attributes[props.config.appZones.oidAttr]}
-                      data-key={feature.attributes[props.config.appZones.oidAttr]}
-                      className={`flex-item zones-item ${selectedZoneOid == feature.attributes[props.config.appZones.oidAttr] ? 'active-zone' : ''}`}
-                      onClick={showZone}
-                      >
-                      {feature.attributes[props.config.appZones.zoneCodeAttr]}
-                    </div>)
-                }) : <div>Načítám oblasti...</div>
-              } 
-            </div>
+          <div className={`section-content flex-list-grid ${zonesExpanded ? "" : "closed"}`} ref={zonesRef}>
+            {props.zoneFeatures ?
+              props.zoneFeatures.map((feature) => {
+                return (
+                  <div 
+                    key={feature.attributes[props.config.appZones.oidAttr]}
+                    data-key={feature.attributes[props.config.appZones.oidAttr]}
+                    className={`flex-item zones-item ${selectedZoneOid == feature.attributes[props.config.appZones.oidAttr] ? 'active-zone' : ''}`}
+                    onClick={showZone}
+                    >
+                    {feature.attributes[props.config.appZones.zoneCodeAttr]}
+                  </div>)
+              }) : <div>Načítám oblasti...</div>
+            } 
           </div>
         </div>
         {/* Zones - alt. 2 */}
