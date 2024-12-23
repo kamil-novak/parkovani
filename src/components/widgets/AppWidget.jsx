@@ -22,12 +22,14 @@ import iconPolygonActive from "./../../images/icon-polygon-active.svg"
 
 function AppWidget(props) {
   // Ref
+  const zones2Ref = useRef(null)
   const zonesRef = useRef(null)
 
   // State
   const [selectedZoneOid, setSelectedZoneOid]  = useState(null)
   const [themesExpanded, setThemesExpanded] = useState(true)
   const [zonesExpanded, setZonesExpanded] = useState(true)
+  const [zones2Expanded, setZones2Expanded] = useState(true)
 
   // Theme
   const handleChangeTheme = (name) => {
@@ -43,7 +45,7 @@ function AppWidget(props) {
     const filterQuery = deburr(e.target.value.toLowerCase().replace(/\s/g,''))
 
     // Search
-    for (const zone of zonesRef.current.children) {
+    for (const zone of zones2Ref.current.children) {
       const zoneText = deburr(zone.innerText.toLowerCase().replace(/\s/g,''))
       if (!zoneText.includes(filterQuery)) {
         zone.style.display = "none"
@@ -113,38 +115,38 @@ function AppWidget(props) {
           <CalciteIcon icon="x" scale="s" text-label="Zavřít" onClick={props.toggleAppWidget}></CalciteIcon>
         </div>
         {/* Themes */}
-          <div className="themes section">
-            <div 
-              className="section-title" 
-              onClick={() => {setThemesExpanded(!themesExpanded)}}
-              >
-              <span>{props.config.appLabels.appWidgetThemesTitle}:</span>
-              <span>
-              {
-                themesExpanded
-                ? <CalciteIcon icon="chevron-up" scale="s" text-label="Sbalit"></CalciteIcon>
-                : <CalciteIcon icon="chevron-down" scale="s" text-label="Rozbalit"></CalciteIcon>
-              }
-              </span>
-            </div>
-            <div className={`section-content flex-list ${themesExpanded ? "" : "closed"}`}>
-              { 
-                props.config && props.config.appThemes.map((theme) => { 
-                  return(
-                    <div 
-                      key={theme.name}
-                      className={`flex-item theme-item ${theme.name === props.actualThemeInfo?.name ? 'active-theme' : ''}`}
-                      onClick={() => {handleChangeTheme(theme.name)}}
-                    >
-                      <img src={theme.name === props.actualThemeInfo?.name ? iconTagActive : iconTag} alt="téma" />
-                      {theme.label}
-                    </div> 
-                  )
-                })
-              }
-            </div>
+        <div className="themes section">
+          <div 
+            className="section-title" 
+            onClick={() => {setThemesExpanded(!themesExpanded)}}
+            >
+            <span>{props.config.appLabels.appWidgetThemesTitle}:</span>
+            <span>
+            {
+              themesExpanded
+              ? <CalciteIcon icon="chevron-up" scale="s" text-label="Sbalit"></CalciteIcon>
+              : <CalciteIcon icon="chevron-down" scale="s" text-label="Rozbalit"></CalciteIcon>
+            }
+            </span>
           </div>
-        {/* Zones */}
+          <div className={`section-content flex-list-column ${themesExpanded ? "" : "closed"}`}>
+            { 
+              props.config && props.config.appThemes.map((theme) => { 
+                return(
+                  <div 
+                    key={theme.name}
+                    className={`flex-item theme-item ${theme.name === props.actualThemeInfo?.name ? 'active-theme' : ''}`}
+                    onClick={() => {handleChangeTheme(theme.name)}}
+                  >
+                    <img src={theme.name === props.actualThemeInfo?.name ? iconTagActive : iconTag} alt="téma" />
+                    {theme.label}
+                  </div> 
+                )
+              })
+            }
+          </div>
+        </div>
+        {/* Zones - alt. 1 */}
         <div className="zones section">
           <div 
             className="section-title" 
@@ -160,12 +162,45 @@ function AppWidget(props) {
           </span>
           </div>
           <div className={`section-content ${zonesExpanded ? "" : "closed"}`}>
+            <div className="flex-list-grid" ref={zonesRef}>
+              {props.zoneFeatures ?
+                props.zoneFeatures.map((feature) => {
+                  return (
+                    <div 
+                      key={feature.attributes[props.config.appZones.oidAttr]}
+                      data-key={feature.attributes[props.config.appZones.oidAttr]}
+                      className={`flex-item zones-item ${selectedZoneOid == feature.attributes[props.config.appZones.oidAttr] ? 'active-zone' : ''}`}
+                      onClick={showZone}
+                      >
+                      {feature.attributes[props.config.appZones.zoneCodeAttr]}
+                    </div>)
+                }) : <div>Načítám oblasti...</div>
+              } 
+            </div>
+          </div>
+        </div>
+        {/* Zones - alt. 2 */}
+        <div className="zones2 section">
+          <div 
+            className="section-title" 
+            onClick={() => setZones2Expanded(!zones2Expanded)}
+          >
+          <span>{props.config.appLabels.appWidgetZonesTitle}:</span>
+          <span>
+            {
+              zones2Expanded
+              ? <CalciteIcon icon="chevron-up" scale="s" text-label="Sbalit"></CalciteIcon>
+              : <CalciteIcon icon="chevron-down" scale="s" text-label="Rozbalit"></CalciteIcon>
+            }
+          </span>
+          </div>
+          <div className={`section-content ${zones2Expanded ? "" : "closed"}`}>
             <CalciteFilter 
               scale="m" 
               placeholder='př. "centrum", "32"' 
               onCalciteFilterChange={filterZones}>
             </CalciteFilter>
-            <div className="flex-list" ref={zonesRef}>
+            <div className="flex-list-column" ref={zones2Ref}>
               {props.zoneFeatures ?
                 props.zoneFeatures.map((feature) => {
                   return (

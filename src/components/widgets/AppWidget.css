@@ -51,13 +51,31 @@
     display: none;
   }
 
-  .flex-list {
+  .flex-item {
+    border: 1px solid var(--color-five);
+  }
+
+  .flex-list-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: start;
+    gap: 3px;
+
+    .flex-item {
+      width: 30px;
+      height: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+  .flex-list-column {
     display: flex;
     flex-direction: column;
     gap: 5px;
     
     .flex-item {
-      border: 1px solid var(--color-five);
       padding: 0px 5px;
       display: flex;
       justify-content: start;
@@ -98,7 +116,7 @@
     height: 55vh;
   }
 
-  .flex-list {
+  .flex-list-column {
     .flex-item {
       padding: 3px 10px !important;
     }
