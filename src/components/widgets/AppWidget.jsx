@@ -173,7 +173,7 @@ function AppWidget(props) {
           </div>
         </div>
         {/* Zones - alt. 1 */}
-        <div className="zones section">
+        {props.actualThemeInfo.isAppZonesTheme && <div className="zones section">
           <div 
             className="section-title" 
             onClick={() => setZonesExpanded(!zonesExpanded)}
@@ -209,9 +209,9 @@ function AppWidget(props) {
               }) : <div>Načítám oblasti...</div>
             } 
           </div>
-        </div>
+        </div>}
         {/* Zones - alt. 2 */}
-        <div className="zones2 section">
+        {props.actualThemeInfo.isAppZonesTheme && <div className="zones2 section">
           <div 
             className="section-title" 
             onClick={() => setZones2Expanded(!zones2Expanded)}
@@ -254,7 +254,7 @@ function AppWidget(props) {
               } 
             </div>
           </div>
-        </div>
+        </div>}
       </div>
   )
 }
