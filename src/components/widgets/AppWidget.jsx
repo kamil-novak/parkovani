@@ -29,7 +29,7 @@ function AppWidget(props) {
   const [selectedZoneOid, setSelectedZoneOid]  = useState(null)
   const [themesExpanded, setThemesExpanded] = useState(true)
   const [zonesExpanded, setZonesExpanded] = useState(true)
-  const [zones2Expanded, setZones2Expanded] = useState(true)
+  const [zones2Expanded, setZones2Expanded] = useState(false)
 
   // Theme
   const handleChangeTheme = (name) => {
@@ -111,7 +111,7 @@ function AppWidget(props) {
       <div className={`app-widget ${props.opened ? "opened" : "closed"}`}>
         {/* Header */}
         <div className="header">
-          <div>{props.config.appLabels.appWidgetTitle}</div>
+          <h1>{props.config.appLabels.appWidgetTitle}</h1>
           <CalciteIcon icon="x" scale="s" text-label="Zavřít" onClick={props.toggleAppWidget}></CalciteIcon>
         </div>
         {/* Themes */}
@@ -120,7 +120,7 @@ function AppWidget(props) {
             className="section-title" 
             onClick={() => {setThemesExpanded(!themesExpanded)}}
             >
-            <span>{props.config.appLabels.appWidgetThemesTitle}:</span>
+            <h2>{props.config.appLabels.appWidgetThemesTitle}:</h2>
             <span>
             {
               themesExpanded
@@ -152,7 +152,7 @@ function AppWidget(props) {
             className="section-title" 
             onClick={() => setZonesExpanded(!zonesExpanded)}
           >
-          <span>{props.config.appLabels.appWidgetZonesTitle}:</span>
+          <h2>{props.config.appLabels.appWidgetZonesTitle}:</h2>
           <span>
             {
               zonesExpanded
@@ -183,7 +183,7 @@ function AppWidget(props) {
             className="section-title" 
             onClick={() => setZones2Expanded(!zones2Expanded)}
           >
-          <span>{props.config.appLabels.appWidgetZonesTitle}:</span>
+          <h2>{props.config.appLabels.appWidgetZonesTitle}:</h2>
           <span>
             {
               zones2Expanded

@@ -1,23 +1,40 @@
 .app-widget {
+  /* Widget variables */
+  --horizontal-gap: 5px;
+
+  /* Widget general settings */
   box-sizing: border-box;
   position: absolute;
   top: 15px;
   right: 15px;
   background-color: var(--color-three);
-  width: 240px;
+  width: 250px;
   max-height: calc(100vh - 180px);
   padding: 5px 10px;
   overflow-y: auto;
   overflow-x: hidden;
+  line-height: 1.2;
+  scrollbar-width: thin;
 
-  .header {
+  h1, h2 {
     font-size: 15px;
+    font-weight: 400;
+    margin: 0px;
+    padding: 0px;
+  }
+
+  h1 {
+    font-weight: 500;
+  }
+
+  /* Header */
+  .header {
     display: flex;
+    gap: var(--horizontal-gap);
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid var(--color-five);
-    padding: 5px 0px;
-    margin-bottom: 5px;
+    padding: 10px 0px;
 
     calcite-icon {
       cursor: pointer;
@@ -26,8 +43,9 @@
     }
   }
 
+  /* Widget sections */
   .section {
-    padding: 8px 0px;
+    padding: 10px 0px;
     
     calcite-filter {
       margin: -7px 0px -2px -12px;
@@ -39,13 +57,12 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 5px;
-    line-height: 18px;
+    gap: var(--horizontal-gap);
     cursor: pointer;
   }
 
   .section-content {
-    margin-top: 8px;
+    margin-top: 5px;
   }
 
   .section-content.closed {
@@ -57,6 +74,7 @@
     cursor: pointer;
   }
 
+  /* Widget grid elements */
   .flex-list-grid {
     display: flex;
     flex-wrap: wrap;
@@ -78,7 +96,7 @@
     gap: 5px;
     
     .flex-item {
-      padding: 0px 5px;
+      padding: 5px 5px;
       display: flex;
       justify-content: start;
       align-items: center;
@@ -94,6 +112,7 @@
     }
   }
 
+  /* Widgets active elements */
   .active-theme {
     color: var(--color-eight) !important;
     border: 1px solid var(--color-eight) !important;
@@ -107,6 +126,7 @@
   }
 }
 
+/* Mobile adjustments */
 @media only screen and (max-width: 544px) {
   .app-widget { 
     top: auto;
@@ -119,7 +139,7 @@
 
   .flex-list-column {
     .flex-item {
-      padding: 3px 10px !important;
+      padding: 10px 5px !important;
     }
   }
 
