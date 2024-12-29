@@ -7,7 +7,8 @@
     "appTitle": "Parkování ve městě",
     "appWidgetTitle": "Témata a oblasti parkování",
     "appWidgetThemesTitle": "Zvolte téma mapy",
-    "appWidgetZonesTitle": "Vyberte oblast parkování, která se zvýrazní v mapě"
+    "appWidgetZonesTitle": "Vyberte oblast parkování, která se zvýrazní v mapě",
+    "appWidgetLayersTitle": "Vypnout / zapnout jednotlivé vrstvy mapy"
   }, 
 
   "search": {
@@ -30,14 +31,12 @@
         "label": "Oblasti parkování",
         "name": "oblasti_parkovani",
         "visibleLayers": ["oblasti parkování aktuální", "oblasti parkování připravované"],
-        "isAppZonesTheme": true,
         "showLayerList": true
     },
     {
       "label": "Dojíždějící",
       "name": "dojizdejici",
       "visibleLayers": ["oblasti parkování (join)", "aktuálně platné oblasti parkování", "parkování"],
-      "isAppZonesTheme": false,
       "showLayerList": true
     }
   ],

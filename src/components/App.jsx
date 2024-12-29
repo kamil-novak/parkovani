@@ -114,6 +114,7 @@ function App() {
     view.map.layers.forEach((layer) => {
       const switchLayerHandlerLocal = layer.watch("visible", () => {
         setActualTheme("[no-theme]")
+        getZonesLayer(view)
       })
 
       if (layer.allSublayers) {
@@ -122,6 +123,7 @@ function App() {
           layer.allSublayers.forEach((sublayer) => {
             const switchSublayerHandlerLocal = sublayer.watch("visible", () => {
               setActualTheme("[no-theme]")
+              getZonesLayer(view)
             })
             switchLayerHandlersLocal.push(switchSublayerHandlerLocal)
           })

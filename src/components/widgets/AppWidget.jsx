@@ -24,12 +24,14 @@ function AppWidget(props) {
   // Ref
   const zones2Ref = useRef(null)
   const zonesRef = useRef(null)
+  const layerListRef = useRef(null)
 
   // State
   const [selectedZoneOid, setSelectedZoneOid]  = useState(null)
   const [themesExpanded, setThemesExpanded] = useState(true)
   const [zonesExpanded, setZonesExpanded] = useState(true)
   const [zones2Expanded, setZones2Expanded] = useState(false)
+  const [layersExpanded, setLayersExpanded] = useState(false)
 
   // Auxiliary functions
   function hexToRgb(hex) {
@@ -130,8 +132,10 @@ function AppWidget(props) {
   }
 
   useEffect(() => {
-
-  }, []);
+    if (props.layerList?.id) {
+      props.layerList.container = layerListRef.current
+    }
+  }, [props.layerListCreated]);
 
   return (
       <div className={`app-widget ${props.opened ? "opened" : "closed"}`}>
@@ -173,7 +177,7 @@ function AppWidget(props) {
           </div>
         </div>
         {/* Zones - alt. 1 */}
-        {props.actualThemeInfo.isAppZonesTheme && <div className="zones section">
+        {props.zonesLayer && props.zonesLayer.visible && <div className="zones section">
           <div 
             className="section-title" 
             onClick={() => setZonesExpanded(!zonesExpanded)}
@@ -195,6 +199,7 @@ function AppWidget(props) {
                     key={feature.attributes[props.config.appZones.oidAttr]}
                     data-key={feature.attributes[props.config.appZones.oidAttr]}
                     className="flex-item zones-item"
+                    title={feature.attributes[props.config.appZones.zoneNameAttr].slice(2)}
                     onClick={showZone}
                     style={selectedZoneOid == feature.attributes[props.config.appZones.oidAttr] 
                       ? {
@@ -211,7 +216,7 @@ function AppWidget(props) {
           </div>
         </div>}
         {/* Zones - alt. 2 */}
-        {props.actualThemeInfo.isAppZonesTheme && <div className="zones2 section">
+        {props.zonesLayer && props.zonesLayer.visible && <div className="zones2 section">
           <div 
             className="section-title" 
             onClick={() => setZones2Expanded(!zones2Expanded)}
@@ -255,6 +260,28 @@ function AppWidget(props) {
             </div>
           </div>
         </div>}
+        {/* Layer List*/}
+        <div 
+          className="layers section"
+          style={!props.actualThemeInfo || (props.actualThemeInfo && props.actualThemeInfo.showLayerList) ? {} : {display: "none"}}  
+        >
+          <div 
+            className="section-title" 
+            onClick={() => setLayersExpanded(!layersExpanded)}
+          >
+          <h2>{props.config.appLabels.appWidgetLayersTitle}:</h2>
+          <span>
+            {
+              layersExpanded
+              ? <CalciteIcon icon="chevron-up" scale="s" text-label="Sbalit"></CalciteIcon>
+              : <CalciteIcon icon="chevron-down" scale="s" text-label="Rozbalit"></CalciteIcon>
+            }
+          </span>
+          </div>
+          <div className={`section-content ${layersExpanded ? "" : "closed"}`}>
+            <div ref={layerListRef}></div>
+          </div>
+        </div>
       </div>
   )
 }

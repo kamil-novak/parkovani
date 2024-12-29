@@ -26,6 +26,7 @@ function Map(props) {
   const [legendExpand, setLegendExpand] = useState(null)
   const [layerListExpand, setLayerListExpand] = useState(null)
   const [layerListWidget, setLayerListWidget] = useState(null)
+  const [layerListCreated, setLayerListCreated] = useState(false)
   const [appWidgetOpened, setAppWidgetOpened] = useState(props.isMobile() && props.config.appWidget.openOnStartIfDesktop ? false : true)
   
 	// Refs
@@ -181,6 +182,7 @@ function Map(props) {
         props.getZonesLayer(viewInit)
         
         setView(viewInit)
+        setLayerListCreated(true)
       });
   }, [mapDiv])
 
@@ -205,6 +207,8 @@ function Map(props) {
         zonesLayer={props.zonesLayer}
         zoneFeatures={props.zoneFeatures}
         isMobile={props.isMobile}
+        layerList={layerListWidget}
+        layerListCreated={layerListCreated}
       />
     </div>
   );

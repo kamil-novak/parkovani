@@ -74,6 +74,13 @@
     cursor: pointer;
   }
 
+  /* Layers section */
+  .layers {
+    .section-content {
+      border: 1px solid var(--color-five);
+    }
+  }
+
   /* Widget grid elements */
   .flex-list-grid {
     display: flex;
