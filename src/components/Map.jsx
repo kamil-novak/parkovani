@@ -11,8 +11,9 @@ import BasemapToggle from "@arcgis/core/widgets/BasemapToggle"
 import Basemap from "@arcgis/core/Basemap"
 import Expand from "@arcgis/core/widgets/Expand"
 import Legend from "@arcgis/core/widgets/Legend"
-import LayerList from "@arcgis/core/widgets/LayerList.js"
-import * as reactiveUtils from "@arcgis/core/core/reactiveUtils.js"
+import LayerList from "@arcgis/core/widgets/LayerList"
+import Graphic from "@arcgis/core/Graphic"
+import * as reactiveUtils from "@arcgis/core/core/reactiveUtils"
 
 import AppWidget from "./widgets/AppWidget"
 
@@ -28,10 +29,27 @@ function Map(props) {
   const [layerListWidget, setLayerListWidget] = useState(null)
   const [layerListCreated, setLayerListCreated] = useState(false)
   const [appWidgetOpened, setAppWidgetOpened] = useState(props.isMobile() && props.config.appWidget.openOnStartIfDesktop ? false : true)
+  const [selectedZoneOid, setSelectedZoneOid] = useState(null)
   
 	// Refs
   const mapDiv = useRef(null)
   const appWidgetEl = useRef(null)
+
+  // Auxiliary functions
+  function hexToRgb(hex) {
+    // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+    const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+    hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+      return r + r + g + g + b + b;
+    });
+  
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : null;
+  }
   
   // Toggle App Widget
   const toggleAppWidget = () => {
@@ -56,6 +74,84 @@ function Map(props) {
         setAppWidgetOpened(false)
       }
   })
+
+  // Track zone selected feature
+  reactiveUtils.watch(
+    () => view?.popup.selectedFeature,
+    (selectedFeature) => {
+      if (selectedFeature && selectedFeature.layer.title === props.config.appZones.fromLayer) {
+        setSelectedZoneOid(() => selectedFeature.attributes[props.config.appZones.oidAttr])
+        // Remove selected zone
+        view.graphics.removeAll()
+        highlightZoneFeatures(selectedFeature.attributes[props.config.appZones.oidAttr])
+      }
+      if (!selectedFeature) {
+        console.log("jsem tady")
+        setSelectedZoneOid(null)
+      }
+  })
+
+  // Show zone in the map
+  const showZone = (e) => {
+    // This zone
+    const featureOid = e.target.getAttribute('data-key')
+
+    // Remove selected zone
+    view.graphics.removeAll()
+
+    // Disable selected feature
+    if (featureOid == selectedZoneOid) {
+      setSelectedZoneOid(() => null)
+      return
+    }
+
+    // Set selected feature to state
+    setSelectedZoneOid(() => featureOid)
+
+    // Highlight feature in the map
+    highlightZoneFeatures(featureOid)
+  }
+
+  // Highlight zone features in the map
+  const highlightZoneFeatures = (featureOid) => {
+    props.zonesLayer.queryFeatures({
+      where: `${props.config.appZones.oidAttr} = ${featureOid}`,
+      returnGeometry: true,
+      outFields: ["*"]
+    })
+    .then((results) => {
+      const feature = results.features[0]
+      const graphic = new Graphic ({
+        attributes: feature.attributes,
+        geometry: feature.geometry,
+        symbol: { 
+          type: "simple-fill",
+          color: {
+            r: hexToRgb(props.config.appZones.activeZoneColor).r,
+            g: hexToRgb(props.config.appZones.activeZoneColor).g,
+            b: hexToRgb(props.config.appZones.activeZoneColor).b,
+            a: 0.4
+          },
+          outline: { 
+            color: {
+              r: hexToRgb(props.config.appZones.activeZoneColor).r,
+              g: hexToRgb(props.config.appZones.activeZoneColor).g,
+              b: hexToRgb(props.config.appZones.activeZoneColor).b,
+              a: 1
+            },  
+            width: 4 
+          } 
+        }
+      })
+
+      view.graphics.add(graphic);
+      view.goTo(graphic.geometry.extent.expand(2)) 
+      console.log("Graphic added to view: ", view.graphics)
+    })
+    .catch((error) => {
+      console.error("Query failed: ", error)
+    })
+  }
 
   useEffect(() => {
 
@@ -209,6 +305,9 @@ function Map(props) {
         isMobile={props.isMobile}
         layerList={layerListWidget}
         layerListCreated={layerListCreated}
+        setSelectedZoneOid={setSelectedZoneOid}
+        selectedZoneOid={selectedZoneOid}
+        showZone={showZone}
       />
     </div>
   );

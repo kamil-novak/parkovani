@@ -2,7 +2,6 @@
 import "./AppWidget.css";
 
 // ArcGIS Modules
-import Graphic from "@arcgis/core/Graphic"
 
 // Modules
 import React, { useEffect, useState, useRef } from "react"
@@ -27,27 +26,10 @@ function AppWidget(props) {
   const layerListRef = useRef(null)
 
   // State
-  const [selectedZoneOid, setSelectedZoneOid]  = useState(null)
   const [themesExpanded, setThemesExpanded] = useState(true)
   const [zonesExpanded, setZonesExpanded] = useState(true)
   const [zones2Expanded, setZones2Expanded] = useState(false)
   const [layersExpanded, setLayersExpanded] = useState(false)
-
-  // Auxiliary functions
-  function hexToRgb(hex) {
-    // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
-    const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-    hex = hex.replace(shorthandRegex, function(m, r, g, b) {
-      return r + r + g + g + b + b;
-    });
-  
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-      r: parseInt(result[1], 16),
-      g: parseInt(result[2], 16),
-      b: parseInt(result[3], 16)
-    } : null;
-  }
 
   // Theme
   const handleChangeTheme = (name) => {
@@ -72,63 +54,6 @@ function AppWidget(props) {
         zone.style.display = "flex"
       }
     }
-  }
-
-  // Show zone in the map
-  const showZone = (e) => {
-    // This zone
-    const featureOid = e.target.getAttribute('data-key')
-
-    // Remove selected zone
-    props.view.graphics.removeAll()
-
-    // Disable selected feature
-    if (featureOid == selectedZoneOid) {
-      setSelectedZoneOid(null)
-      return
-    }
-
-    // Set selected feature to state
-    setSelectedZoneOid(featureOid)
-
-    // Select feature in the map
-    props.zonesLayer.queryFeatures({
-      where: `${props.config.appZones.oidAttr} = ${featureOid}`,
-      returnGeometry: true,
-      outFields: ["*"]
-    })
-    .then((results) => {
-      const feature = results.features[0]
-      const graphic = new Graphic ({
-        attributes: feature.attributes,
-        geometry: feature.geometry,
-        symbol: { 
-          type: "simple-fill",
-          color: {
-            r: hexToRgb(props.config.appZones.activeZoneColor).r,
-            g: hexToRgb(props.config.appZones.activeZoneColor).g,
-            b: hexToRgb(props.config.appZones.activeZoneColor).b,
-            a: 0.4
-          },
-          outline: { 
-            color: {
-              r: hexToRgb(props.config.appZones.activeZoneColor).r,
-              g: hexToRgb(props.config.appZones.activeZoneColor).g,
-              b: hexToRgb(props.config.appZones.activeZoneColor).b,
-              a: 1
-            },  
-            width: 4 
-          } 
-        }
-      })
-
-      props.view.graphics.add(graphic);
-      props.view.goTo(graphic.geometry.extent.expand(2)) 
-      console.log("Graphic added to view: ", props.view.graphics)
-    })
-    .catch((error) => {
-      console.error("Query failed: ", error)
-    })
   }
 
   useEffect(() => {
@@ -200,8 +125,8 @@ function AppWidget(props) {
                     data-key={feature.attributes[props.config.appZones.oidAttr]}
                     className="flex-item zones-item"
                     title={feature.attributes[props.config.appZones.zoneNameAttr]}
-                    onClick={showZone}
-                    style={selectedZoneOid == feature.attributes[props.config.appZones.oidAttr] 
+                    onClick={props.showZone}
+                    style={props.selectedZoneOid == feature.attributes[props.config.appZones.oidAttr] 
                       ? {
                         color: props.config.appZones.activeZoneColor,
                         backgroundColor: `rgb(from ${props.config.appZones.activeZoneColor} r g b / 10%)`,
@@ -244,15 +169,15 @@ function AppWidget(props) {
                       key={feature.attributes[props.config.appZones.oidAttr]}
                       data-key={feature.attributes[props.config.appZones.oidAttr]}
                       className="flex-item zones-item"
-                      style={selectedZoneOid == feature.attributes[props.config.appZones.oidAttr] 
+                      style={props.selectedZoneOid == feature.attributes[props.config.appZones.oidAttr] 
                         ? {
                           color: props.config.appZones.activeZoneColor,
                           backgroundColor: `rgb(from ${props.config.appZones.activeZoneColor} r g b / 10%)`,
                           border: `1px solid ${props.config.appZones.activeZoneColor}`
                         } 
                         : {}}
-                      onClick={showZone}>
-                      <img src={selectedZoneOid == feature.attributes[props.config.appZones.oidAttr] ?iconPolygonActive : iconPolygon} alt="zóna" />
+                      onClick={props.showZone}>
+                      <img src={props.selectedZoneOid == feature.attributes[props.config.appZones.oidAttr] ?iconPolygonActive : iconPolygon} alt="zóna" />
                       {feature.attributes[props.config.appZones.zoneCodeAttr]} {feature.attributes[props.config.appZones.zoneNameAttr]}
                     </div>)
                 }) : <div>Načítám oblasti...</div>
