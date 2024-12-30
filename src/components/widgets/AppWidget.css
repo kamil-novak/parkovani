@@ -10,7 +10,6 @@
   background-color: var(--color-three);
   width: 250px;
   max-height: calc(100vh - 180px);
-  padding: 5px 10px;
   overflow-y: auto;
   overflow-x: hidden;
   line-height: 1.2;
@@ -34,7 +33,7 @@
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid var(--color-five);
-    padding: 10px 0px;
+    padding: 10px;
 
     calcite-icon {
       cursor: pointer;
@@ -45,8 +44,13 @@
 
   /* Widget sections */
   .section {
-    padding: 10px 0px;
-    
+    padding: 10px;
+    border-bottom: 1px solid var(--color-five);
+
+    &:last-child {
+      border-bottom: none;
+    }
+      
     calcite-filter {
       margin: -7px 0px -2px -12px;
       width: calc(100% + 24px);
@@ -62,7 +66,7 @@
   }
 
   .section-content {
-    margin-top: 5px;
+    margin: 5px 0px;
   }
 
   .section-content.closed {
