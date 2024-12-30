@@ -199,7 +199,7 @@ function AppWidget(props) {
                     key={feature.attributes[props.config.appZones.oidAttr]}
                     data-key={feature.attributes[props.config.appZones.oidAttr]}
                     className="flex-item zones-item"
-                    title={feature.attributes[props.config.appZones.zoneNameAttr].slice(2)}
+                    title={feature.attributes[props.config.appZones.zoneNameAttr]}
                     onClick={showZone}
                     style={selectedZoneOid == feature.attributes[props.config.appZones.oidAttr] 
                       ? {
@@ -253,7 +253,7 @@ function AppWidget(props) {
                         : {}}
                       onClick={showZone}>
                       <img src={selectedZoneOid == feature.attributes[props.config.appZones.oidAttr] ?iconPolygonActive : iconPolygon} alt="zóna" />
-                      {feature.attributes[props.config.appZones.zoneCodeAttr]} {feature.attributes[props.config.appZones.zoneNameAttr].slice(2)} {/* Remove slice after cleaning values in data */}
+                      {feature.attributes[props.config.appZones.zoneCodeAttr]} {feature.attributes[props.config.appZones.zoneNameAttr]}
                     </div>)
                 }) : <div>Načítám oblasti...</div>
               } 
