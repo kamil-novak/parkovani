@@ -30,6 +30,33 @@ function Map(props) {
   const [layerListCreated, setLayerListCreated] = useState(false)
   const [appWidgetOpened, setAppWidgetOpened] = useState(props.isMobile() && props.config.appWidget.openOnStartIfDesktop ? false : true)
   const [selectedZoneOid, setSelectedZoneOid] = useState(null)
+  const [highlightZonesLayer, setHighlightZonesLayer] = useState(new FeatureLayer({
+    listMode: "hide",
+    geometryType: "polygon",
+    source: [],
+    objectIdField: props.config.appZones.oidAttr,
+    renderer: {
+      type: "simple",
+      symbol: { 
+        type: "simple-fill",
+        color: {
+          r: hexToRgb(props.config.appZones.activeZoneColor).r,
+          g: hexToRgb(props.config.appZones.activeZoneColor).g,
+          b: hexToRgb(props.config.appZones.activeZoneColor).b,
+          a: 0.4
+        },
+        outline: { 
+          color: {
+            r: hexToRgb(props.config.appZones.activeZoneColor).r,
+            g: hexToRgb(props.config.appZones.activeZoneColor).g,
+            b: hexToRgb(props.config.appZones.activeZoneColor).b,
+            a: 1
+          },  
+          width: 4 
+        } 
+      } 
+    }
+  }))
   
 	// Refs
   const mapDiv = useRef(null)
@@ -66,6 +93,7 @@ function Map(props) {
       }
   });
 
+  // Reactive Utils
   // Hide App Widget, if popup is opened
   reactiveUtils.watch(
     () => view?.popup.selectedFeature,
@@ -75,21 +103,39 @@ function Map(props) {
       }
   })
 
+  // Reactive Utils
   // Track zone selected feature
-  reactiveUtils.watch(
-    () => view?.popup.selectedFeature,
-    (selectedFeature) => {
-      if (selectedFeature && selectedFeature.layer.title === props.config.appZones.fromLayer) {
-        setSelectedZoneOid(() => selectedFeature.attributes[props.config.appZones.oidAttr])
+  reactiveUtils.on(
+    () => view,
+    "click",
+    (e) => {
+      props.zonesLayer.queryFeatures({
+        geometry: e.mapPoint,
+        spatialRelationship: "intersects",
+        returnGeometry: true,
+        outFields: ["*"]
+      })
+      .then((results) => {
+        const feature = results?.features[0]
         // Remove selected zone
-        view.graphics.removeAll()
-        highlightZoneFeatures(selectedFeature.attributes[props.config.appZones.oidAttr])
-      }
-      if (!selectedFeature) {
-        console.log("jsem tady")
-        setSelectedZoneOid(null)
-      }
+        removeZoneFromMap()
+        
+        if (!feature) {return}
+
+        // Set selected feature to state
+        setSelectedZoneOid(feature.attributes[props.config.appZones.oidAttr])
+        // Highlight feature in the map
+        highlightZoneFeatures(feature.attributes[props.config.appZones.oidAttr])
+      })
   })
+
+  // Remove zone from map
+  const removeZoneFromMap = () => {
+    highlightZonesLayer.queryFeatures({where: "1=1"})
+    .then((results) => {
+      highlightZonesLayer.applyEdits({deleteFeatures: results.features})
+    })
+  }
 
   // Show zone in the map
   const showZone = (e) => {
@@ -97,8 +143,8 @@ function Map(props) {
     const featureOid = e.target.getAttribute('data-key')
 
     // Remove selected zone
-    view.graphics.removeAll()
-
+    removeZoneFromMap()
+    
     // Disable selected feature
     if (featureOid == selectedZoneOid) {
       setSelectedZoneOid(() => null)
@@ -121,32 +167,14 @@ function Map(props) {
     })
     .then((results) => {
       const feature = results.features[0]
+
       const graphic = new Graphic ({
         attributes: feature.attributes,
-        geometry: feature.geometry,
-        symbol: { 
-          type: "simple-fill",
-          color: {
-            r: hexToRgb(props.config.appZones.activeZoneColor).r,
-            g: hexToRgb(props.config.appZones.activeZoneColor).g,
-            b: hexToRgb(props.config.appZones.activeZoneColor).b,
-            a: 0.4
-          },
-          outline: { 
-            color: {
-              r: hexToRgb(props.config.appZones.activeZoneColor).r,
-              g: hexToRgb(props.config.appZones.activeZoneColor).g,
-              b: hexToRgb(props.config.appZones.activeZoneColor).b,
-              a: 1
-            },  
-            width: 4 
-          } 
-        }
+        geometry: feature.geometry
       })
 
-      view.graphics.add(graphic);
+      highlightZonesLayer.applyEdits({addFeatures: [graphic]});
       view.goTo(graphic.geometry.extent.expand(2)) 
-      console.log("Graphic added to view: ", view.graphics)
     })
     .catch((error) => {
       console.error("Query failed: ", error)
@@ -276,7 +304,9 @@ function Map(props) {
         props.checkVisibleLayers(viewInit, null)
         // Zones
         props.getZonesLayer(viewInit)
-        
+        // Zone highlight layer
+        viewInit.map.add(highlightZonesLayer)
+
         setView(viewInit)
         setLayerListCreated(true)
       });

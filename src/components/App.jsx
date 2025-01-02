@@ -141,6 +141,7 @@ function App() {
       if (config.appZones.fromLayer) {
         // If zones in layer
         if (layer.title === config.appZones.fromLayer) {
+          layer.popupEnabled = false
           setZonesLayer(layer)
           getZoneFeatures(layer)
         }
@@ -149,6 +150,7 @@ function App() {
           layer.when(() => {
             layer.allSublayers.forEach((subLayer) => {
               if (subLayer.title === config.appZones.fromLayer ) {
+                subLayer.popupEnabled = false
                 setZonesLayer(subLayer)
                 getZoneFeatures(subLayer)
               }
