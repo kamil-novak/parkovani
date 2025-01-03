@@ -35,6 +35,8 @@ function AppWidget(props) {
   const handleChangeTheme = (name) => {
     props.setActualTheme(name)
     props.checkVisibleLayers(props.view, name)
+    props.setSelectedZoneOid(null)
+    props.removeZoneFromMap()
    
     window.history.replaceState(null, null, `?theme=${name}`);
   }

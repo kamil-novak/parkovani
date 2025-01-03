@@ -345,6 +345,7 @@ function Map(props) {
         setSelectedZoneOid={setSelectedZoneOid}
         selectedZoneOid={selectedZoneOid}
         showZone={showZone}
+        removeZoneFromMap={removeZoneFromMap} 
       />
     </div>
   );
