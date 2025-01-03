@@ -91,8 +91,10 @@ function App() {
     // Handle switch theme
     view.map.layers.forEach((layer) => {
 
+      if (layer.id === "selected-zone-system-layer") {return}
+
       layer.visible = false
-      if (themeFc.visibleLayers.includes(layer.title)) {
+      if (themeFc?.visibleLayers.includes(layer.title)) {
         layer.visible = true
       }
   
@@ -101,7 +103,7 @@ function App() {
         layer.when(() => {
           layer.allSublayers.forEach((sublayer) => {
             sublayer.visible = false
-            if (themeFc.visibleLayers.includes(sublayer.title)) {
+            if (themeFc?.visibleLayers.includes(sublayer.title)) {
               sublayer.visible = true
             }
           })

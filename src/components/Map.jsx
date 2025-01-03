@@ -33,6 +33,7 @@ function Map(props) {
   const [highlightZonesLayer, setHighlightZonesLayer] = useState(new FeatureLayer({
     listMode: "hide",
     geometryType: "polygon",
+    id: "selected-zone-system-layer",
     source: [],
     objectIdField: props.config.appZones.oidAttr,
     renderer: {
@@ -101,32 +102,6 @@ function Map(props) {
       if (selectedFeature && appWidgetOpened && props.isMobile()) {
         setAppWidgetOpened(false)
       }
-  })
-
-  // Reactive Utils
-  // Track zone selected feature
-  reactiveUtils.on(
-    () => view,
-    "click",
-    (e) => {
-      props.zonesLayer.queryFeatures({
-        geometry: e.mapPoint,
-        spatialRelationship: "intersects",
-        returnGeometry: true,
-        outFields: ["*"]
-      })
-      .then((results) => {
-        const feature = results?.features[0]
-        // Remove selected zone
-        removeZoneFromMap()
-        
-        if (!feature) {return}
-
-        // Set selected feature to state
-        setSelectedZoneOid(feature.attributes[props.config.appZones.oidAttr])
-        // Highlight feature in the map
-        highlightZoneFeatures(feature.attributes[props.config.appZones.oidAttr])
-      })
   })
 
   // Remove zone from map
@@ -311,6 +286,38 @@ function Map(props) {
         setLayerListCreated(true)
       });
   }, [mapDiv])
+
+  useEffect(() => {
+    if (!view && !props.zonesLayer) {return}
+    
+    // Reactive Utils
+    // Track zone selected feature
+    reactiveUtils.on(
+      () => view,
+      "click",
+      (e) => {
+        if (props.actualThemeInfo.name === props.config.appZones.theme && props.zonesLayer.visible === true) {
+        props.zonesLayer.queryFeatures({
+          geometry: e.mapPoint,
+          spatialRelationship: "intersects",
+          returnGeometry: true,
+          outFields: ["*"]
+        })
+        .then((results) => {
+          const feature = results?.features[0]
+          // Remove selected zone
+          removeZoneFromMap()
+          
+          if (!feature) {return}
+
+          // Set selected feature to state
+          setSelectedZoneOid(feature.attributes[props.config.appZones.oidAttr])
+          // Highlight feature in the map
+          highlightZoneFeatures(feature.attributes[props.config.appZones.oidAttr])
+        })
+      }
+    })
+  }, [view, props.zonesLayer])
 
   return (
     <div className="map-div" ref={mapDiv}>
