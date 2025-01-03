@@ -16,6 +16,7 @@ import Graphic from "@arcgis/core/Graphic"
 import * as reactiveUtils from "@arcgis/core/core/reactiveUtils"
 
 import AppWidget from "./widgets/AppWidget"
+import iconPolygon from "./../images/icon-polygon.svg"
 
 // CSS
 import "./Map.css";
@@ -36,6 +37,7 @@ function Map(props) {
     id: "selected-zone-system-layer",
     source: [],
     objectIdField: props.config.appZones.oidAttr,
+    popupEnabled: true,
     renderer: {
       type: "simple",
       symbol: { 
@@ -145,11 +147,19 @@ function Map(props) {
 
       const graphic = new Graphic ({
         attributes: feature.attributes,
-        geometry: feature.geometry
+        geometry: feature.geometry,
+        popupTemplate: {
+          title: "Oblast parkování",
+          content: `Identifikovaná oblast: <span style="color: ${props.config.appZones.activeZoneColor};background-color: rgba(from ${props.config.appZones.activeZoneColor} r g b / 10%); padding: 0px 5px; border: 1px solid ${props.config.appZones.activeZoneColor}">{kod_text} {popis}</span>
+          <br><br>
+          S oprávněním pro tuto oblast můžete také parkovat v oblastech:
+          `
+        }
       })
 
       highlightZonesLayer.applyEdits({addFeatures: [graphic]});
       view.goTo(graphic.geometry.extent.expand(2)) 
+      view.openPopup({features: [graphic], location: graphic.geometry.centroid})
     })
     .catch((error) => {
       console.error("Query failed: ", error)
