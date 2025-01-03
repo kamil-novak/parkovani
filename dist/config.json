@@ -42,6 +42,7 @@
   ],
 
   "appZones": {
+    "theme": "oblasti_parkovani",
     "fromLayer": "oblasti parkování aktuální",
     "whereCondition": "stav_prvku = 'Stávající'", 
     "oidAttr": "objectid",
