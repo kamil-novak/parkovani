@@ -116,15 +116,18 @@ function Map(props) {
           },  
           width: 4 
         } 
+      },
+      popupTemplate: {
+        title: "Oblast parkování",
+        content: props.setZonesPopup
       } 
     })
-    
+
     removeZoneFromMap()
-    highlightZonesLayer.add(higlightFeature.clone())
+    highlightZonesLayer.addMany([higlightFeature.clone()])
     if (zoom) {
-      view.goTo(higlightFeature.clone().geometry.extent.expand(2)).then(() => {
-        view.openPopup({location: higlightFeature.clone().geometry.centroid, fetchFeatures: true})
-      })
+      view.popup.open({features: [higlightFeature.clone()]})
+      view.goTo(higlightFeature.clone().geometry.extent.expand(2))
     }
   }
 
@@ -270,19 +273,24 @@ function Map(props) {
     // Track zone selected feature
     if (!view || !props.zonesLayer || !props.zoneFeatures) {return}
 
-    reactiveUtils.watch(
-      () => [view?.popup.selectedFeature, view?.popup.visible, view.interacting],
-      ([selectedFeature, popupVisible, viewInteracting]) => {
-        if (selectedFeature && selectedFeature.layer?.id === props.zonesLayer.id && popupVisible) {
-          // Set selected feature to state
-          setSelectedZoneOid(selectedFeature.attributes[props.config.appZones.oidAttr])
-          // Highlight feature in the map
-          highlightZoneFeatures(selectedFeature.attributes[props.config.appZones.oidAttr], false)
-        }
-        if (!popupVisible && !viewInteracting) {
-          setSelectedZoneOid(null)
-          removeZoneFromMap()
-        }
+    props.zonesLayer.when((zonesLayerView) => {
+      reactiveUtils.watch(
+        () => [view?.popup.selectedFeature, view?.popup.visible, view.navigating, zonesLayerView.updating],
+        ([selectedFeature, popupVisible, viewNavigating, layerUpdating]) => {
+          if (selectedFeature && selectedFeature.layer?.id === props.zonesLayer.id && popupVisible) {
+            // Set selected feature to state
+            setSelectedZoneOid(selectedFeature.attributes[props.config.appZones.oidAttr])
+            // Highlight feature in the map
+            highlightZoneFeatures(selectedFeature.attributes[props.config.appZones.oidAttr], false)
+          }
+          if (!popupVisible && !viewNavigating && !layerUpdating) {
+            setSelectedZoneOid(null)
+            removeZoneFromMap()
+          }
+      })
+      reactiveUtils.on(
+        () => view.popup.visible
+      )
     })
   }, [view, props.zonesLayer, props.zoneFeatures])
 
@@ -309,7 +317,6 @@ function Map(props) {
       (selectedFeature) => {
         if (selectedFeature && appWidgetOpened && props.isMobile()) {
           setAppWidgetOpened(false)
-          console.log("kolikrát to odpaluju?")
         }
     })
     setTrackPopupOpenHandler(popupOpenHandler)

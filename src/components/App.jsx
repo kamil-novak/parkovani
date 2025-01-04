@@ -271,6 +271,7 @@ function App() {
           zonesLayer={zonesLayer}
           zonesLayerView={zonesLayerView}
           zoneFeatures={zonesFeatures}
+          setZonesPopup={setZonesPopupContent}
           /> }
 
       </CalciteShell>
