@@ -179,7 +179,6 @@ function AppWidget(props) {
                         } 
                         : {}}
                       onClick={props.showZone}>
-                      <img src={props.selectedZoneOid == feature.attributes[props.config.appZones.oidAttr] ?iconPolygonActive : iconPolygon} alt="zóna" />
                       {feature.attributes[props.config.appZones.zoneCodeAttr]} {feature.attributes[props.config.appZones.zoneNameAttr]}
                     </div>)
                 }) : <div>Načítám oblasti...</div>
