@@ -32,12 +32,16 @@ function App() {
 
   // Zones popup content
   const setZonesPopupContent = (feature) => {
-    const correspondingZones = feature.graphic.attributes[config?.appZones.correspondingZonesAttr].split(", ")
-    const correspondingZonesNones = correspondingZones.map((zone) => {
-      return(`<span style="color: ${config?.appZones.correspondingZonesColor};background-color: rgba(from ${config?.appZones.correspondingZonesColor} r g b / 10%); padding: 0px 5px; border: 1px solid ${config?.appZones.correspondingZonesColor}; display: flex; justify-content: center; align-items: center; width: 30px; height: 30px;">
-        ${zone}
-      </span>`)
-    })
+    let correspondingZones
+    let correspondingZonesNones 
+    if (feature.graphic.attributes[config?.appZones.correspondingZonesAttr]) {
+      correspondingZones = feature.graphic.attributes[config?.appZones.correspondingZonesAttr].split(", ")
+      correspondingZonesNones = correspondingZones.map((zone) => {
+        return(`<span style="color: ${config?.appZones.correspondingZonesColor};background-color: rgba(from ${config?.appZones.correspondingZonesColor} r g b / 10%); padding: 0px 5px; border: 1px solid ${config?.appZones.correspondingZonesColor}; display: flex; justify-content: center; align-items: center; width: 30px; height: 30px;">
+          ${zone}
+        </span>`)
+      })
+    }
 
     const node = document.createElement("div")
     node.innerHTML = `
@@ -45,13 +49,10 @@ function App() {
       <span style="color: ${config?.appZones.activeZoneColor};background-color: rgba(from ${config?.appZones.activeZoneColor} r g b / 10%); padding: 0px 5px; border: 1px solid ${config?.appZones.activeZoneColor}">
         ${feature.graphic.attributes[config?.appZones.zoneCodeAttr]} - ${feature.graphic.attributes[config?.appZones.zoneNameAttr]}
       </span>
-
-      <br><br>
-
-      ${config?.appLabels.zonesPopupCorrespondingZones}:
-      <div style="margin-top: 3px; display: flex; flex-wrap: wrap; justify-content: start; gap: 3px;">
-        ${correspondingZonesNones.join("")}
-      </div>
+      ${correspondingZonesNones ? '<br><br>' + config?.appLabels.zonesPopupCorrespondingZones + ':': ''}
+      ${correspondingZonesNones ? '<div style="margin-top: 3px; display: flex; flex-wrap: wrap; justify-content: start; gap: 3px;">' : ''}
+        ${correspondingZonesNones ? correspondingZonesNones.join("") : ''}
+      ${correspondingZonesNones ? '</div>' : ''}
     `
     return node;
   }
