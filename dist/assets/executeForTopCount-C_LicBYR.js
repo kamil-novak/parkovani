@@ -1,1 +1,0 @@
-import{ce as c}from"./index-DCXMjNx3.js";import{c as m}from"./queryTopFeatures-DUPOXWGc.js";import n from"./TopFeaturesQuery-cyogEXI2.js";async function i(o,t,r){const a=c(o);return(await m(a,n.from(t),{...r})).data.count}export{i as executeForTopCount};
