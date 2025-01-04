@@ -16,7 +16,6 @@ import Graphic from "@arcgis/core/Graphic"
 import * as reactiveUtils from "@arcgis/core/core/reactiveUtils"
 
 import AppWidget from "./widgets/AppWidget"
-import iconPolygon from "./../images/icon-polygon.svg"
 
 // CSS
 import "./Map.css";

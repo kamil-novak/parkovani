@@ -16,8 +16,6 @@ import {
 // Images
 import iconTag from "./../../images/icon-tag.svg"
 import iconTagActive from "./../../images/icon-tag-active.svg"
-import iconPolygon from "./../../images/icon-polygon.svg"
-import iconPolygonActive from "./../../images/icon-polygon-active.svg"
 
 function AppWidget(props) {
   // Ref
