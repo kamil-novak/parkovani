@@ -27,6 +27,15 @@ function App() {
   const [zonesLayer, setZonesLayer] = useState(null)
   const [zonesFeatures, setZonesFeatures] = useState(null)
 
+  // Zones popup template
+  const zonesPopupTemplate = {
+    title: "Oblast parkování",
+    content: `Identifikovaná oblast: <span style="color: ${config?.appZones.activeZoneColor};background-color: rgba(from ${config?.appZones.activeZoneColor} r g b / 10%); padding: 0px 5px; border: 1px solid ${config?.appZones.activeZoneColor}">{kod_text} {popis}</span>
+    <br><br>
+    S oprávněním pro tuto oblast můžete také parkovat v oblastech:
+    `
+  }
+
   // Mobile resolution settings
   const mobileScreen = 544
 
@@ -143,18 +152,36 @@ function App() {
       if (config.appZones.fromLayer) {
         // If zones in layer
         if (layer.title === config.appZones.fromLayer) {
-          layer.popupEnabled = false
+          layer.popupEnabled = true
+          layer.popupTemplate = zonesPopupTemplate
           setZonesLayer(layer)
           getZoneFeatures(layer)
+
+          view.whenLayerView(layer).then((layerView) => {
+            layerView.highlightOptions = {
+              color: [0,0,0,0],
+              haloOpacity: 1,
+              fillOpacity: 1
+            }
+          })
         }
         // If zones in sublayer
         if (layer.allSublayers) {
           layer.when(() => {
             layer.allSublayers.forEach((subLayer) => {
               if (subLayer.title === config.appZones.fromLayer ) {
-                subLayer.popupEnabled = false
+                subLayer.popupEnabled = true
+                subLayer.popupTemplate = zonesPopupTemplate
                 setZonesLayer(subLayer)
                 getZoneFeatures(subLayer)
+
+                view.whenLayerView(subLayer).then((subLayerView) => {
+                  subLayerView.highlightOptions = {
+                    color: [0,0,0,0],
+                    haloOpacity: 1,
+                    fillOpacity: 1
+                  }
+                })
               }
             })
           })

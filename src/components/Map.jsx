@@ -106,6 +106,16 @@ function Map(props) {
       }
   })
 
+  // Reactive Utils
+  // Remove selected zone from map after popup is close
+  reactiveUtils.watch(
+    () => view?.popup.active,
+    (active) => {
+      if (!active) {
+        removeZoneFromMap()
+      }
+  })
+
   // Remove zone from map
   const removeZoneFromMap = () => {
     highlightZonesLayer.queryFeatures({where: "1=1"})
@@ -119,8 +129,9 @@ function Map(props) {
     // This zone
     const featureOid = e.target.getAttribute('data-key')
 
-    // Remove selected zone
-    removeZoneFromMap()
+    // Remove selected zone and close popup
+    // removeZoneFromMap()
+    view.popup.close()
     
     // Disable selected feature
     if (featureOid == selectedZoneOid) {
@@ -148,19 +159,15 @@ function Map(props) {
       const graphic = new Graphic ({
         attributes: feature.attributes,
         geometry: feature.geometry,
-        popupTemplate: {
-          title: "Oblast parkování",
-          content: `Identifikovaná oblast: <span style="color: ${props.config.appZones.activeZoneColor};background-color: rgba(from ${props.config.appZones.activeZoneColor} r g b / 10%); padding: 0px 5px; border: 1px solid ${props.config.appZones.activeZoneColor}">{kod_text} {popis}</span>
-          <br><br>
-          S oprávněním pro tuto oblast můžete také parkovat v oblastech:
-          `
-        }
       })
 
       highlightZonesLayer.applyEdits({addFeatures: [graphic]});
-      if (zoom) {view.goTo(graphic.geometry.extent.expand(2)) }
-      console.log("GRAFIKA: ", graphic)
-      view.openPopup({features: [graphic], location: graphic.geometry.centroid})
+      if (zoom) {
+        view.goTo(graphic.geometry.extent.expand(2)) 
+        setTimeout(() => {
+          view.openPopup({location: graphic.geometry.centroid, fetchFeatures: true})
+        }, 150)
+      }
     })
     .catch((error) => {
       console.error("Query failed: ", error)
@@ -320,7 +327,7 @@ function Map(props) {
           
           if (!feature) {return}
 
-          if (props.actualThemeInfo.name === props.config.appZones.theme && props.zonesLayer.visible === true) {
+          if (props.zonesLayer.visible === true) {
             // Set selected feature to state
             setSelectedZoneOid(feature.attributes[props.config.appZones.oidAttr])
             // Highlight feature in the map
@@ -328,7 +335,7 @@ function Map(props) {
           }
       })
     })
-  }, [view, props.zonesLayer, props.actualThemeInfo.name])
+  }, [view, props.zonesLayer])
 
   return (
     <div className="map-div" ref={mapDiv}>
