@@ -12,6 +12,7 @@ import Basemap from "@arcgis/core/Basemap"
 import Expand from "@arcgis/core/widgets/Expand"
 import Legend from "@arcgis/core/widgets/Legend"
 import LayerList from "@arcgis/core/widgets/LayerList"
+import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer"
 import Graphic from "@arcgis/core/Graphic"
 import * as reactiveUtils from "@arcgis/core/core/reactiveUtils"
 
@@ -33,34 +34,9 @@ function Map(props) {
   const [trackWidgetExpandedHandler, setTrackWidgetExpandedHandler] = useState(null)
   const [trackPopupOpenHandler, setTrackPopupOpenHandler] = useState(null)
   const [] = useState(null)
-  const [highlightZonesLayer, setHighlightZonesLayer] = useState(new FeatureLayer({
+  const [highlightZonesLayer, setHighlightZonesLayer] = useState(new GraphicsLayer({
     listMode: "hide",
-    geometryType: "polygon",
     id: "selected-zone-system-layer",
-    source: [],
-    objectIdField: props.config.appZones.oidAttr,
-    popupEnabled: true,
-    renderer: {
-      type: "simple",
-      symbol: { 
-        type: "simple-fill",
-        color: {
-          r: hexToRgb(props.config.appZones.activeZoneColor).r,
-          g: hexToRgb(props.config.appZones.activeZoneColor).g,
-          b: hexToRgb(props.config.appZones.activeZoneColor).b,
-          a: 0.4
-        },
-        outline: { 
-          color: {
-            r: hexToRgb(props.config.appZones.activeZoneColor).r,
-            g: hexToRgb(props.config.appZones.activeZoneColor).g,
-            b: hexToRgb(props.config.appZones.activeZoneColor).b,
-            a: 1
-          },  
-          width: 4 
-        } 
-      } 
-    }
   }))
   
 	// Refs
@@ -90,10 +66,7 @@ function Map(props) {
 
   // Remove zone from map
   const removeZoneFromMap = async () => {
-    highlightZonesLayer.queryFeatures({where: "1=1"})
-    .then((results) => {
-      highlightZonesLayer.applyEdits({deleteFeatures: results.features})
-    })
+    highlightZonesLayer.removeAll()
   }
 
   // Show zone in the map
@@ -126,16 +99,33 @@ function Map(props) {
     const higlightFeature = new Graphic ({
       attributes: zoneFeature.attributes,
       geometry: zoneFeature.geometry,
+      symbol: { 
+        type: "simple-fill",
+        color: {
+          r: hexToRgb(props.config.appZones.activeZoneColor).r,
+          g: hexToRgb(props.config.appZones.activeZoneColor).g,
+          b: hexToRgb(props.config.appZones.activeZoneColor).b,
+          a: 0.4
+        },
+        outline: { 
+          color: {
+            r: hexToRgb(props.config.appZones.activeZoneColor).r,
+            g: hexToRgb(props.config.appZones.activeZoneColor).g,
+            b: hexToRgb(props.config.appZones.activeZoneColor).b,
+            a: 1
+          },  
+          width: 4 
+        } 
+      } 
     })
     
-    removeZoneFromMap().then(() => {
-      highlightZonesLayer.applyEdits({addFeatures: [higlightFeature.clone()]}).then(() => {
-        if (zoom) {
-          view.openPopup({location: higlightFeature.clone().geometry.centroid, fetchFeatures: true})
-          view.goTo(higlightFeature.clone().geometry.extent.expand(2)) 
-        }
+    removeZoneFromMap()
+    highlightZonesLayer.add(higlightFeature.clone())
+    if (zoom) {
+      view.goTo(higlightFeature.clone().geometry.extent.expand(2)).then(() => {
+        view.openPopup({location: higlightFeature.clone().geometry.centroid, fetchFeatures: true})
       })
-    })
+    }
   }
 
   useEffect(() => {
@@ -281,15 +271,15 @@ function Map(props) {
     if (!view || !props.zonesLayer || !props.zoneFeatures) {return}
 
     reactiveUtils.watch(
-      () => [view?.popup.selectedFeature, view?.popup.visible],
-      ([selectedFeature, popupVisible]) => {
+      () => [view?.popup.selectedFeature, view?.popup.visible, view.interacting],
+      ([selectedFeature, popupVisible, viewInteracting]) => {
         if (selectedFeature && selectedFeature.layer?.id === props.zonesLayer.id && popupVisible) {
           // Set selected feature to state
           setSelectedZoneOid(selectedFeature.attributes[props.config.appZones.oidAttr])
           // Highlight feature in the map
           highlightZoneFeatures(selectedFeature.attributes[props.config.appZones.oidAttr], false)
         }
-        if (!popupVisible) {
+        if (!popupVisible && !viewInteracting) {
           setSelectedZoneOid(null)
           removeZoneFromMap()
         }
