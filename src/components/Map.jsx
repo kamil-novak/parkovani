@@ -105,18 +105,8 @@ function Map(props) {
       }
   })
 
-  // Reactive Utils
-  // Remove selected zone from map after popup is close
-  reactiveUtils.watch(
-    () => view?.popup.active,
-    (active) => {
-      if (!active) {
-        removeZoneFromMap()
-      }
-  })
-
   // Remove zone from map
-  const removeZoneFromMap = () => {
+  const removeZoneFromMap = async () => {
     highlightZonesLayer.queryFeatures({where: "1=1"})
     .then((results) => {
       highlightZonesLayer.applyEdits({deleteFeatures: results.features})
@@ -128,8 +118,7 @@ function Map(props) {
     // This zone
     const featureOid = e.target.getAttribute('data-key')
 
-    // Remove selected zone and close popup
-    // removeZoneFromMap()
+    // Close popup
     view.popup.close()
     
     // Disable selected feature
@@ -147,29 +136,22 @@ function Map(props) {
 
   // Highlight zone features in the map
   const highlightZoneFeatures = (featureOid, zoom=true) => {
-    props.zonesLayer.queryFeatures({
-      where: `${props.config.appZones.oidAttr} = ${featureOid}`,
-      returnGeometry: true,
-      outFields: ["*"]
-    })
-    .then((results) => {
-      const feature = results.features[0]
+    const zoneFeature = props.zoneFeatures.filter((fc) => {
+      return fc.attributes[props.config.appZones.oidAttr] == featureOid 
+    })[0]
 
-      const graphic = new Graphic ({
-        attributes: feature.attributes,
-        geometry: feature.geometry,
+    const higlightFeature = new Graphic ({
+      attributes: zoneFeature.attributes,
+      geometry: zoneFeature.geometry,
+    })
+    
+    removeZoneFromMap().then(() => {
+      highlightZonesLayer.applyEdits({addFeatures: [higlightFeature.clone()]}).then(() => {
+        if (zoom) {
+          view.openPopup({location: higlightFeature.clone().geometry.centroid, fetchFeatures: true})
+          view.goTo(higlightFeature.clone().geometry.extent.expand(2)) 
+        }
       })
-
-      highlightZonesLayer.applyEdits({addFeatures: [graphic]});
-      if (zoom) {
-        view.goTo(graphic.geometry.extent.expand(2)) 
-        setTimeout(() => {
-          view.openPopup({location: graphic.geometry.centroid, fetchFeatures: true})
-        }, 150)
-      }
-    })
-    .catch((error) => {
-      console.error("Query failed: ", error)
     })
   }
 
@@ -190,14 +172,14 @@ function Map(props) {
       // View
       const viewInit = new MapView({
         container: mapDiv.current,
-        map
-      })
-      viewInit.popup = new Popup({
-        dockEnabled: true,
-        dockOptions: {
-          breakpoint: false,
-          position: "bottom-left"
-        }
+        map,
+        popup: new Popup({
+          dockEnabled: true,
+          dockOptions: {
+            breakpoint: false,
+            position: props.isMobile() ? "bottom-center" : "bottom-left"
+          }
+        })
       })
 
       // Home widget
@@ -311,36 +293,25 @@ function Map(props) {
   }, [mapDiv])
 
   useEffect(() => {
-    if (!view && !props.zonesLayer) {return}
-    
     // Reactive Utils
     // Track zone selected feature
-    reactiveUtils.on(
-      () => view,
-      "click",
-      (e) => {
-        props.zonesLayer.queryFeatures({
-          geometry: e.mapPoint,
-          spatialRelationship: "intersects",
-          returnGeometry: true,
-          outFields: ["*"]
-        })
-        .then((results) => {
-          const feature = results?.features[0]
-          // Remove selected zone
-          removeZoneFromMap()
-          
-          if (!feature) {return}
+    if (!view || !props.zonesLayer || !props.zoneFeatures) {return}
 
-          if (props.zonesLayer.visible === true) {
-            // Set selected feature to state
-            setSelectedZoneOid(feature.attributes[props.config.appZones.oidAttr])
-            // Highlight feature in the map
-            highlightZoneFeatures(feature.attributes[props.config.appZones.oidAttr], false)
-          }
-      })
+    reactiveUtils.watch(
+      () => [view?.popup.selectedFeature, view?.popup.visible],
+      ([selectedFeature, popupVisible]) => {
+        if (selectedFeature && selectedFeature.layer?.id === props.zonesLayer.id && popupVisible) {
+          // Set selected feature to state
+          setSelectedZoneOid(selectedFeature.attributes[props.config.appZones.oidAttr])
+          // Highlight feature in the map
+          highlightZoneFeatures(selectedFeature.attributes[props.config.appZones.oidAttr], false)
+        }
+        if (!popupVisible) {
+          setSelectedZoneOid(null)
+          removeZoneFromMap()
+        }
     })
-  }, [view, props.zonesLayer])
+  }, [view, props.zonesLayer, props.zoneFeatures])
 
   return (
     <div className="map-div" ref={mapDiv}>
