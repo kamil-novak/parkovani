@@ -8,7 +8,9 @@
     "appWidgetTitle": "Témata a oblasti parkování",
     "appWidgetThemesTitle": "Zvolte téma mapy",
     "appWidgetZonesTitle": "Vyberte oblast parkování, která se zvýrazní v mapě",
-    "appWidgetLayersTitle": "Vypnout / zapnout jednotlivé vrstvy mapy"
+    "appWidgetLayersTitle": "Vypnout / zapnout jednotlivé vrstvy mapy",
+    "zonesPopupThisZone": "Identifikovaná oblast",
+    "zonesPopupCorrespondingZones": "S oprávněním pro tuto oblast můžete také parkovat v oblastech"
   }, 
 
   "search": {
@@ -50,6 +52,6 @@
     "zoneNameAttr": "popis",
     "correspondingZonesAttr": "kvetinka",
     "activeZoneColor": "#CA1517",
-    "correspondingZonesColor": "#D5BC70"
+    "correspondingZonesColor": "#CC7E00"
   }
 }

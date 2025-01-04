@@ -27,17 +27,40 @@ function App() {
   const [zonesLayer, setZonesLayer] = useState(null)
   const [zonesFeatures, setZonesFeatures] = useState(null)
 
+  // Mobile resolution settings
+  const mobileScreen = 544
+
+  // Zones popup content
+  const setZonesPopupContent = (feature) => {
+    const correspondingZones = feature.graphic.attributes[config?.appZones.correspondingZonesAttr].split(", ")
+    const correspondingZonesNones = correspondingZones.map((zone) => {
+      return(`<span style="color: ${config?.appZones.correspondingZonesColor};background-color: rgba(from ${config?.appZones.correspondingZonesColor} r g b / 10%); padding: 0px 5px; border: 1px solid ${config?.appZones.correspondingZonesColor}; display: flex; justify-content: center; align-items: center; width: 30px; height: 30px;">
+        ${zone}
+      </span>`)
+    })
+
+    const node = document.createElement("div")
+    node.innerHTML = `
+      ${config?.appLabels.zonesPopupThisZone}: 
+      <span style="color: ${config?.appZones.activeZoneColor};background-color: rgba(from ${config?.appZones.activeZoneColor} r g b / 10%); padding: 0px 5px; border: 1px solid ${config?.appZones.activeZoneColor}">
+        ${feature.graphic.attributes[config?.appZones.zoneCodeAttr]} - ${feature.graphic.attributes[config?.appZones.zoneNameAttr]}
+      </span>
+
+      <br><br>
+
+      ${config?.appLabels.zonesPopupCorrespondingZones}:
+      <div style="margin-top: 3px; display: flex; flex-wrap: wrap; justify-content: start; gap: 3px;">
+        ${correspondingZonesNones.join("")}
+      </div>
+    `
+    return node;
+  }
+
   // Zones popup template
   const zonesPopupTemplate = {
     title: "Oblast parkování",
-    content: `Identifikovaná oblast: <span style="color: ${config?.appZones.activeZoneColor};background-color: rgba(from ${config?.appZones.activeZoneColor} r g b / 10%); padding: 0px 5px; border: 1px solid ${config?.appZones.activeZoneColor}">{kod_text} {popis}</span>
-    <br><br>
-    S oprávněním pro tuto oblast můžete také parkovat v oblastech:
-    `
+    content: setZonesPopupContent
   }
-
-  // Mobile resolution settings
-  const mobileScreen = 544
 
   // Check mobile resolution
   const isMobile = () => {
@@ -154,6 +177,7 @@ function App() {
         if (layer.title === config.appZones.fromLayer) {
           layer.popupEnabled = true
           layer.popupTemplate = zonesPopupTemplate
+          layer.outFields = ["*"]
           setZonesLayer(layer)
           getZoneFeatures(layer)
 
@@ -172,6 +196,7 @@ function App() {
               if (subLayer.title === config.appZones.fromLayer ) {
                 subLayer.popupEnabled = true
                 subLayer.popupTemplate = zonesPopupTemplate
+                subLayer.outFields = ["*"]
                 setZonesLayer(subLayer)
                 getZoneFeatures(subLayer)
 

@@ -177,7 +177,7 @@ function AppWidget(props) {
                         } 
                         : {}}
                       onClick={props.showZone}>
-                      {feature.attributes[props.config.appZones.zoneCodeAttr]} {feature.attributes[props.config.appZones.zoneNameAttr]}
+                      {feature.attributes[props.config.appZones.zoneCodeAttr]} - {feature.attributes[props.config.appZones.zoneNameAttr]}
                     </div>)
                 }) : <div>Načítám oblasti...</div>
               } 
