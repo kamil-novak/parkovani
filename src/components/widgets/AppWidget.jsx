@@ -117,7 +117,7 @@ function AppWidget(props) {
           </span>
           </div>
           <div className={`section-content flex-list-grid ${zonesExpanded ? "" : "closed"}`} ref={zonesRef}>
-            {props.zoneFeatures ?
+            {props.zoneFeatures && props.zonesLayerView ?
               props.zoneFeatures.map((feature) => {
                 return (
                   <div 
@@ -162,7 +162,7 @@ function AppWidget(props) {
               onCalciteFilterChange={filterZones}>
             </CalciteFilter>
             <div className="flex-list-column" ref={zones2Ref}>
-              {props.zoneFeatures ?
+              {props.zoneFeatures && props.zonesLayerView ?
                 props.zoneFeatures.map((feature) => {
                   return (
                     <div 

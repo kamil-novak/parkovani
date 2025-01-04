@@ -344,6 +344,7 @@ function Map(props) {
         actualThemeInfo={props.actualThemeInfo} 
         checkVisibleLayers={props.checkVisibleLayers}
         zonesLayer={props.zonesLayer}
+        zonesLayerView={props.zonesLayerView}
         zoneFeatures={props.zoneFeatures}
         isMobile={props.isMobile}
         layerList={layerListWidget}

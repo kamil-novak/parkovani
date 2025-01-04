@@ -25,6 +25,7 @@ function App() {
   const [config, setConfig] = useState(null)
   const [appIsLoaded, setAppIsLoaded] = useState(false)
   const [zonesLayer, setZonesLayer] = useState(null)
+  const [zonesLayerView, setZonesLayerView] = useState(null)
   const [zonesFeatures, setZonesFeatures] = useState(null)
 
   // Mobile resolution settings
@@ -188,6 +189,7 @@ function App() {
               haloOpacity: 1,
               fillOpacity: 1
             }
+            setZonesLayerView(layerView)
           })
         }
         // If zones in sublayer
@@ -207,6 +209,7 @@ function App() {
                     haloOpacity: 1,
                     fillOpacity: 1
                   }
+                  setZonesLayerView(subLayer)
                 })
               }
             })
@@ -266,6 +269,7 @@ function App() {
           getZonesLayer={getZonesLayer}
           getZoneFeatures={getZoneFeatures}
           zonesLayer={zonesLayer}
+          zonesLayerView={zonesLayerView}
           zoneFeatures={zonesFeatures}
           /> }
 
