@@ -192,7 +192,13 @@ function Map(props) {
         container: mapDiv.current,
         map
       })
-      viewInit.popup = new Popup()
+      viewInit.popup = new Popup({
+        dockEnabled: true,
+        dockOptions: {
+          breakpoint: false,
+          position: "bottom-left"
+        }
+      })
 
       // Home widget
       const homeWidget = new Home({

@@ -49,6 +49,7 @@
     "zoneCodeAttr": "kod_text",
     "zoneNameAttr": "popis",
     "correspondingZonesAttr": "kvetinka",
-    "activeZoneColor": "#CA1517"
+    "activeZoneColor": "#CA1517",
+    "correspondingZonesColor": "#D5BC70"
   }
 }
