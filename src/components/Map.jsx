@@ -136,7 +136,7 @@ function Map(props) {
   }
 
   // Highlight zone features in the map
-  const highlightZoneFeatures = (featureOid) => {
+  const highlightZoneFeatures = (featureOid, zoom=true) => {
     props.zonesLayer.queryFeatures({
       where: `${props.config.appZones.oidAttr} = ${featureOid}`,
       returnGeometry: true,
@@ -158,7 +158,8 @@ function Map(props) {
       })
 
       highlightZonesLayer.applyEdits({addFeatures: [graphic]});
-      view.goTo(graphic.geometry.extent.expand(2)) 
+      if (zoom) {view.goTo(graphic.geometry.extent.expand(2)) }
+      console.log("GRAFIKA: ", graphic)
       view.openPopup({features: [graphic], location: graphic.geometry.centroid})
     })
     .catch((error) => {
@@ -306,7 +307,6 @@ function Map(props) {
       () => view,
       "click",
       (e) => {
-        if (props.actualThemeInfo.name === props.config.appZones.theme && props.zonesLayer.visible === true) {
         props.zonesLayer.queryFeatures({
           geometry: e.mapPoint,
           spatialRelationship: "intersects",
@@ -320,14 +320,15 @@ function Map(props) {
           
           if (!feature) {return}
 
-          // Set selected feature to state
-          setSelectedZoneOid(feature.attributes[props.config.appZones.oidAttr])
-          // Highlight feature in the map
-          highlightZoneFeatures(feature.attributes[props.config.appZones.oidAttr])
-        })
-      }
+          if (props.actualThemeInfo.name === props.config.appZones.theme && props.zonesLayer.visible === true) {
+            // Set selected feature to state
+            setSelectedZoneOid(feature.attributes[props.config.appZones.oidAttr])
+            // Highlight feature in the map
+            highlightZoneFeatures(feature.attributes[props.config.appZones.oidAttr], false)
+          }
+      })
     })
-  }, [view, props.zonesLayer])
+  }, [view, props.zonesLayer, props.actualThemeInfo.name])
 
   return (
     <div className="map-div" ref={mapDiv}>
