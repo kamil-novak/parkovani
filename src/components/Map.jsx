@@ -30,6 +30,9 @@ function Map(props) {
   const [layerListCreated, setLayerListCreated] = useState(false)
   const [appWidgetOpened, setAppWidgetOpened] = useState(props.isMobile() && props.config.appWidget.openOnStartIfDesktop ? false : true)
   const [selectedZoneOid, setSelectedZoneOid] = useState(null)
+  const [trackWidgetExpandedHandler, setTrackWidgetExpandedHandler] = useState(null)
+  const [trackPopupOpenHandler, setTrackPopupOpenHandler] = useState(null)
+  const [] = useState(null)
   const [highlightZonesLayer, setHighlightZonesLayer] = useState(new FeatureLayer({
     listMode: "hide",
     geometryType: "polygon",
@@ -84,26 +87,6 @@ function Map(props) {
   const toggleAppWidget = () => {
     appWidgetOpened ? setAppWidgetOpened(false) : setAppWidgetOpened(true)
   }
-
-  // Reactive Utils
-  // Hide App Widget, if other widget is expanded on mobile
-  reactiveUtils.watch(
-    () => [legendExpand?.expanded, layerListExpand?.expanded],
-    (expanded) => {
-      if (expanded.includes(true) && props.isMobile() && appWidgetOpened) {
-        setAppWidgetOpened(false)
-      }
-  });
-
-  // Reactive Utils
-  // Hide App Widget, if popup is opened
-  reactiveUtils.watch(
-    () => view?.popup.selectedFeature,
-    (selectedFeature) => {
-      if (selectedFeature && appWidgetOpened && props.isMobile()) {
-        setAppWidgetOpened(false)
-      }
-  })
 
   // Remove zone from map
   const removeZoneFromMap = async () => {
@@ -312,6 +295,35 @@ function Map(props) {
         }
     })
   }, [view, props.zonesLayer, props.zoneFeatures])
+
+  useEffect(() => {
+    if (!legendExpand || !layerListExpand) {return}
+    if (trackWidgetExpandedHandler) {trackWidgetExpandedHandler.remove()}
+    if (trackPopupOpenHandler) {trackPopupOpenHandler.remove()}
+
+    // Reactive Utils
+    // Hide App Widget, if other widget is expanded on mobile
+    const expandedHandler = reactiveUtils.watch(
+      () => [legendExpand?.expanded, layerListExpand?.expanded],
+      (expanded) => {
+        if (expanded.includes(true) && props.isMobile() && appWidgetOpened) {
+          setAppWidgetOpened(false)
+        }
+    });
+    setTrackWidgetExpandedHandler(expandedHandler)
+
+    // Reactive Utils
+    // Hide App Widget, if popup is opened
+    const popupOpenHandler = reactiveUtils.watch(
+      () => view?.popup.selectedFeature,
+      (selectedFeature) => {
+        if (selectedFeature && appWidgetOpened && props.isMobile()) {
+          setAppWidgetOpened(false)
+          console.log("kolikrát to odpaluju?")
+        }
+    })
+    setTrackPopupOpenHandler(popupOpenHandler)
+  }, [legendExpand, layerListExpand, appWidgetOpened])
 
   return (
     <div className="map-div" ref={mapDiv}>
