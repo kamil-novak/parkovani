@@ -157,7 +157,7 @@ function Map(props) {
         } 
       },
       popupTemplate: {
-        title: "Oblast parkování",
+        title: props.config.appLabels.zonesPopupTitle,
         content: props.setZonesPopup
       } 
     })

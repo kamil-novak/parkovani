@@ -60,7 +60,7 @@ function App() {
 
   // Zones popup template
   const zonesPopupTemplate = {
-    title: "Oblast parkování",
+    title: config?.appLabels.zonesPopupTitle,
     content: setZonesPopupContent
   }
 
