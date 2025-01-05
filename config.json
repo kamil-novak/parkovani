@@ -10,7 +10,8 @@
     "appWidgetZonesTitle": "Vyberte oblast parkování, která se zvýrazní v mapě",
     "appWidgetLayersTitle": "Vypnout / zapnout jednotlivé vrstvy mapy",
     "zonesPopupThisZone": "Identifikovaná oblast",
-    "zonesPopupCorrespondingZones": "S oprávněním pro tuto oblast můžete také parkovat v oblastech"
+    "zonesPopupCorrespondingZones": "S oprávněním pro tuto oblast můžete také parkovat v oblastech",
+    "aboutWidget": "<h3>Parkování ve městě</h3><div><h4>Autoři</h4><p><a href='https://jihlava.cz' target='_blank'>Statutární město Jihlava</a><br>odbor informatiky<br>gis@jihlava-city.cz<br>Verze 1.0.0</p></div>"
   }, 
 
   "search": {

@@ -26,6 +26,7 @@ function Map(props) {
   // State
   const [view, setView] = useState(null)
   const [legendExpand, setLegendExpand] = useState(null)
+  const [aboutWidgetExpand, setAboutWidgetExpand] = useState(null)
   const [layerListExpand, setLayerListExpand] = useState(null)
   const [layerListWidget, setLayerListWidget] = useState(null)
   const [layerListCreated, setLayerListCreated] = useState(false)
@@ -209,6 +210,7 @@ function Map(props) {
       // Legend
       const legendWidgetInit = new Legend({view: viewInit})
       const legendExpandInit = new Expand({
+        label: "Legenda",
         collapseIcon: "legend",
         collapseTooltip: "Zavřít legendu",
         expandIcon: "legend",
@@ -222,6 +224,7 @@ function Map(props) {
       // Layer List
       const layerListWidgetInit = new LayerList({view: viewInit})
       const layerListExpandInit = new Expand({
+        label: "Vrstvy mapy",
         collapseIcon: "layers",
         collapseTooltip: "Zavřít vrstvy mapy",
         expandIcon: "layers",
@@ -232,6 +235,25 @@ function Map(props) {
       })
       setLayerListExpand(layerListExpandInit)
       setLayerListWidget(layerListWidgetInit)
+
+      // Widget
+      // O aplikaci
+      const aboutWidgetInit = document.createElement("div")
+      aboutWidgetInit.style.padding = "10px"
+      aboutWidgetInit.classList.add("esri-widget--panel", "esri-widget")
+      aboutWidgetInit.innerHTML = "<div class='map-component-about-widget'>" + props.config.appLabels.aboutWidget + "</div>"
+
+      const aboutWidgetExpandInit = new Expand({
+        label: "O aplikaci",
+        collapseIcon: "question",
+        collapseTooltip: "Sbalit informace o aplikaci",
+        expandIcon: "question",
+        expandTooltip: "O aplikaci",
+        group: "top-left",
+        view: viewInit,
+        content: aboutWidgetInit, 
+      })
+      setAboutWidgetExpand(aboutWidgetExpandInit)
       
       // Basemap Toggle widget
       const basemapContainer = document.createElement("div")
@@ -288,6 +310,7 @@ function Map(props) {
       viewInit.ui.add(locateWidget, "top-left")
       viewInit.ui.add(layerListExpandInit, "top-left")
       viewInit.ui.add(legendExpandInit, "top-left")
+      viewInit.ui.add(aboutWidgetExpandInit, "top-left")
       viewInit.ui.add(basemapContainer, "manual")
       viewInit.ui.add(appWidgetEl.current, "manual")
 
@@ -346,7 +369,7 @@ function Map(props) {
     // Reactive Utils
     // Hide App Widget, if other widget is expanded on mobile
     const expandedHandler = reactiveUtils.watch(
-      () => [legendExpand?.expanded, layerListExpand?.expanded],
+      () => [legendExpand?.expanded, layerListExpand?.expanded, aboutWidgetExpand?.expanded],
       (expanded) => {
         if (expanded.includes(true) && props.isMobile() && appWidgetOpened) {
           setAppWidgetOpened(false)
