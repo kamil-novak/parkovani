@@ -288,10 +288,16 @@ function Map(props) {
             removeZoneFromMap()
           }
       })
-      reactiveUtils.on(
-        () => view.popup.visible
-      )
     })
+
+    // Reactive Utils
+    // Track view width for popup dock changing
+    reactiveUtils.watch(
+      () => view.width,
+      () => {
+        view.popup.dockOptions.position = props.isMobile() ? "bottom-center" : "bottom-left"
+      }
+    )
   }, [view, props.zonesLayer, props.zoneFeatures])
 
   useEffect(() => {
