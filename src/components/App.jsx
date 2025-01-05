@@ -36,10 +36,10 @@ function App() {
     let correspondingZones
     let correspondingZonesNones 
     if (feature.graphic.attributes[config?.appZones.correspondingZonesAttr]) {
-      correspondingZones = feature.graphic.attributes[config?.appZones.correspondingZonesAttr].split(", ")
+      correspondingZones = feature.graphic.attributes[config?.appZones.correspondingZonesAttr].split(",")
       correspondingZonesNones = correspondingZones.map((zone) => {
         return(`<span style="color: ${config?.appZones.correspondingZonesColor};background-color: rgba(from ${config?.appZones.correspondingZonesColor} r g b / 10%); padding: 0px 5px; border: 1px solid ${config?.appZones.correspondingZonesColor}; display: flex; justify-content: center; align-items: center; width: 30px; height: 30px;">
-          ${zone}
+          ${zone.trim()}
         </span>`)
       })
     }

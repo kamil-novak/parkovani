@@ -92,9 +92,47 @@ function Map(props) {
 
   // Highlight zone features in the map
   const highlightZoneFeatures = (featureOid, zoom=true) => {
+    // Selected feature
     const zoneFeature = props.zoneFeatures.filter((fc) => {
       return fc.attributes[props.config.appZones.oidAttr] == featureOid 
     })[0]
+
+    // Coreesponding features
+    const correspondingFeaturesOids = zoneFeature.attributes[props.config.appZones.correspondingZonesAttr]
+    let correspondingFeatures = []
+
+    if (correspondingFeaturesOids) {
+      const correspondingFeaturesOidsArr =  correspondingFeaturesOids.split(",")
+      const correspondingFeaturesOidsArrF = correspondingFeaturesOidsArr.map(oid => oid.trim())
+      const correspondingFeaturesOrig = props.zoneFeatures.filter((fc) => {
+        return correspondingFeaturesOidsArrF.includes(fc.attributes[props.config.appZones.zoneCodeAttr]) 
+      })
+      correspondingFeatures = correspondingFeaturesOrig.map((fc) => {
+        return(
+          new Graphic ({
+            geometry: fc.geometry,
+            symbol: { 
+              type: "simple-fill",
+              color: {
+                r: hexToRgb(props.config.appZones.correspondingZonesColor).r,
+                g: hexToRgb(props.config.appZones.correspondingZonesColor).g,
+                b: hexToRgb(props.config.appZones.correspondingZonesColor).b,
+                a: 0.4
+              },
+              outline: { 
+                color: {
+                  r: hexToRgb(props.config.appZones.correspondingZonesColor).r,
+                  g: hexToRgb(props.config.appZones.correspondingZonesColor).g,
+                  b: hexToRgb(props.config.appZones.correspondingZonesColor).b,
+                  a: 1
+                },  
+                width: 3 
+              }
+            }
+          })
+        )
+      })
+    }
 
     const higlightFeature = new Graphic ({
       attributes: zoneFeature.attributes,
@@ -114,7 +152,7 @@ function Map(props) {
             b: hexToRgb(props.config.appZones.activeZoneColor).b,
             a: 1
           },  
-          width: 4 
+          width: 3 
         } 
       },
       popupTemplate: {
@@ -124,7 +162,7 @@ function Map(props) {
     })
 
     removeZoneFromMap()
-    highlightZonesLayer.addMany([higlightFeature.clone()])
+    highlightZonesLayer.addMany([...correspondingFeatures, higlightFeature.clone()])
     if (zoom) {
       view.popup.open({features: [higlightFeature.clone()]})
       view.goTo(higlightFeature.clone().geometry.extent.expand(2))
