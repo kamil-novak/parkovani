@@ -27,7 +27,6 @@ function Map(props) {
   const [view, setView] = useState(null)
   const [legendExpand, setLegendExpand] = useState(null)
   const [aboutWidgetExpand, setAboutWidgetExpand] = useState(null)
-  const [layerListExpand, setLayerListExpand] = useState(null)
   const [layerListWidget, setLayerListWidget] = useState(null)
   const [layerListCreated, setLayerListCreated] = useState(false)
   const [appWidgetOpened, setAppWidgetOpened] = useState(props.isMobile() && props.config.appWidget.openOnStartIfDesktop ? false : true)
@@ -233,7 +232,6 @@ function Map(props) {
         view: viewInit,
         content: layerListWidgetInit
       })
-      setLayerListExpand(layerListExpandInit)
       setLayerListWidget(layerListWidgetInit)
 
       // Widget
@@ -308,7 +306,6 @@ function Map(props) {
       viewInit.ui.add(homeWidget, "top-left")
       viewInit.ui.move([ "zoom" ], "top-left")
       viewInit.ui.add(locateWidget, "top-left")
-      viewInit.ui.add(layerListExpandInit, "top-left")
       viewInit.ui.add(legendExpandInit, "top-left")
       viewInit.ui.add(aboutWidgetExpandInit, "top-left")
       viewInit.ui.add(basemapContainer, "manual")
@@ -362,14 +359,14 @@ function Map(props) {
   }, [view, props.zonesLayer, props.zoneFeatures])
 
   useEffect(() => {
-    if (!legendExpand || !layerListExpand) {return}
+    if (!legendExpand) {return}
     if (trackWidgetExpandedHandler) {trackWidgetExpandedHandler.remove()}
     if (trackPopupOpenHandler) {trackPopupOpenHandler.remove()}
 
     // Reactive Utils
     // Hide App Widget, if other widget is expanded on mobile
     const expandedHandler = reactiveUtils.watch(
-      () => [legendExpand?.expanded, layerListExpand?.expanded, aboutWidgetExpand?.expanded],
+      () => [legendExpand?.expanded, aboutWidgetExpand?.expanded],
       (expanded) => {
         if (expanded.includes(true) && props.isMobile() && appWidgetOpened) {
           setAppWidgetOpened(false)
@@ -387,7 +384,7 @@ function Map(props) {
         }
     })
     setTrackPopupOpenHandler(popupOpenHandler)
-  }, [legendExpand, layerListExpand, appWidgetOpened])
+  }, [legendExpand, appWidgetOpened])
 
   return (
     <div className="map-div" ref={mapDiv}>

@@ -7,8 +7,8 @@
     "appTitle": "Parkování ve městě",
     "appWidgetTitle": "Témata a oblasti parkování",
     "appWidgetThemesTitle": "Zvolte téma mapy",
-    "appWidgetZonesTitle": "Vyberte oblast parkování, která se zvýrazní v mapě",
-    "appWidgetLayersTitle": "Vypnout / zapnout jednotlivé vrstvy mapy",
+    "appWidgetZonesTitle": "Vyberte oblast parkování",
+    "appWidgetLayersTitle": "Seznam vrstev",
     "zonesPopupTitle": "Oblast parkování",
     "zonesPopupThisZone": "Identifikovaná oblast",
     "zonesPopupCorrespondingZones": "S oprávněním pro tuto oblast můžete také parkovat v oblastech",
@@ -32,15 +32,33 @@
 
   "appThemes": [
     {
-        "label": "Oblasti parkování",
-        "name": "oblasti_parkovani",
-        "visibleLayers": ["oblasti parkování aktuální", "oblasti parkování připravované"],
-        "showLayerList": true
+      "label": "Oblasti parkování",
+      "name": "oblasti_parkovani",
+      "visibleLayers": ["oblasti parkování aktuální", "oblasti parkování připravované"],
+      "showLayerList": true
+    },
+    {
+      "label": "Režimy parkování - oblasti, režimy, parkomaty",
+      "name": "rezimy",
+      "visibleLayers": ["režim 1 Rezidentní", "režim 2 Návštěvnický", "režim 3 Střednědobý", "oblasti parkování aktuální", "parkomaty"],
+      "showLayerList": false
     },
     {
       "label": "Dojíždějící",
       "name": "dojizdejici",
       "visibleLayers": ["oblasti parkování (join)", "aktuálně platné oblasti parkování", "parkování"],
+      "showLayerList": true
+    },
+    {
+      "label": "Stání pro ZTP",
+      "name": "ztp",
+      "visibleLayers": ["stání ZTP"],
+      "showLayerList": true
+    },
+    {
+      "label": "Stání pro motorky",
+      "name": "motorky",
+      "visibleLayers": ["stání pro motorky"],
       "showLayerList": true
     }
   ],
@@ -48,7 +66,7 @@
   "appZones": {
     "theme": "oblasti_parkovani",
     "fromLayer": "oblasti parkování aktuální",
-    "whereCondition": "stav_prvku = 'Stávající'", 
+    "whereCondition": "stav_prvku IN ('Stávající', 'Návrh')", 
     "oidAttr": "objectid",
     "zoneCodeAttr": "kod_text",
     "zoneNameAttr": "popis",

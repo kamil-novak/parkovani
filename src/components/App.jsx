@@ -267,7 +267,6 @@ function App() {
           actualThemeInfo={getActualThemeInfo(actualTheme)} 
           isMobile={isMobile}
           getZonesLayer={getZonesLayer}
-          getZoneFeatures={getZoneFeatures}
           zonesLayer={zonesLayer}
           zonesLayerView={zonesLayerView}
           zoneFeatures={zonesFeatures}
