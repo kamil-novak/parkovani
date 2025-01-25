@@ -105,14 +105,14 @@ function AppWidget(props) {
                     key={feature.attributes[props.config.appZones.oidAttr] + "-" + feature.layer.id}
                     data-oid={feature.attributes[props.config.appZones.oidAttr]}
                     data-layer={feature.layer.id}
-                    className="flex-item zones-item"
+                    className={`flex-item zones-item ${feature.attributes[props.config.appZones.zoneDraftAttr] === props.config.appZones.zoneDraftValue ? "zones-draft" : ""}`}
                     title={feature.attributes[props.config.appZones.zoneNameAttr]}
                     onClick={props.showZone}
                     style={props.selectedZone === feature.attributes[props.config.appZones.oidAttr] + "--" + feature.layer.id
                       ? {
                         color: props.config.appZones.activeZoneColor,
                         backgroundColor: `rgb(from ${props.config.appZones.activeZoneColor} r g b / 10%)`,
-                        border: `1px solid ${props.config.appZones.activeZoneColor}`
+                        border: `1px ${feature.attributes[props.config.appZones.zoneDraftAttr] === props.config.appZones.zoneDraftValue ? "dashed" : "solid"} ${props.config.appZones.activeZoneColor}`
                       } 
                       : {}}
                     >

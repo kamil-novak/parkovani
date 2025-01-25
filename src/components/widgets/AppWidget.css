@@ -129,6 +129,12 @@
     border: 1px solid var(--color-eight) !important;
     background-color: var(--color-ten);
   }
+
+  /* Zones - customization */
+  .zones-draft {
+    border: 1px dashed var(--color-five);
+    color: var(--color-five);
+  }
 }
 
 /* Mobile adjustments */
