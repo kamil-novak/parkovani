@@ -92,6 +92,7 @@ function Map(props) {
 
   // Highlight zone features in the map
   const highlightZoneFeatures = (featureOid, zoom=true) => {
+    console.log(props.zoneFeatures)
     // Selected feature
     const zoneFeature = props.zoneFeatures.filter((fc) => {
       return fc.attributes[props.config.appZones.oidAttr] == featureOid 
@@ -329,22 +330,24 @@ function Map(props) {
   useEffect(() => {
     // Reactive Utils
     // Track zone selected feature
-    if (!view || !props.zonesLayer || !props.zoneFeatures) {return}
+    if (!view || !props.zonesLayers || !props.zoneFeatures) {return}
 
-    props.zonesLayer.when((zonesLayerView) => {
-      reactiveUtils.watch(
-        () => [view?.popup.selectedFeature, view?.popup.visible, view.navigating, zonesLayerView.updating],
-        ([selectedFeature, popupVisible, viewNavigating, layerUpdating]) => {
-          if (selectedFeature && selectedFeature.layer?.id === props.zonesLayer.id && popupVisible) {
-            // Set selected feature to state
-            setSelectedZoneOid(selectedFeature.attributes[props.config.appZones.oidAttr])
-            // Highlight feature in the map
-            highlightZoneFeatures(selectedFeature.attributes[props.config.appZones.oidAttr], false)
-          }
-          if (!popupVisible && !viewNavigating && !layerUpdating) {
-            setSelectedZoneOid(null)
-            removeZoneFromMap()
-          }
+    props.zonesLayers.forEach((zonesLayer) => {
+      zonesLayer.when((zonesLayerView) => {
+        reactiveUtils.watch(
+          () => [view?.popup.selectedFeature, view?.popup.visible, view.navigating, zonesLayerView.updating],
+          ([selectedFeature, popupVisible, viewNavigating, layerUpdating]) => {
+            if (selectedFeature && selectedFeature.layer?.id === zonesLayer.id && popupVisible) {
+              // Set selected feature to state
+              setSelectedZoneOid(selectedFeature.attributes[props.config.appZones.oidAttr])
+              // Highlight feature in the map
+              highlightZoneFeatures(selectedFeature.attributes[props.config.appZones.oidAttr], false)
+            }
+            if (!popupVisible && !viewNavigating && !layerUpdating) {
+              setSelectedZoneOid(null)
+              removeZoneFromMap()
+            }
+        })
       })
     })
 
@@ -356,7 +359,7 @@ function Map(props) {
         view.popup.dockOptions.position = props.isMobile() ? "bottom-center" : "bottom-left"
       }
     )
-  }, [view, props.zonesLayer, props.zoneFeatures])
+  }, [view, props.zonesLayers, props.zoneFeatures])
 
   useEffect(() => {
     if (!legendExpand) {return}
@@ -404,8 +407,8 @@ function Map(props) {
         setActualTheme={props.setActualTheme} 
         actualThemeInfo={props.actualThemeInfo} 
         checkVisibleLayers={props.checkVisibleLayers}
-        zonesLayer={props.zonesLayer}
-        zonesLayerView={props.zonesLayerView}
+        zonesLayers={props.zonesLayers}
+        zonesLayerViews={props.zonesLayerViews}
         zoneFeatures={props.zoneFeatures}
         isMobile={props.isMobile}
         layerList={layerListWidget}

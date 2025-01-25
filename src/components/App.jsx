@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 // Calcite
 setAssetPath('https://js.arcgis.com/calcite-components/2.13.2/assets')
@@ -24,9 +24,10 @@ function App() {
   const [switchLayerHandlers, setSwitchLayerHandlers] = useState()
   const [config, setConfig] = useState(null)
   const [appIsLoaded, setAppIsLoaded] = useState(false)
-  const [zonesLayer, setZonesLayer] = useState(null)
-  const [zonesLayerView, setZonesLayerView] = useState(null)
-  const [zonesFeatures, setZonesFeatures] = useState(null)
+  const [zonesLayers, setZonesLayers] = useState(null)
+  const [zonesLayerViews, setZonesLayerViews] = useState(null)
+  const [zonesFeatures, setZonesFeatures] = useState([])
+  const zonesFeaturesRef = useRef(zonesFeatures);
 
   // Mobile resolution settings
   const mobileScreen = 544
@@ -171,37 +172,43 @@ function App() {
   }
 
   // Zones layer
-  const getZonesLayer = (view) => {
-    view.map.layers.forEach((layer) => {
+  const getZonesLayer = async (view) => {
+    const zonesFeaturesInitAll = []
+    const zonesLayersInit = []
+    const zonesLayerViewsInit = []
+
+    for (const layer of view.map.layers) {
       // If zones are congigured
-      if (config.appZones.fromLayer) {
+      if (config.appZones.fromLayers.length > 0) {
         // If zones in layer
-        if (layer.title === config.appZones.fromLayer) {
+        if (config.appZones.fromLayers.includes(layer.title)) {
           layer.popupEnabled = true
           layer.popupTemplate = zonesPopupTemplate
           layer.outFields = ["*"]
-          setZonesLayer(layer)
-          getZoneFeatures(layer)
-
+          zonesLayersInit.push(layer)
+          const zonesFeaturesInit = await getZoneFeatures(layer)
+          zonesFeaturesInitAll.push(...zonesFeaturesInit)
+          
           view.whenLayerView(layer).then((layerView) => {
             layerView.highlightOptions = {
               color: [0,0,0,0],
               haloOpacity: 1,
               fillOpacity: 1
             }
-            setZonesLayerView(layerView)
+            zonesLayerViewsInit.push(layerView)
           })
         }
         // If zones in sublayer
         if (layer.allSublayers) {
-          layer.when(() => {
-            layer.allSublayers.forEach((subLayer) => {
-              if (subLayer.title === config.appZones.fromLayer ) {
+          layer.when(async () => {
+            for (const subLayer of layer.allSublayers.items) {
+              if (config.appZones.fromLayers.includes(subLayer.title) ) {
                 subLayer.popupEnabled = true
                 subLayer.popupTemplate = zonesPopupTemplate
                 subLayer.outFields = ["*"]
-                setZonesLayer(subLayer)
-                getZoneFeatures(subLayer)
+                zonesLayersInit.push(subLayer)
+                const zonesFeaturesInit = await getZoneFeatures(subLayer)
+                zonesFeaturesInitAll.push(...zonesFeaturesInit)
 
                 view.whenLayerView(subLayer).then((subLayerView) => {
                   subLayerView.highlightOptions = {
@@ -209,29 +216,30 @@ function App() {
                     haloOpacity: 1,
                     fillOpacity: 1
                   }
-                  setZonesLayerView(subLayer)
+                  zonesLayerViewsInit.push(subLayerView)
                 })
               }
-            })
+            }
           })
         }
       }
-    })
+    }
+    setZonesLayers(zonesLayersInit)
+    setZonesLayerViews(zonesLayerViewsInit)
+    if (zonesFeaturesRef.current.length === 0) {
+      setZonesFeatures(zonesFeaturesInitAll)
+      zonesFeaturesRef.current = zonesFeaturesInitAll
+    }
   }
 
   // Zone features
-  const getZoneFeatures = (zonesLayer) => {
-    const zones = []
-    zonesLayer.queryFeatures({
-      where: !config.appZones.whereCondition ? "1=1" : config.appZones.whereCondition, 
+  const getZoneFeatures = async (zonesLayer) => {
+    const results = await zonesLayer.queryFeatures({
       outFields: ["*"], 
       returnGeometry: true,
-      orderByFields: [`${config.appZones.zoneCodeAttr} ASC`]
+      where: zonesLayer.definitionExpression
     })
-    .then((results) => {
-      results.features.forEach((feature) => {zones.push(feature)})
-      setZonesFeatures(zones)
-    }) 
+    return results.features;
   }
 
   useEffect(() => {
@@ -267,8 +275,8 @@ function App() {
           actualThemeInfo={getActualThemeInfo(actualTheme)} 
           isMobile={isMobile}
           getZonesLayer={getZonesLayer}
-          zonesLayer={zonesLayer}
-          zonesLayerView={zonesLayerView}
+          zonesLayers={zonesLayers}
+          zonesLayerViews={zonesLayerViews}
           zoneFeatures={zonesFeatures}
           setZonesPopup={setZonesPopupContent}
           /> }

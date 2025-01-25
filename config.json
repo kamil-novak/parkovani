@@ -65,8 +65,7 @@
 
   "appZones": {
     "theme": "oblasti_parkovani",
-    "fromLayer": "oblasti parkování aktuální",
-    "whereCondition": "stav_prvku IN ('Stávající', 'Návrh')", 
+    "fromLayers": ["oblasti parkování aktuální", "oblasti parkování připravované"],
     "oidAttr": "objectid",
     "zoneCodeAttr": "kod_text",
     "zoneNameAttr": "popis",
