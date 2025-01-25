@@ -94,7 +94,6 @@ function Map(props) {
 
   // Highlight zone features in the map
   const highlightZoneFeatures = (featureOid, featureLayerId, zoom=true) => {
-    console.log(featureLayerId)
     // Selected feature
     const zoneFeature = props.zoneFeatures.filter((fc) => {
       return fc.attributes[props.config.appZones.oidAttr] == featureOid && fc.layer.id == featureLayerId

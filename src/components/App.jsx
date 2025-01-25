@@ -48,10 +48,15 @@ function App() {
     const node = document.createElement("div")
     node.innerHTML = `
       ${config?.appLabels.zonesPopupThisZone}:<br> 
+
       <div style="color: ${config?.appZones.activeZoneColor}; margin-top: 3px; height: 30px; display: inline-flex; justify-content: center; align-items: center; background-color: rgba(from ${config?.appZones.activeZoneColor} r g b / 10%); padding: 0px 8px; border: 1px solid ${config?.appZones.activeZoneColor}">
-        ${feature.graphic.attributes[config?.appZones.zoneCodeAttr]} - ${feature.graphic.attributes[config?.appZones.zoneNameAttr]}
-      </div>
+        ${feature.graphic.attributes[config?.appZones.zoneCodeAttr]} ${feature.graphic.attributes[config?.appZones.zoneNameAttr]} 
+      </div> 
+      
+      ${feature.graphic.attributes[config?.appZones.zoneDraftAttr] === config?.appZones.zoneDraftValue && config?.appLabels.zonesPopupDraftZone ? '<span style="color: ' + config?.appZones.activeZoneColor + '">' + config?.appLabels.zonesPopupDraftZone + '</span>' : ""}
+
       ${correspondingZonesNones ? '<br><br>' + config?.appLabels.zonesPopupCorrespondingZones + ':': ''}
+
       ${correspondingZonesNones ? '<div style="margin-top: 3px; display: flex; flex-wrap: wrap; justify-content: start; gap: 3px;">' : ''}
         ${correspondingZonesNones ? correspondingZonesNones.join("") : ''}
       ${correspondingZonesNones ? '</div>' : ''}
