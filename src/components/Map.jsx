@@ -30,7 +30,7 @@ function Map(props) {
   const [layerListWidget, setLayerListWidget] = useState(null)
   const [layerListCreated, setLayerListCreated] = useState(false)
   const [appWidgetOpened, setAppWidgetOpened] = useState(props.isMobile() && props.config.appWidget.openOnStartIfDesktop ? false : true)
-  const [selectedZoneOid, setSelectedZoneOid] = useState(null)
+  const [selectedZone, setSelectedZone] = useState(null)
   const [trackWidgetExpandedHandler, setTrackWidgetExpandedHandler] = useState(null)
   const [trackPopupOpenHandler, setTrackPopupOpenHandler] = useState(null)
   const [] = useState(null)
@@ -72,30 +72,32 @@ function Map(props) {
   // Show zone in the map
   const showZone = (e) => {
     // This zone
-    const featureOid = e.target.getAttribute('data-key')
+    const featureOid = e.target.getAttribute('data-oid')
+    const featureLayerId = e.target.getAttribute('data-layer')
+    const featureOidAndLayer = featureOid + "--" + featureLayerId
 
     // Close popup
     view.popup.close()
     
     // Disable selected feature
-    if (featureOid == selectedZoneOid) {
-      setSelectedZoneOid(() => null)
+    if (featureOidAndLayer == selectedZone) {
+      setSelectedZone(() => null)
       return
     }
 
     // Set selected feature to state
-    setSelectedZoneOid(() => featureOid)
+    setSelectedZone(() => featureOidAndLayer)
 
     // Highlight feature in the map
-    highlightZoneFeatures(featureOid)
+    highlightZoneFeatures(featureOid, featureLayerId)
   }
 
   // Highlight zone features in the map
-  const highlightZoneFeatures = (featureOid, zoom=true) => {
-    console.log(props.zoneFeatures)
+  const highlightZoneFeatures = (featureOid, featureLayerId, zoom=true) => {
+    console.log(featureLayerId)
     // Selected feature
     const zoneFeature = props.zoneFeatures.filter((fc) => {
-      return fc.attributes[props.config.appZones.oidAttr] == featureOid 
+      return fc.attributes[props.config.appZones.oidAttr] == featureOid && fc.layer.id == featureLayerId
     })[0]
 
     // Coreesponding features
@@ -339,12 +341,12 @@ function Map(props) {
           ([selectedFeature, popupVisible, viewNavigating, layerUpdating]) => {
             if (selectedFeature && selectedFeature.layer?.id === zonesLayer.id && popupVisible) {
               // Set selected feature to state
-              setSelectedZoneOid(selectedFeature.attributes[props.config.appZones.oidAttr])
+              setSelectedZone(selectedFeature.attributes[props.config.appZones.oidAttr])
               // Highlight feature in the map
-              highlightZoneFeatures(selectedFeature.attributes[props.config.appZones.oidAttr], false)
+              highlightZoneFeatures(selectedFeature.attributes[props.config.appZones.oidAttr], selectedFeature.layer.id, false)
             }
             if (!popupVisible && !viewNavigating && !layerUpdating) {
-              setSelectedZoneOid(null)
+              setSelectedZone(null)
               removeZoneFromMap()
             }
         })
@@ -413,8 +415,8 @@ function Map(props) {
         isMobile={props.isMobile}
         layerList={layerListWidget}
         layerListCreated={layerListCreated}
-        setSelectedZoneOid={setSelectedZoneOid}
-        selectedZoneOid={selectedZoneOid}
+        setSelectedZoneOid={setSelectedZone}
+        selectedZoneOid={selectedZone}
         showZone={showZone}
         removeZoneFromMap={removeZoneFromMap} 
       />

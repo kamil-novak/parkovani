@@ -82,7 +82,7 @@ function AppWidget(props) {
           </div>
         </div>
         {/* Zones */}
-        {props.zonesLayers && props.zonesLayers.some((layer) => layer.visible) && <div className="zones section">
+        {props.zonesLayers && props.zonesLayers.every((layer) => layer.visible) && <div className="zones section">
           <div 
             className="section-title" 
             onClick={() => setZonesExpanded(!zonesExpanded)}
@@ -99,10 +99,12 @@ function AppWidget(props) {
           <div className={`section-content flex-list-grid ${zonesExpanded ? "" : "closed"}`} ref={zonesRef}>
             {props.zoneFeatures && props.zonesLayerViews ?
               props.zoneFeatures.sort((a, b) => a.attributes[props.config.appZones.zoneCodeAttr] - b.attributes[props.config.appZones.zoneCodeAttr]).map((feature) => {
+                console.log(feature.layer.id)
                 return (
                   <div 
-                    key={feature.attributes[props.config.appZones.oidAttr]}
-                    data-key={feature.attributes[props.config.appZones.oidAttr]}
+                    key={feature.attributes[props.config.appZones.oidAttr] + "-" + feature.layer.id}
+                    data-oid={feature.attributes[props.config.appZones.oidAttr]}
+                    data-layer={feature.layer.id}
                     className="flex-item zones-item"
                     title={feature.attributes[props.config.appZones.zoneNameAttr]}
                     onClick={props.showZone}
