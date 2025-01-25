@@ -20,11 +20,13 @@ function AppWidget(props) {
   // Ref
   const zonesRef = useRef(null)
   const layerListRef = useRef(null)
+  const legendRef = useRef(null)
 
   // State
   const [themesExpanded, setThemesExpanded] = useState(true)
   const [zonesExpanded, setZonesExpanded] = useState(true)
   const [layersExpanded, setLayersExpanded] = useState(false)
+  const [legendExpanded, setLegendExpanded] = useState(false)
 
   // Theme
   const handleChangeTheme = (name) => {
@@ -41,6 +43,12 @@ function AppWidget(props) {
       props.layerList.container = layerListRef.current
     }
   }, [props.layerListCreated]);
+
+  useEffect(() => {
+    if (props.legend?.id) {
+      props.legend.container = legendRef.current
+    }
+  }, [props.legendCreated]);
 
   return (
       <div className={`app-widget ${props.opened ? "opened" : "closed"}`}>
@@ -142,6 +150,27 @@ function AppWidget(props) {
           </div>
           <div className={`section-content ${layersExpanded ? "" : "closed"}`}>
             <div ref={layerListRef}></div>
+          </div>
+        </div>
+        {/* Legend */}
+        <div 
+          className="legend section"
+        >
+          <div 
+            className="section-title" 
+            onClick={() => setLegendExpanded(!legendExpanded)}
+          >
+          <h2>{props.config.appLabels.appWidgetLayersLegend}:</h2>
+          <span>
+            {
+              legendExpanded
+              ? <CalciteIcon icon="chevron-up" scale="s" text-label="Sbalit"></CalciteIcon>
+              : <CalciteIcon icon="chevron-down" scale="s" text-label="Rozbalit"></CalciteIcon>
+            }
+          </span>
+          </div>
+          <div className={`section-content ${legendExpanded ? "" : "closed"}`}>
+            <div ref={legendRef}></div>
           </div>
         </div>
       </div>

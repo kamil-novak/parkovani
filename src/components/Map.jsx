@@ -25,10 +25,11 @@ function Map(props) {
 
   // State
   const [view, setView] = useState(null)
-  const [legendExpand, setLegendExpand] = useState(null)
   const [aboutWidgetExpand, setAboutWidgetExpand] = useState(null)
   const [layerListWidget, setLayerListWidget] = useState(null)
   const [layerListCreated, setLayerListCreated] = useState(false)
+  const [legendWidget, setLegendWidget] = useState(null)
+  const [legendCreated, setLegendCreated] = useState(false)
   const [appWidgetOpened, setAppWidgetOpened] = useState(props.isMobile() && props.config.appWidget.openOnStartIfDesktop ? false : true)
   const [selectedZone, setSelectedZone] = useState(null)
   const [trackWidgetExpandedHandler, setTrackWidgetExpandedHandler] = useState(null)
@@ -210,30 +211,10 @@ function Map(props) {
 
       // Legend
       const legendWidgetInit = new Legend({view: viewInit})
-      const legendExpandInit = new Expand({
-        label: "Legenda",
-        collapseIcon: "legend",
-        collapseTooltip: "Zavřít legendu",
-        expandIcon: "legend",
-        expandTooltip: "Legenda",
-        group: "top-left",
-        view: viewInit,
-        content: legendWidgetInit
-      })
-      setLegendExpand(legendExpandInit)
+      setLegendWidget(legendWidgetInit)
 
       // Layer List
       const layerListWidgetInit = new LayerList({view: viewInit})
-      const layerListExpandInit = new Expand({
-        label: "Vrstvy mapy",
-        collapseIcon: "layers",
-        collapseTooltip: "Zavřít vrstvy mapy",
-        expandIcon: "layers",
-        expandTooltip: "Vrstvy mapy",
-        group: "top-left",
-        view: viewInit,
-        content: layerListWidgetInit
-      })
       setLayerListWidget(layerListWidgetInit)
 
       // Widget
@@ -308,7 +289,6 @@ function Map(props) {
       viewInit.ui.add(homeWidget, "top-left")
       viewInit.ui.move([ "zoom" ], "top-left")
       viewInit.ui.add(locateWidget, "top-left")
-      viewInit.ui.add(legendExpandInit, "top-left")
       viewInit.ui.add(aboutWidgetExpandInit, "top-left")
       viewInit.ui.add(basemapContainer, "manual")
       viewInit.ui.add(appWidgetEl.current, "manual")
@@ -325,6 +305,7 @@ function Map(props) {
 
         setView(viewInit)
         setLayerListCreated(true)
+        setLegendCreated(true)
       });
   }, [mapDiv])
 
@@ -363,14 +344,13 @@ function Map(props) {
   }, [view, props.zonesLayers, props.zoneFeatures])
 
   useEffect(() => {
-    if (!legendExpand) {return}
     if (trackWidgetExpandedHandler) {trackWidgetExpandedHandler.remove()}
     if (trackPopupOpenHandler) {trackPopupOpenHandler.remove()}
 
     // Reactive Utils
     // Hide App Widget, if other widget is expanded on mobile
     const expandedHandler = reactiveUtils.watch(
-      () => [legendExpand?.expanded, aboutWidgetExpand?.expanded],
+      () => [aboutWidgetExpand?.expanded],
       (expanded) => {
         if (expanded.includes(true) && props.isMobile() && appWidgetOpened) {
           setAppWidgetOpened(false)
@@ -388,7 +368,7 @@ function Map(props) {
         }
     })
     setTrackPopupOpenHandler(popupOpenHandler)
-  }, [legendExpand, appWidgetOpened])
+  }, [appWidgetOpened])
 
   return (
     <div className="map-div" ref={mapDiv}>
@@ -414,6 +394,8 @@ function Map(props) {
         isMobile={props.isMobile}
         layerList={layerListWidget}
         layerListCreated={layerListCreated}
+        legend={legendWidget}
+        legendCreated={legendCreated}
         setSelectedZoneOid={setSelectedZone}
         selectedZone={selectedZone}
         showZone={showZone}

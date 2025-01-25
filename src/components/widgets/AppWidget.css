@@ -78,10 +78,15 @@
     cursor: pointer;
   }
 
-  /* Layers section */
-  .layers {
+  /* Layers section, Legend section */
+  .layers, .legend {
     .section-content {
       border: 1px solid var(--color-five);
+    }
+  }
+  .legend {
+    .esri-widget__heading {
+      font-weight: normal !important;
     }
   }
 
