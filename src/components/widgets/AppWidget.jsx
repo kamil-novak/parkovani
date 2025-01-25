@@ -99,7 +99,6 @@ function AppWidget(props) {
           <div className={`section-content flex-list-grid ${zonesExpanded ? "" : "closed"}`} ref={zonesRef}>
             {props.zoneFeatures && props.zonesLayerViews ?
               props.zoneFeatures.sort((a, b) => a.attributes[props.config.appZones.zoneCodeAttr] - b.attributes[props.config.appZones.zoneCodeAttr]).map((feature) => {
-                console.log(feature.layer.id)
                 return (
                   <div 
                     key={feature.attributes[props.config.appZones.oidAttr] + "-" + feature.layer.id}
