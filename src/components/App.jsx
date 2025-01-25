@@ -53,7 +53,7 @@ function App() {
         ${feature.graphic.attributes[config?.appZones.zoneCodeAttr]} ${feature.graphic.attributes[config?.appZones.zoneNameAttr]} 
       </div> 
       
-      ${feature.graphic.attributes[config?.appZones.zoneDraftAttr] === config?.appZones.zoneDraftValue && config?.appLabels.zonesPopupDraftZone ? '<span style="color: ' + config?.appZones.activeZoneColor + '">' + config?.appLabels.zonesPopupDraftZone + '</span>' : ""}
+      ${feature.graphic.attributes[config?.appZones.zoneDraftAttr] === config?.appZones.zoneDraftValue && config?.appLabels.zonesPopupDraftZone ? '<span style="margin-left: 5px; padding: 0px 2px 0px 1px; border-bottom: 1px dashed ' + config?.appZones.activeZoneColor + '; color: ' + config?.appZones.activeZoneColor + '">' + config?.appLabels.zonesPopupDraftZone + '</span>' : ""}
 
       ${correspondingZonesNones ? '<br><br>' + config?.appLabels.zonesPopupCorrespondingZones + ':': ''}
 

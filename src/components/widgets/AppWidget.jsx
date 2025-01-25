@@ -23,11 +23,7 @@ function AppWidget(props) {
   const legendRef = useRef(null)
 
   // State
-  const [themesExpanded, setThemesExpanded] = useState(true)
-  const [zonesExpanded, setZonesExpanded] = useState(true)
-  const [layersExpanded, setLayersExpanded] = useState(false)
-  const [legendExpanded, setLegendExpanded] = useState(false)
-  const [aboutExpanded, setAboutExpanded] = useState(false)
+  const [sectionExpanded, setSectionExpanded] = useState("")
 
   // Theme
   const handleChangeTheme = (name) => {
@@ -51,6 +47,13 @@ function AppWidget(props) {
     }
   }, [props.legendCreated]);
 
+  useEffect(() => { 
+    setSectionExpanded("")
+    if(props.zonesLayers) {
+      setSectionExpanded(props.zonesLayers.some((layer) => layer.visible) ? "zones" : "themes")
+    }
+  }, [props.zonesLayers])
+
   return (
       <div className={`app-widget ${props.opened ? "opened" : "closed"}`}>
         {/* Header */}
@@ -62,18 +65,18 @@ function AppWidget(props) {
         <div className="themes section">
           <div 
             className="section-title" 
-            onClick={() => {setThemesExpanded(!themesExpanded)}}
+            onClick={() => {sectionExpanded === "themes" ? setSectionExpanded(null) : setSectionExpanded("themes")}}
             >
             <h2>{props.config.appLabels.appWidgetThemesTitle}:</h2>
             <span>
             {
-              themesExpanded
+              sectionExpanded === "themes"
               ? <CalciteIcon icon="chevron-up" scale="s" text-label="Sbalit"></CalciteIcon>
               : <CalciteIcon icon="chevron-down" scale="s" text-label="Rozbalit"></CalciteIcon>
             }
             </span>
           </div>
-          <div className={`section-content flex-list-column ${themesExpanded ? "" : "closed"}`}>
+          <div className={`section-content flex-list-column ${sectionExpanded === "themes" ? "" : "closed"}`}>
             { 
               props.config && props.config.appThemes.map((theme) => { 
                 return(
@@ -94,18 +97,18 @@ function AppWidget(props) {
         {props.zonesLayers && props.zonesLayers.some((layer) => layer.visible) && <div className="zones section">
           <div 
             className="section-title" 
-            onClick={() => setZonesExpanded(!zonesExpanded)}
+            onClick={() => {sectionExpanded === "zones" ? setSectionExpanded(null) : setSectionExpanded("zones")}}
           >
           <h2>{props.config.appLabels.appWidgetZonesTitle}:</h2>
           <span>
             {
-              zonesExpanded
+              sectionExpanded === "zones"
               ? <CalciteIcon icon="chevron-up" scale="s" text-label="Sbalit"></CalciteIcon>
               : <CalciteIcon icon="chevron-down" scale="s" text-label="Rozbalit"></CalciteIcon>
             }
           </span>
           </div>
-          <div className={`section-content flex-list-grid ${zonesExpanded ? "" : "closed"}`} ref={zonesRef}>
+          <div className={`section-content flex-list-grid ${sectionExpanded === "zones" ? "" : "closed"}`} ref={zonesRef}>
             {props.zoneFeatures && props.zonesLayerViews ?
               props.zoneFeatures.sort((a, b) => a.attributes[props.config.appZones.zoneCodeAttr] - b.attributes[props.config.appZones.zoneCodeAttr]).map((feature) => {
                 return (
@@ -121,7 +124,7 @@ function AppWidget(props) {
                       ? {
                         color: props.config.appZones.activeZoneColor,
                         backgroundColor: `rgb(from ${props.config.appZones.activeZoneColor} r g b / 10%)`,
-                        border: `1px ${feature.attributes[props.config.appZones.zoneDraftAttr] === props.config.appZones.zoneDraftValue ? "dashed" : "solid"} ${props.config.appZones.activeZoneColor}`
+                        border: `1px solid ${props.config.appZones.activeZoneColor}`
                       } 
                       : {}}
                     >
@@ -138,18 +141,18 @@ function AppWidget(props) {
         >
           <div 
             className="section-title" 
-            onClick={() => setLayersExpanded(!layersExpanded)}
+            onClick={() => {sectionExpanded === "layers" ? setSectionExpanded(null) : setSectionExpanded("layers")}}
           >
           <h2>{props.config.appLabels.appWidgetLayersTitle}:</h2>
           <span>
             {
-              layersExpanded
+              sectionExpanded === "layers"
               ? <CalciteIcon icon="chevron-up" scale="s" text-label="Sbalit"></CalciteIcon>
               : <CalciteIcon icon="chevron-down" scale="s" text-label="Rozbalit"></CalciteIcon>
             }
           </span>
           </div>
-          <div className={`section-content ${layersExpanded ? "" : "closed"}`}>
+          <div className={`section-content ${sectionExpanded === "layers" ? "" : "closed"}`}>
             <div ref={layerListRef}></div>
           </div>
         </div>
@@ -159,18 +162,18 @@ function AppWidget(props) {
         >
           <div 
             className="section-title" 
-            onClick={() => setLegendExpanded(!legendExpanded)}
+            onClick={() => {sectionExpanded === "legend" ? setSectionExpanded(null) : setSectionExpanded("legend")}}
           >
           <h2>{props.config.appLabels.appWidgetLegendTitle}:</h2>
           <span>
             {
-              legendExpanded
+              sectionExpanded === "legend"
               ? <CalciteIcon icon="chevron-up" scale="s" text-label="Sbalit"></CalciteIcon>
               : <CalciteIcon icon="chevron-down" scale="s" text-label="Rozbalit"></CalciteIcon>
             }
           </span>
           </div>
-          <div className={`section-content ${legendExpanded ? "" : "closed"}`}>
+          <div className={`section-content ${sectionExpanded === "legend" ? "" : "closed"}`}>
             <div ref={legendRef}></div>
           </div>
         </div>
@@ -180,18 +183,18 @@ function AppWidget(props) {
         >
           <div 
             className="section-title" 
-            onClick={() => setAboutExpanded(!aboutExpanded)}
+            onClick={() => {sectionExpanded === "about" ? setSectionExpanded(null) : setSectionExpanded("about")}}
           >
           <h2>{props.config.appLabels.appWidgetAboutTitle}:</h2>
           <span>
             {
-              aboutExpanded
+              sectionExpanded === "about"
               ? <CalciteIcon icon="chevron-up" scale="s" text-label="Sbalit"></CalciteIcon>
               : <CalciteIcon icon="chevron-down" scale="s" text-label="Rozbalit"></CalciteIcon>
             }
           </span>
           </div>
-          <div className={`section-content ${aboutExpanded ? "" : "closed"}`}>
+          <div className={`section-content ${sectionExpanded === "about" ? "" : "closed"}`}>
             <div dangerouslySetInnerHTML={{ __html: props.config.appLabels.aboutWidget }} />
           </div>
         </div>

@@ -33,7 +33,7 @@
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid var(--color-five);
-    padding: 10px;
+    padding: 12px 10px 10px 10px;
 
     calcite-icon {
       cursor: pointer;
