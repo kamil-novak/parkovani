@@ -90,6 +90,37 @@
     }
   }
 
+  /* About section */
+  .about {
+    .section-content {
+      line-height: 18px;
+      a {
+        color: var(--color-one);
+      }
+      h3 {
+        margin-top: 0px;
+        margin-bottom: 10px;
+        font-weight: normal;
+        font-size: 15px;
+      }
+      h4 {
+        margin-top: 3px;
+        margin-bottom: 3px;
+        color: var(--color-four);
+        font-weight: normal;
+        font-size: 15px;
+      }
+      p {
+        margin-top: 0px;
+        margin-bottom: 10px;
+        font-size: 14px;
+      }
+      p:last-child {
+        margin-bottom: 0px;
+      }
+    }
+  }
+
   /* Widget grid elements */
   .flex-list-grid {
     display: flex;

@@ -27,6 +27,7 @@ function AppWidget(props) {
   const [zonesExpanded, setZonesExpanded] = useState(true)
   const [layersExpanded, setLayersExpanded] = useState(false)
   const [legendExpanded, setLegendExpanded] = useState(false)
+  const [aboutExpanded, setAboutExpanded] = useState(false)
 
   // Theme
   const handleChangeTheme = (name) => {
@@ -160,7 +161,7 @@ function AppWidget(props) {
             className="section-title" 
             onClick={() => setLegendExpanded(!legendExpanded)}
           >
-          <h2>{props.config.appLabels.appWidgetLayersLegend}:</h2>
+          <h2>{props.config.appLabels.appWidgetLegendTitle}:</h2>
           <span>
             {
               legendExpanded
@@ -171,6 +172,27 @@ function AppWidget(props) {
           </div>
           <div className={`section-content ${legendExpanded ? "" : "closed"}`}>
             <div ref={legendRef}></div>
+          </div>
+        </div>
+        {/* About */}
+        <div 
+          className="about section"
+        >
+          <div 
+            className="section-title" 
+            onClick={() => setAboutExpanded(!aboutExpanded)}
+          >
+          <h2>{props.config.appLabels.appWidgetAboutTitle}:</h2>
+          <span>
+            {
+              aboutExpanded
+              ? <CalciteIcon icon="chevron-up" scale="s" text-label="Sbalit"></CalciteIcon>
+              : <CalciteIcon icon="chevron-down" scale="s" text-label="Rozbalit"></CalciteIcon>
+            }
+          </span>
+          </div>
+          <div className={`section-content ${aboutExpanded ? "" : "closed"}`}>
+            <div dangerouslySetInnerHTML={{ __html: props.config.appLabels.aboutWidget }} />
           </div>
         </div>
       </div>

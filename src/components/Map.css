@@ -49,26 +49,6 @@
   left: 60px;
 }
 
-/* About widget */
-.map-component-about-widget {
-  line-height: 1.5em;
-}
-.map-component-about-widget a {
-  color: var(--color-one);
-}
-.map-component-about-widget h3 {
-  margin-block-start: 0em;
-  color: var(--color-one);
-}
-.map-component-about-widget h4 {
-  margin-block-end: .55em;
-  color: var(--color-four);
-}
-.map-component-about-widget p {
-  margin-block-start: .45em;
-  margin-block-end: .45em;
-}
-
 @media only screen and (max-width: 544px) {
   .app-button {
     top: auto;

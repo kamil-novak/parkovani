@@ -25,7 +25,6 @@ function Map(props) {
 
   // State
   const [view, setView] = useState(null)
-  const [aboutWidgetExpand, setAboutWidgetExpand] = useState(null)
   const [layerListWidget, setLayerListWidget] = useState(null)
   const [layerListCreated, setLayerListCreated] = useState(false)
   const [legendWidget, setLegendWidget] = useState(null)
@@ -216,25 +215,6 @@ function Map(props) {
       // Layer List
       const layerListWidgetInit = new LayerList({view: viewInit})
       setLayerListWidget(layerListWidgetInit)
-
-      // Widget
-      // O aplikaci
-      const aboutWidgetInit = document.createElement("div")
-      aboutWidgetInit.style.padding = "10px"
-      aboutWidgetInit.classList.add("esri-widget--panel", "esri-widget")
-      aboutWidgetInit.innerHTML = "<div class='map-component-about-widget'>" + props.config.appLabels.aboutWidget + "</div>"
-
-      const aboutWidgetExpandInit = new Expand({
-        label: "O aplikaci",
-        collapseIcon: "question",
-        collapseTooltip: "Sbalit informace o aplikaci",
-        expandIcon: "question",
-        expandTooltip: "O aplikaci",
-        group: "top-left",
-        view: viewInit,
-        content: aboutWidgetInit, 
-      })
-      setAboutWidgetExpand(aboutWidgetExpandInit)
       
       // Basemap Toggle widget
       const basemapContainer = document.createElement("div")
@@ -289,7 +269,6 @@ function Map(props) {
       viewInit.ui.add(homeWidget, "top-left")
       viewInit.ui.move([ "zoom" ], "top-left")
       viewInit.ui.add(locateWidget, "top-left")
-      viewInit.ui.add(aboutWidgetExpandInit, "top-left")
       viewInit.ui.add(basemapContainer, "manual")
       viewInit.ui.add(appWidgetEl.current, "manual")
 
@@ -350,7 +329,7 @@ function Map(props) {
     // Reactive Utils
     // Hide App Widget, if other widget is expanded on mobile
     const expandedHandler = reactiveUtils.watch(
-      () => [aboutWidgetExpand?.expanded],
+      () => [],
       (expanded) => {
         if (expanded.includes(true) && props.isMobile() && appWidgetOpened) {
           setAppWidgetOpened(false)
