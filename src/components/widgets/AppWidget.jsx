@@ -82,7 +82,7 @@ function AppWidget(props) {
           </div>
         </div>
         {/* Zones */}
-        {props.zonesLayers && props.zonesLayers.every((layer) => layer.visible) && <div className="zones section">
+        {props.zonesLayers && props.zonesLayers.some((layer) => layer.visible) && <div className="zones section">
           <div 
             className="section-title" 
             onClick={() => setZonesExpanded(!zonesExpanded)}
@@ -100,7 +100,7 @@ function AppWidget(props) {
             {props.zoneFeatures && props.zonesLayerViews ?
               props.zoneFeatures.sort((a, b) => a.attributes[props.config.appZones.zoneCodeAttr] - b.attributes[props.config.appZones.zoneCodeAttr]).map((feature) => {
                 return (
-                  
+                  props.zonesLayers.filter((layer) => layer.id === feature.layer.id)[0].visible &&
                   <div 
                     key={feature.attributes[props.config.appZones.oidAttr] + "-" + feature.layer.id}
                     data-oid={feature.attributes[props.config.appZones.oidAttr]}

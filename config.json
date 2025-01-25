@@ -65,7 +65,6 @@
   ],
 
   "appZones": {
-    "theme": "oblasti_parkovani",
     "fromLayers": ["oblasti parkování aktuální", "oblasti parkování připravované"],
     "oidAttr": "objectid",
     "zoneCodeAttr": "kod_text",
