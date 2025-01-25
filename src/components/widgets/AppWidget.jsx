@@ -107,7 +107,7 @@ function AppWidget(props) {
                     className="flex-item zones-item"
                     title={feature.attributes[props.config.appZones.zoneNameAttr]}
                     onClick={props.showZone}
-                    style={props.selectedZoneOid == feature.attributes[props.config.appZones.oidAttr] 
+                    style={props.selectedZoneOid == feature.attributes[props.config.appZones.oidAttr] + "--" + feature.layer.id
                       ? {
                         color: props.config.appZones.activeZoneColor,
                         backgroundColor: `rgb(from ${props.config.appZones.activeZoneColor} r g b / 10%)`,
