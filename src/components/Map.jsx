@@ -340,7 +340,7 @@ function Map(props) {
           ([selectedFeature, popupVisible, viewNavigating, layerUpdating]) => {
             if (selectedFeature && selectedFeature.layer?.id === zonesLayer.id && popupVisible) {
               // Set selected feature to state
-              setSelectedZone(selectedFeature.attributes[props.config.appZones.oidAttr])
+              setSelectedZone(selectedFeature.attributes[props.config.appZones.oidAttr] + "--" + selectedFeature.layer.id)
               // Highlight feature in the map
               highlightZoneFeatures(selectedFeature.attributes[props.config.appZones.oidAttr], selectedFeature.layer.id, false)
             }
@@ -415,7 +415,7 @@ function Map(props) {
         layerList={layerListWidget}
         layerListCreated={layerListCreated}
         setSelectedZoneOid={setSelectedZone}
-        selectedZoneOid={selectedZone}
+        selectedZone={selectedZone}
         showZone={showZone}
         removeZoneFromMap={removeZoneFromMap} 
       />

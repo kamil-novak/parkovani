@@ -100,6 +100,7 @@ function AppWidget(props) {
             {props.zoneFeatures && props.zonesLayerViews ?
               props.zoneFeatures.sort((a, b) => a.attributes[props.config.appZones.zoneCodeAttr] - b.attributes[props.config.appZones.zoneCodeAttr]).map((feature) => {
                 return (
+                  
                   <div 
                     key={feature.attributes[props.config.appZones.oidAttr] + "-" + feature.layer.id}
                     data-oid={feature.attributes[props.config.appZones.oidAttr]}
@@ -107,7 +108,7 @@ function AppWidget(props) {
                     className="flex-item zones-item"
                     title={feature.attributes[props.config.appZones.zoneNameAttr]}
                     onClick={props.showZone}
-                    style={props.selectedZoneOid == feature.attributes[props.config.appZones.oidAttr] + "--" + feature.layer.id
+                    style={props.selectedZone === feature.attributes[props.config.appZones.oidAttr] + "--" + feature.layer.id
                       ? {
                         color: props.config.appZones.activeZoneColor,
                         backgroundColor: `rgb(from ${props.config.appZones.activeZoneColor} r g b / 10%)`,
