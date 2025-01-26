@@ -119,7 +119,7 @@ function Map(props) {
                 r: hexToRgb(props.config.appZones.correspondingZonesColor).r,
                 g: hexToRgb(props.config.appZones.correspondingZonesColor).g,
                 b: hexToRgb(props.config.appZones.correspondingZonesColor).b,
-                a: 0.4
+                a: props.config.appZones.correspondingZonesMapOpacity
               },
               outline: { 
                 color: {
@@ -145,7 +145,7 @@ function Map(props) {
           r: hexToRgb(props.config.appZones.activeZoneColor).r,
           g: hexToRgb(props.config.appZones.activeZoneColor).g,
           b: hexToRgb(props.config.appZones.activeZoneColor).b,
-          a: 0.4
+          a: props.config.appZones.correspondingZonesMapOpacity
         },
         outline: { 
           color: {

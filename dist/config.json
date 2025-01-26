@@ -1,18 +1,21 @@
 {
   "appLogoLink": "https://www.jihlava.cz/projekty-pro-verejnost/d-465410",
   "portal": "https://gis.jihlava-city.cz/portal",
-  "webMapId": "75cff0970fa2487e82d4b74414c5f08f",
+  "webMapId": "9b94d4e278b241c09b432c24f173b313",
 
   "appLabels": {
     "appTitle": "Parkování ve městě",
     "appWidgetTitle": "Témata a oblasti parkování",
     "appWidgetThemesTitle": "Zvolte téma mapy",
-    "appWidgetZonesTitle": "Vyberte oblast parkování, která se zvýrazní v mapě",
-    "appWidgetLayersTitle": "Vypnout / zapnout jednotlivé vrstvy mapy",
+    "appWidgetZonesTitle": "Vyberte oblast parkování",
+    "appWidgetLayersTitle": "Seznam vrstev",
+    "appWidgetLegendTitle": "Legenda",
+    "appWidgetAboutTitle": "O aplikaci",
     "zonesPopupTitle": "Oblast parkování",
     "zonesPopupThisZone": "Identifikovaná oblast",
     "zonesPopupCorrespondingZones": "S oprávněním pro tuto oblast můžete také parkovat v oblastech",
-    "aboutWidget": "<h3>Parkování ve městě</h3><div><h4>Autoři</h4><p><a href='https://jihlava.cz' target='_blank'>Statutární město Jihlava</a><br>odbor informatiky<br>gis@jihlava-city.cz<br>Verze 1.0.0</p></div>"
+    "zonesPopupDraftZone": "návrh", 
+    "aboutWidget": "<h4>Autoři</h4><p><a href='https://jihlava.cz' target='_blank'>Statutární město Jihlava</a><br>odbor informatiky<br>gis@jihlava-city.cz<br>Verze 1.0.1</p>"
   }, 
 
   "search": {
@@ -32,28 +35,48 @@
 
   "appThemes": [
     {
-        "label": "Oblasti parkování",
-        "name": "oblasti_parkovani",
-        "visibleLayers": ["oblasti parkování aktuální", "oblasti parkování připravované"],
-        "showLayerList": true
+      "label": "Oblasti parkování",
+      "name": "oblasti_parkovani",
+      "visibleLayers": ["oblasti parkování aktuální", "oblasti parkování připravované"],
+      "showLayerList": true
+    },
+    {
+      "label": "Režimy parkování - oblasti, režimy, parkomaty",
+      "name": "rezimy",
+      "visibleLayers": ["režim 1 Rezidentní", "režim 2 Návštěvnický", "režim 3 Střednědobý", "oblasti parkování aktuální", "parkomaty"],
+      "showLayerList": false
     },
     {
       "label": "Dojíždějící",
       "name": "dojizdejici",
       "visibleLayers": ["oblasti parkování (join)", "aktuálně platné oblasti parkování", "parkování"],
       "showLayerList": true
+    },
+    {
+      "label": "Stání pro ZTP",
+      "name": "ztp",
+      "visibleLayers": ["stání ZTP"],
+      "showLayerList": true
+    },
+    {
+      "label": "Stání pro motorky",
+      "name": "motorky",
+      "visibleLayers": ["stání pro motorky"],
+      "showLayerList": true
     }
   ],
 
   "appZones": {
-    "theme": "oblasti_parkovani",
-    "fromLayer": "oblasti parkování aktuální",
-    "whereCondition": "stav_prvku = 'Stávající'", 
+    "fromLayers": ["oblasti parkování aktuální", "oblasti parkování připravované"],
     "oidAttr": "objectid",
     "zoneCodeAttr": "kod_text",
     "zoneNameAttr": "popis",
+    "zoneDraftAttr": "stav_prvku",
+    "zoneDraftValue": "Návrh",
     "correspondingZonesAttr": "kvetinka",
     "activeZoneColor": "#CA1517",
-    "correspondingZonesColor": "#CC7E00"
+    "activeZoneMapOpacity": 0.25,
+    "correspondingZonesColor": "#CC7E00",
+    "correspondingZonesMapOpacity": 0.25
   }
 }

@@ -1,7 +1,7 @@
 {
   "appLogoLink": "https://www.jihlava.cz/projekty-pro-verejnost/d-465410",
   "portal": "https://gis.jihlava-city.cz/portal",
-  "webMapId": "75cff0970fa2487e82d4b74414c5f08f",
+  "webMapId": "9b94d4e278b241c09b432c24f173b313",
 
   "appLabels": {
     "appTitle": "Parkování ve městě",
@@ -15,7 +15,7 @@
     "zonesPopupThisZone": "Identifikovaná oblast",
     "zonesPopupCorrespondingZones": "S oprávněním pro tuto oblast můžete také parkovat v oblastech",
     "zonesPopupDraftZone": "návrh", 
-    "aboutWidget": "<h4>Autoři</h4><p><a href='https://jihlava.cz' target='_blank'>Statutární město Jihlava</a><br>odbor informatiky<br>gis@jihlava-city.cz<br>Verze 1.0.0</p>"
+    "aboutWidget": "<h4>Autoři</h4><p><a href='https://jihlava.cz' target='_blank'>Statutární město Jihlava</a><br>odbor informatiky<br>gis@jihlava-city.cz<br>Verze 1.0.1</p>"
   }, 
 
   "search": {
@@ -75,6 +75,8 @@
     "zoneDraftValue": "Návrh",
     "correspondingZonesAttr": "kvetinka",
     "activeZoneColor": "#CA1517",
-    "correspondingZonesColor": "#CC7E00"
+    "activeZoneMapOpacity": 0.25,
+    "correspondingZonesColor": "#CC7E00",
+    "correspondingZonesMapOpacity": 0.25
   }
 }
