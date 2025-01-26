@@ -1,7 +1,8 @@
 // CSS
 import "./AppWidget.css";
 
-// ArcGIS Modules
+// Google Analytics
+import ReactGA from "react-ga4";
 
 // Modules
 import React, { useEffect, useState, useRef } from "react"
@@ -34,6 +35,9 @@ function AppWidget(props) {
     props.removeZoneFromMap()
    
     window.history.replaceState(null, null, `?theme=${name}`);
+
+    // GA listener
+    ReactGA.event({category: "click", action: `prepnuti_tematu--${name}`, label: `Přepnutí tématu - ${name}`})
   }
 
   useEffect(() => {
@@ -68,7 +72,11 @@ function AppWidget(props) {
         <div className="themes section">
           <div 
             className="section-title" 
-            onClick={() => {sectionExpanded === "themes" ? setSectionExpanded(null) : setSectionExpanded("themes")}}
+            onClick={() => {
+              sectionExpanded === "themes" ? setSectionExpanded(null) : setSectionExpanded("themes")
+              // GA listener
+              ReactGA.event({category: "click", action: "sekce--temata", label: "Rozbalení/Sbalení sekce - Témata"})
+            }}
             >
             <h2>{props.config.appLabels.appWidgetThemesTitle}:</h2>
             <span>
@@ -100,7 +108,11 @@ function AppWidget(props) {
         {props.zonesLayers && props.zonesLayers.some((layer) => layer.visible) && <div className="zones section">
           <div 
             className="section-title" 
-            onClick={() => {sectionExpanded === "zones" ? setSectionExpanded(null) : setSectionExpanded("zones")}}
+            onClick={() => {
+              sectionExpanded === "zones" ? setSectionExpanded(null) : setSectionExpanded("zones")
+              // GA listener
+              ReactGA.event({category: "click", action: "sekce--oblasti", label: "Rozbalení/Sbalení sekce - Oblasti parkování"})
+            }}
           >
           <h2>{props.config.appLabels.appWidgetZonesTitle}:</h2>
           <span>
@@ -122,7 +134,11 @@ function AppWidget(props) {
                     data-layer={feature.layer.id}
                     className={`flex-item zones-item ${feature.attributes[props.config.appZones.zoneDraftAttr] === props.config.appZones.zoneDraftValue ? "zones-draft" : ""}`}
                     title={feature.attributes[props.config.appZones.zoneNameAttr]}
-                    onClick={props.showZone}
+                    onClick={(e) => {
+                      props.showZone(e)
+                      // GA listener
+                      ReactGA.event({category: "click", action: `vyber_oblati_widget--${feature.attributes[props.config.appZones.zoneCodeAttr]}`, label: `Výběr oblasti z widgetu - ${feature.attributes[props.config.appZones.zoneCodeAttr]}`})
+                    }}
                     style={props.selectedZone === feature.attributes[props.config.appZones.oidAttr] + "--" + feature.layer.id
                       ? {
                         color: props.config.appZones.activeZoneColor,
@@ -144,7 +160,11 @@ function AppWidget(props) {
         >
           <div 
             className="section-title" 
-            onClick={() => {sectionExpanded === "layers" ? setSectionExpanded(null) : setSectionExpanded("layers")}}
+            onClick={() => {
+              sectionExpanded === "layers" ? setSectionExpanded(null) : setSectionExpanded("layers")
+              // GA listener
+              ReactGA.event({category: "click", action: "sekce--vrstvy", label: "Rozbalení/Sbalení sekce - Vrstvy"})
+            }}
           >
           <h2>{props.config.appLabels.appWidgetLayersTitle}:</h2>
           <span>
@@ -165,7 +185,11 @@ function AppWidget(props) {
         >
           <div 
             className="section-title" 
-            onClick={() => {sectionExpanded === "legend" ? setSectionExpanded(null) : setSectionExpanded("legend")}}
+            onClick={() => {
+              sectionExpanded === "legend" ? setSectionExpanded(null) : setSectionExpanded("legend")
+              // GA listener
+              ReactGA.event({category: "click", action: "sekce--legenda", label: "Rozbalení/Sbalení sekce - Legenda"})
+            }}
           >
           <h2>{props.config.appLabels.appWidgetLegendTitle}:</h2>
           <span>
@@ -186,7 +210,11 @@ function AppWidget(props) {
         >
           <div 
             className="section-title" 
-            onClick={() => {sectionExpanded === "about" ? setSectionExpanded(null) : setSectionExpanded("about")}}
+            onClick={() => {
+              sectionExpanded === "about" ? setSectionExpanded(null) : setSectionExpanded("about")
+              // GA listener
+              ReactGA.event({category: "click", action: "sekce--o_aplikaci", label: "Rozbalení/Sbalení sekce - O aplikaci"})            
+            }}
           >
           <h2>{props.config.appLabels.appWidgetAboutTitle}:</h2>
           <span>

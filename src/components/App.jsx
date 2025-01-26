@@ -1,5 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 
+// Google Analytics
+import ReactGA from "react-ga4";
+
 // Calcite
 setAssetPath('https://js.arcgis.com/calcite-components/2.13.2/assets')
 import { setAssetPath } from '@esri/calcite-components/dist/components';
@@ -254,6 +257,9 @@ function App() {
       // Load app config 
       const initConfig = await getData()
       setConfig( initConfig )
+
+      // Google Analytics
+      initConfig?.ga4Id && ReactGA.initialize(initConfig?.ga4Id)
      
     })()
    
