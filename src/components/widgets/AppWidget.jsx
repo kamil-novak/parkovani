@@ -21,6 +21,7 @@ function AppWidget(props) {
   const zonesRef = useRef(null)
   const layerListRef = useRef(null)
   const legendRef = useRef(null)
+  const appWidgetRef = useRef(false);
 
   // State
   const [sectionExpanded, setSectionExpanded] = useState("")
@@ -48,9 +49,11 @@ function AppWidget(props) {
   }, [props.legendCreated]);
 
   useEffect(() => { 
-    setSectionExpanded("")
-    if(props.zonesLayers) {
+    !appWidgetRef.current && setSectionExpanded("")
+    
+    if(props.zonesLayers && !appWidgetRef.current) {
       setSectionExpanded(props.zonesLayers.some((layer) => layer.visible) ? "zones" : "themes")
+      appWidgetRef.current = true
     }
   }, [props.zonesLayers])
 
