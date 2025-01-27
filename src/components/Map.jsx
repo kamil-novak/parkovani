@@ -293,6 +293,12 @@ function Map(props) {
     // Track zone selected feature
     if (!view || !props.zonesLayers || !props.zoneFeatures) {return}
 
+    // Remove graphic if click to map
+    // It solve a problem with duplicate popup when it is clicked to the existing graphic
+    view.on("click", () => {
+      highlightZonesLayer.removeAll()
+    })
+
     props.zonesLayers.forEach((zonesLayer) => {
       zonesLayer.when((zonesLayerView) => {
         reactiveUtils.watch(
