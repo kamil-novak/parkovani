@@ -18,11 +18,3 @@ body {
   z-index: 100;
   stroke: white !important;
 }
-
-.opened {
-  display: block;
-}
-
-.closed {
-  display: none;
-}

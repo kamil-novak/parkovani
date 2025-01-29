@@ -7,48 +7,66 @@
   position: absolute;
   top: 15px;
   right: 15px;
-  background-color: var(--color-three);
+  background-color: var(--color-six);
   width: 250px;
-  max-height: calc(100vh - 180px);
-  overflow-y: auto;
-  overflow-x: hidden;
   line-height: 1.2;
-  scrollbar-width: thin;
+  overflow: hidden;
 
   h1, h2 {
     font-size: 15px;
-    font-weight: 400;
+    font-weight: 500;
     margin: 0px;
     padding: 0px;
   }
 
-  h1 {
-    font-weight: 500;
+  &.closed {
+    display: none;
   }
 
   /* Header */
-  .header {
-    display: flex;
-    gap: var(--horizontal-gap);
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid var(--color-five);
-    padding: 12px 10px 10px 10px;
+  .widget-header {
+    position: fixed;
+    top: 52px;
+    right: 8px;
+    background-color: var(--color-one);
+    border-radius: 50%;
+    border: 1.5px solid var(--color-six);
+    z-index: 100;
+    
+    h1 {
+      display: none;
+    }
 
     calcite-icon {
       cursor: pointer;
       position: relative;
-      top: -1px;
+      top: 2px;
+      color: var(--color-three);
+      width: 20px;
+      height: 15px;
     }
+  }
+
+  /* Content */
+  .widget-content {
+    margin: 5px 0px;
+    padding: 0px 5px;
+    max-height: calc(100vh - 190px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
   }
 
   /* Widget sections */
   .section {
     padding: 10px;
+    margin-bottom: 5px;
+    background-color: var(--color-three);
     border-bottom: 1px solid var(--color-five);
 
     &:last-child {
       border-bottom: none;
+      margin-bottom: 0px;
     }
       
     calcite-filter {
@@ -69,8 +87,14 @@
     margin: 10px 0px 5px 0px;
   }
 
-  .section-content.closed {
-    display: none;
+  .section.closed {
+    .section-title h2 {
+      font-weight: 400;
+    }
+
+    .section-content {
+      display: none;
+    }
   }
 
   .flex-item {
@@ -181,12 +205,43 @@
     right: 0px;
     min-width: 100vw;
     max-width: 100vw;
-    height: 55vh;
-  }
+    height: 250px;
 
-  .flex-list-column {
-    .flex-item {
-      padding: 10px 5px !important;
+    .widget-header {
+      display: flex;
+      gap: var(--horizontal-gap);
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--color-five);
+      background-color: var(--color-three);
+      padding: 12px 10px 10px 10px;
+      position: static;
+      border-radius: 0px;
+      -webkit-border-radius: 0px;
+      -moz-border-radius: 0px;
+      -ms-border-radius: 0px;
+      -o-border-radius: 0px;
+      
+      h1 {
+        display: block;
+      }
+  
+      calcite-icon {
+        cursor: pointer;
+        position: relative;
+        top: -1px;
+        color: var(--calcite-color-text-2);
+      }
+    }
+
+    .widget-content {
+      max-height: 196px;
+    }
+
+    .flex-list-column {
+      .flex-item {
+        padding: 10px 5px !important;
+      }
     }
   }
 
