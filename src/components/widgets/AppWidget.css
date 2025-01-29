@@ -235,7 +235,7 @@
     }
 
     .widget-content {
-      max-height: 196px;
+      max-height: calc(100% - 54px);
     }
 
     .flex-list-column {
