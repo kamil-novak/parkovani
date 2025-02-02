@@ -322,12 +322,12 @@ function Map(props) {
         closeBtnOld.remove()
       }
       const closeBtn = document.createElement("div")
-      closeBtn.innerHTML = "<span>x</span>"
+      closeBtn.innerHTML = "<span><</span>"
       closeBtn.classList.add("search-close-btn")
       searchWidgetRef.current.domNode?.firstChild?.firstChild.prepend(closeBtn)
   
       // Expand widget after click
-      searchWidgetRef.current.domNode.querySelector(".esri-search__submit-button").addEventListener("click", () => {
+      searchWidgetRef.current.domNode.querySelector(".esri-search__submit-button")?.addEventListener("click", () => {
         if (!searchWidgetRef.current.domNode.classList.contains("search-expanded")) {
           searchWidgetRef.current.domNode.classList.add("search-expanded")
           console.log("Jsem tady")
