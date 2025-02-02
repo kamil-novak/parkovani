@@ -268,7 +268,7 @@ function Map(props) {
               outFields: ["*"],
               definitionExpression: props.config.search.layerUrl.definitionExpression
             }),
-            searchFields: props.config.search.layerUrl.searchFields,
+            searchFields: props.config.search.searchFields,
             displayField: props.config.search.layerUrl.displayField,
             exactMatch: false,
             outFields: ["*"],
