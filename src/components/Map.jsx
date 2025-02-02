@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useState } from "react"
 import MapView from "@arcgis/core/views/MapView"
 import Popup from "@arcgis/core/widgets/Popup"
 import WebMap from "@arcgis/core/WebMap"
-import Home from "@arcgis/core/widgets/Home"
 import Search from "@arcgis/core/widgets/Search"
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer"
 import Locate from "@arcgis/core/widgets/Locate"
@@ -42,6 +41,7 @@ function Map(props) {
 	// Refs
   const mapDiv = useRef(null)
   const appWidgetEl = useRef(null)
+  const searchWidgetRef = useRef(null)
 
   // Auxiliary functions
   function hexToRgb(hex) {
@@ -198,11 +198,6 @@ function Map(props) {
         })
       })
 
-      // Home widget
-      const homeWidget = new Home({
-        view: viewInit
-      })
-
       // Locate widget
       const locateWidget = new Locate({
         view: viewInit
@@ -291,10 +286,10 @@ function Map(props) {
           }
         ]
       })
+      searchWidgetRef.current = searchWidget
       
       // Add widgets
-      viewInit.ui.add(searchWidget, "manual")
-      viewInit.ui.add(homeWidget, "top-left")
+      viewInit.ui.add(searchWidget, "top-left")
       viewInit.ui.move([ "zoom" ], "top-left")
       viewInit.ui.add(locateWidget, "top-left")
       viewInit.ui.add(legendExpandInit, "top-left")
@@ -316,6 +311,36 @@ function Map(props) {
         setLayerListCreated(true)
       });
   }, [mapDiv])
+
+  useEffect(() => {
+      // Search widget expanding
+      if (!view) {return}
+
+      // Close button
+      const closeBtnOld = document.body.querySelector("search-close-btn")
+      if (closeBtnOld) {
+        closeBtnOld.remove()
+      }
+      const closeBtn = document.createElement("div")
+      closeBtn.innerHTML = "<span>x</span>"
+      closeBtn.classList.add("search-close-btn")
+      searchWidgetRef.current.domNode?.firstChild?.firstChild.prepend(closeBtn)
+  
+      // Expand widget after click
+      searchWidgetRef.current.domNode.querySelector(".esri-search__submit-button").addEventListener("click", () => {
+        if (!searchWidgetRef.current.domNode.classList.contains("search-expanded")) {
+          searchWidgetRef.current.domNode.classList.add("search-expanded")
+          console.log("Jsem tady")
+        }
+      });
+
+      // Collapse widget after click
+      closeBtn.addEventListener("click", () => {
+        if (searchWidgetRef.current.domNode.classList.contains("search-expanded")) {
+          searchWidgetRef.current.domNode.classList.remove("search-expanded")
+        }
+      })
+  }, [view])
 
   useEffect(() => {
     // Reactive Utils

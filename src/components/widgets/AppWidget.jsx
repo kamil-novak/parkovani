@@ -21,7 +21,7 @@ function AppWidget(props) {
   // Ref
   const zonesRef = useRef(null)
   const layerListRef = useRef(null)
-  const appWidgetRef = useRef(false);
+  const appWidgetRef = useRef(false)
 
   // State
   const [sectionExpanded, setSectionExpanded] = useState("")
