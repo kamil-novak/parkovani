@@ -335,6 +335,7 @@ function Map(props) {
       searchWidgetRef.current.domNode.querySelector(".esri-search__submit-button")?.addEventListener("click", () => {
         if (!searchWidgetRef.current.domNode.classList.contains("search-expanded")) {
           searchWidgetRef.current.domNode.classList.add("search-expanded")
+          searchWidgetRef.current.domNode.querySelector("input").focus()
         }
       });
 
