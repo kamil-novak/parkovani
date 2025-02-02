@@ -13,6 +13,7 @@ import Legend from "@arcgis/core/widgets/Legend"
 import LayerList from "@arcgis/core/widgets/LayerList"
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer"
 import Graphic from "@arcgis/core/Graphic"
+import * as geometryEngine from "@arcgis/core/geometry/geometryEngine"
 import * as reactiveUtils from "@arcgis/core/core/reactiveUtils"
 
 import AppWidget from "./widgets/AppWidget"
@@ -166,8 +167,9 @@ function Map(props) {
     removeZoneFromMap()
     highlightZonesLayer.addMany([...correspondingFeatures, higlightFeature.clone()])
     if (zoom) {
+      const goToGeometry = geometryEngine.union([higlightFeature.clone().geometry.extent.expand(2), ...correspondingFeatures.map((feature) => feature.clone().geometry.extent.expand(2))])
       view.popup.open({features: [higlightFeature.clone()]})
-      view.goTo(higlightFeature.clone().geometry.extent.expand(2))
+      view.goTo(goToGeometry)
     }
   }
 
@@ -190,6 +192,9 @@ function Map(props) {
         container: mapDiv.current,
         map,
         popup: new Popup({
+          viewModel: {
+            includeDefaultActions: false
+          },
           dockEnabled: true,
           dockOptions: {
             breakpoint: false,

@@ -45,7 +45,7 @@ function App() {
     if (feature.graphic.attributes[config?.appZones.correspondingZonesAttr]) {
       correspondingZones = feature.graphic.attributes[config?.appZones.correspondingZonesAttr].split(",")
       correspondingZonesNones = correspondingZones.map((zone) => {
-        return(`<span style="color: ${config?.appZones.correspondingZonesColor};background-color: rgba(from ${config?.appZones.correspondingZonesColor} r g b / 10%); padding: 0px 5px; border: 1px solid ${config?.appZones.correspondingZonesColor}; display: flex; justify-content: center; align-items: center; width: 30px; height: 30px;">
+        return(`<span style="color: ${config?.appZones.correspondingZonesColor}; background-color: rgba(from ${config?.appZones.correspondingZonesColor} r g b / 10%); padding: 0px 5px; border: 1px solid ${config?.appZones.correspondingZonesColor}; display: flex; justify-content: center; align-items: center; width: 30px; height: 30px;">
           ${zone.trim()}
         </span>`)
       })
@@ -53,19 +53,21 @@ function App() {
 
     const node = document.createElement("div")
     node.innerHTML = `
-      ${config?.appLabels.zonesPopupThisZone}:<br> 
-
-      <div style="color: ${config?.appZones.activeZoneColor}; margin-top: 3px; height: 30px; display: inline-flex; justify-content: center; align-items: center; background-color: rgba(from ${config?.appZones.activeZoneColor} r g b / 10%); padding: 0px 8px; border: 1px solid ${config?.appZones.activeZoneColor}">
+    <div>
+      <div style="color: ${config?.appZones.activeZoneColor}; height: 30px; display: inline-flex; justify-content: center; align-items: center; background-color: rgba(from ${config?.appZones.activeZoneColor} r g b / 10%); padding: 0px 8px; border: 1px solid ${config?.appZones.activeZoneColor}">
         ${feature.graphic.attributes[config?.appZones.zoneCodeAttr]} ${feature.graphic.attributes[config?.appZones.zoneNameAttr]} 
       </div> 
       
       ${feature.graphic.attributes[config?.appZones.zoneDraftAttr] === config?.appZones.zoneDraftValue && config?.appLabels.zonesPopupDraftZone ? '<span style="margin-left: 5px; padding: 0px 2px 0px 1px; border-bottom: 1px dashed ' + config?.appZones.activeZoneColor + '; color: ' + config?.appZones.activeZoneColor + '">' + config?.appLabels.zonesPopupDraftZone + '</span>' : ""}
-
-      ${correspondingZonesNones ? '<br><br>' + config?.appLabels.zonesPopupCorrespondingZones + ':': ''}
+    </div> 
+    
+    <div style="margin-top: 12px; ${correspondingZonesNones ? '' : 'display: none'}">
+      ${correspondingZonesNones ? config?.appLabels.zonesPopupCorrespondingZones + ':': ''}
 
       ${correspondingZonesNones ? '<div style="margin-top: 3px; display: flex; flex-wrap: wrap; justify-content: start; gap: 3px;">' : ''}
         ${correspondingZonesNones ? correspondingZonesNones.join("") : ''}
       ${correspondingZonesNones ? '</div>' : ''}
+    </div> 
     `
     return node;
   }
