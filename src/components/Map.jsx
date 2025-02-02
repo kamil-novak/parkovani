@@ -322,7 +322,7 @@ function Map(props) {
         closeBtnOld.remove()
       }
       const closeBtn = document.createElement("div")
-      closeBtn.innerHTML = "<span><</span>"
+      closeBtn.innerHTML = '<span class="esri-icon-left"></span>'
       closeBtn.classList.add("search-close-btn")
       searchWidgetRef.current.domNode?.firstChild?.firstChild.prepend(closeBtn)
   
@@ -330,7 +330,6 @@ function Map(props) {
       searchWidgetRef.current.domNode.querySelector(".esri-search__submit-button")?.addEventListener("click", () => {
         if (!searchWidgetRef.current.domNode.classList.contains("search-expanded")) {
           searchWidgetRef.current.domNode.classList.add("search-expanded")
-          console.log("Jsem tady")
         }
       });
 

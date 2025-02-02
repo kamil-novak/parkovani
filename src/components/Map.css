@@ -55,7 +55,7 @@
   transition: width 0.3s ease;
 
   .esri-search__suggestions-menu {
-    width: 250px;
+    width: 270px;
   }
   
   .esri-search__input-container {
@@ -70,11 +70,6 @@
    
     .search-close-btn {
       span {
-        font-family: consolas;
-        position: relative;
-        top: 6px;
-        left: 2px;
-        margin-top: 5px;
         padding: 7px 7px 9px 7px;
         color: var(--calcite-color-text-3);
         cursor: pointer;
@@ -88,7 +83,7 @@
 }
 
 .esri-search.search-expanded {
-  width: 250px !important;
+  width: 270px !important;
 
   .esri-search__input-container {
     display: flex !important;
