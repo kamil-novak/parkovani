@@ -21,7 +21,6 @@ function AppWidget(props) {
   // Ref
   const zonesRef = useRef(null)
   const layerListRef = useRef(null)
-  const legendRef = useRef(null)
   const appWidgetRef = useRef(false);
 
   // State
@@ -45,12 +44,6 @@ function AppWidget(props) {
       props.layerList.container = layerListRef.current
     }
   }, [props.layerListCreated]);
-
-  useEffect(() => {
-    if (props.legend?.id) {
-      props.legend.container = legendRef.current
-    }
-  }, [props.legendCreated]);
 
   useEffect(() => { 
     !appWidgetRef.current && setSectionExpanded("")
@@ -180,56 +173,6 @@ function AppWidget(props) {
             </div>
             <div className="section-content">
               <div ref={layerListRef}></div>
-            </div>
-          </div>
-          {/* Legend */}
-          <div 
-            className={`legend section ${sectionExpanded === "legend" ? "" : "closed"}`}
-          >
-            <div 
-              className="section-title" 
-              onClick={() => {
-                sectionExpanded === "legend" ? setSectionExpanded(null) : setSectionExpanded("legend")
-                // GA listener
-                ReactGA.event({category: "click", action: "sekce--legenda", label: "Rozbalení/Sbalení sekce - Legenda"})
-              }}
-            >
-            <h2>{props.config.appLabels.appWidgetLegendTitle}:</h2>
-            <span>
-              {
-                sectionExpanded === "legend"
-                ? <CalciteIcon icon="chevron-up" scale="s" text-label="Sbalit"></CalciteIcon>
-                : <CalciteIcon icon="chevron-down" scale="s" text-label="Rozbalit"></CalciteIcon>
-              }
-            </span>
-            </div>
-            <div className="section-content">
-              <div ref={legendRef}></div>
-            </div>
-          </div>
-          {/* About */}
-          <div 
-            className={`about section ${sectionExpanded === "about" ? "" : "closed"}`}
-          >
-            <div 
-              className="section-title" 
-              onClick={() => {
-                sectionExpanded === "about" ? setSectionExpanded(null) : setSectionExpanded("about")
-                // GA listener
-                ReactGA.event({category: "click", action: "sekce--o_aplikaci", label: "Rozbalení/Sbalení sekce - O aplikaci"})            
-              }}
-            >
-            <h2>{props.config.appLabels.appWidgetAboutTitle}:</h2>
-            <span>
-              {
-                sectionExpanded === "about"
-                ? <CalciteIcon icon="chevron-up" scale="s" text-label="Sbalit"></CalciteIcon>
-                : <CalciteIcon icon="chevron-down" scale="s" text-label="Rozbalit"></CalciteIcon>
-              }
-            </span>
-            </div>
-            <div className="section-content">
-              <div dangerouslySetInnerHTML={{ __html: props.config.appLabels.aboutWidget }} />
             </div>
           </div>
         </div>

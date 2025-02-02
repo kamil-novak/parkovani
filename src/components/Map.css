@@ -49,6 +49,40 @@
   left: 60px;
 }
 
+/* About widget */
+.map-component-about-widget {
+  line-height: 20px;
+
+  a {
+    color: var(--color-one);
+  }
+
+  h3 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    color: var(--color-one);
+  }
+
+  h4 {
+    margin-top: 6px;
+    margin-bottom: 3px;
+    color: var(--color-four);
+  }
+
+  h3:first-child {
+    margin-top: 0px;
+  }
+
+  h4:first-child {
+    margin-top: 0px;
+  }
+
+  p {
+    margin-top: 2px;
+    margin-bottom: 2px;
+  }
+}
+
 @media only screen and (max-width: 544px) {
   .app-button {
     top: auto;

@@ -20,10 +20,16 @@
   --panel-width: 220px;
   --panel-mobile-width-delta: 65px;
   --esri-widget-panel-max-height: 100% !important;
+  --calcite-ui-focus-color: none !important;
 }
 
 .esri-expand__panel {
   height: 65vh!important;
+}
+
+.button:focus {
+  outline: 2px solid green;
+  outline-offset: calc(-2px* calc(1 - 2* clamp(0, var(--calcite-offset-invert-focus), 1)));
 }
 
 @media only screen and (max-width: 544px) {
