@@ -32,7 +32,8 @@
   },
 
   "appWidget": {
-    "openOnStartIfDesktop": true
+    "openOnStartIfDesktop": true,
+    "heightOnMobile": 250
   },
 
   "appThemes": [

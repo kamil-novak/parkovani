@@ -20,6 +20,9 @@ import "./App.css";
 import Header from "./Header"
 import Map from "./Map"
 
+// Global variables
+const MOBILE_BREAKPOINT = 544
+
 function App() {
 
   // State
@@ -30,10 +33,10 @@ function App() {
   const [zonesLayers, setZonesLayers] = useState(null)
   const [zonesLayerViews, setZonesLayerViews] = useState(null)
   const [zonesFeatures, setZonesFeatures] = useState([])
-  const zonesFeaturesRef = useRef(zonesFeatures);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= MOBILE_BREAKPOINT)
 
-  // Mobile resolution settings
-  const mobileScreen = 544
+  const zonesFeaturesRef = useRef(zonesFeatures);
 
   // Zones popup content
   const setZonesPopupContent = (feature) => {
@@ -71,16 +74,6 @@ function App() {
   const zonesPopupTemplate = {
     title: config?.appLabels.zonesPopupTitle,
     content: setZonesPopupContent
-  }
-
-  // Check mobile resolution
-  const isMobile = () => {
-    if (window.innerWidth < mobileScreen) {
-      return true
-    }
-    else {
-      return false
-    }
   }
 
   // Loading
@@ -249,6 +242,20 @@ function App() {
     })
     return results.features;
   }
+
+  // Handle resize
+  const handleResize = () => {
+    setWindowWidth(window.innerWidth);
+    setIsMobile(window.innerWidth <= MOBILE_BREAKPOINT)
+  }
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    }
+  }, [])
 
   useEffect(() => {
 

@@ -62,7 +62,9 @@ function AppWidget(props) {
   }, [props.zonesLayers])
 
   return (
-      <div className={`app-widget ${props.opened ? "opened" : "closed"}`}>
+      <div 
+        className={`app-widget ${props.opened ? "opened" : "closed"}`}
+        style={props.isMobile === true ? {height: `${props.config.appWidget.heightOnMobile}px`} : {}}>
         {/* Header */}
         <div className="widget-header">
           <h1>{props.config.appLabels.appWidgetTitle}</h1>

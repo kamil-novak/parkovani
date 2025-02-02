@@ -29,7 +29,7 @@ function Map(props) {
   const [layerListCreated, setLayerListCreated] = useState(false)
   const [legendWidget, setLegendWidget] = useState(null)
   const [legendCreated, setLegendCreated] = useState(false)
-  const [appWidgetOpened, setAppWidgetOpened] = useState(props.isMobile() && props.config.appWidget.openOnStartIfDesktop ? false : true)
+  const [appWidgetOpened, setAppWidgetOpened] = useState(props.isMobile && props.config.appWidget.openOnStartIfDesktop ? false : true)
   const [selectedZone, setSelectedZone] = useState(null)
   const [trackWidgetExpandedHandler, setTrackWidgetExpandedHandler] = useState(null)
   const [trackPopupOpenHandler, setTrackPopupOpenHandler] = useState(null)
@@ -193,7 +193,7 @@ function Map(props) {
           dockEnabled: true,
           dockOptions: {
             breakpoint: false,
-            position: props.isMobile() ? "bottom-center" : "bottom-left"
+            position: props.isMobile ? "bottom-center" : "bottom-left"
           }
         })
       })
@@ -318,15 +318,20 @@ function Map(props) {
       })
     })
 
+  }, [view, props.zonesLayers, props.zoneFeatures])
+
+  useEffect(() => {
     // Reactive Utils
     // Track view width for popup dock changing
+    if (!view) { return }
+
     reactiveUtils.watch(
       () => view.width,
       () => {
-        view.popup.dockOptions.position = props.isMobile() ? "bottom-center" : "bottom-left"
+        view.popup.dockOptions.position = props.isMobile ? "bottom-center" : "bottom-left";
       }
-    )
-  }, [view, props.zonesLayers, props.zoneFeatures])
+    );
+  }, [view, props.isMobile])
 
   useEffect(() => {
     if (trackWidgetExpandedHandler) {trackWidgetExpandedHandler.remove()}
@@ -337,7 +342,7 @@ function Map(props) {
     const expandedHandler = reactiveUtils.watch(
       () => [],
       (expanded) => {
-        if (expanded.includes(true) && props.isMobile() && appWidgetOpened) {
+        if (expanded.includes(true) && props.isMobile && appWidgetOpened) {
           setAppWidgetOpened(false)
         }
     });
@@ -348,17 +353,22 @@ function Map(props) {
     const popupOpenHandler = reactiveUtils.watch(
       () => view?.popup.selectedFeature,
       (selectedFeature) => {
-        if (selectedFeature && appWidgetOpened && props.isMobile()) {
+        if (selectedFeature && appWidgetOpened && props.isMobile) {
           setAppWidgetOpened(false)
         }
     })
     setTrackPopupOpenHandler(popupOpenHandler)
-  }, [appWidgetOpened])
+
+    return () => {
+      if (expandedHandler) { expandedHandler.remove() }
+      if (popupOpenHandler) { popupOpenHandler.remove() }
+    }  
+  }, [appWidgetOpened, props.isMobile])
 
   return (
     <div className="map-div" ref={mapDiv}>
       <div ref={appWidgetEl}
-        title="Témata a oblasti parkování" 
+        title={props.config.appLabels.appWidgetTitle}
         className="app-button" 
         onClick={toggleAppWidget}>
         <div className="icon"></div>
