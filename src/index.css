@@ -27,6 +27,11 @@
   height: 65vh!important;
 }
 
+.esri-popup__main-container  {
+  max-height: 250px !important;
+ 
+}
+
 .button:focus {
   outline: 2px solid green;
   outline-offset: calc(-2px* calc(1 - 2* clamp(0, var(--calcite-offset-invert-focus), 1)));
