@@ -11,13 +11,11 @@
     "appWidgetThemesTitle": "Zvolte téma mapy",
     "appWidgetZonesTitle": "Vyberte oblast parkování",
     "appWidgetLayersTitle": "Seznam vrstev",
-    "appWidgetLegendTitle": "Legenda",
-    "appWidgetAboutTitle": "O aplikaci",
     "zonesPopupTitle": "Oblast parkování",
     "zonesPopupThisZone": "Identifikovaná oblast",
     "zonesPopupCorrespondingZones": "S oprávněním pro tuto oblast můžete také parkovat v oblastech",
     "zonesPopupDraftZone": "návrh", 
-    "aboutWidget": "<h4>Autoři</h4><p><a href='https://jihlava.cz' target='_blank'>Statutární město Jihlava</a><br>odbor informatiky<br>gis@jihlava-city.cz<br>Verze 1.0.1</p>"
+    "aboutWidget": "<h4>Autoři</h4><p><a href='https://jihlava.cz' target='_blank'>Statutární město Jihlava</a><br>odbor informatiky<br>gis@jihlava-city.cz<br>Verze 1.0.3</p>"
   }, 
 
   "search": {
@@ -32,7 +30,8 @@
   },
 
   "appWidget": {
-    "openOnStartIfDesktop": true
+    "openOnStartIfDesktop": true,
+    "heightOnMobile": 250
   },
 
   "appThemes": [
