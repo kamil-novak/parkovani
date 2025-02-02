@@ -32,6 +32,7 @@ function AppWidget(props) {
     props.checkVisibleLayers(props.view, name)
     props.setSelectedZoneOid(null)
     props.removeZoneFromMap()
+    props.view.popup.close()
    
     window.history.replaceState(null, null, `?theme=${name}`);
 

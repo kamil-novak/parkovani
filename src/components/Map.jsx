@@ -66,7 +66,7 @@ function Map(props) {
   }
 
   // Remove zone from map
-  const removeZoneFromMap = async () => {
+  const removeZoneFromMap = () => {
     highlightZonesLayer.removeAll()
   }
 
