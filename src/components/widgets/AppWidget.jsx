@@ -150,7 +150,7 @@ function AppWidget(props) {
               } 
             </div>
           </div>}
-          {/* Layer List*/}
+          {/* Layer List */}
           <div 
             className={`layers section ${sectionExpanded === "layers" ? "" : "closed"}`}
             style={!props.actualThemeInfo || (props.actualThemeInfo && props.actualThemeInfo.showLayerList) ? {} : {display: "none"}}  
@@ -174,6 +174,31 @@ function AppWidget(props) {
             </div>
             <div className="section-content">
               <div ref={layerListRef}></div>
+            </div>
+          </div>
+          {/* Feedback */}
+          <div 
+            className={`feedback section ${sectionExpanded === "feedback" ? "" : "closed"}`}
+          >
+            <div 
+              className="section-title" 
+              onClick={() => {
+                sectionExpanded === "feedback" ? setSectionExpanded(null) : setSectionExpanded("feedback")
+                // GA listener
+                ReactGA.event({category: "click", action: "sekce--zpetna_vazba", label: "Rozbalení/Sbalení sekce - Zpětná vazba"})
+              }}
+            >
+            <h2>{props.config.appLabels.appWidgetFeedbackTitle}:</h2>
+            <span>
+              {
+                sectionExpanded === "feedback"
+                ? <CalciteIcon icon="chevron-up" scale="s" text-label="Sbalit"></CalciteIcon>
+                : <CalciteIcon icon="chevron-down" scale="s" text-label="Rozbalit"></CalciteIcon>
+              }
+            </span>
+            </div>
+            <div className="section-content">
+              Funkcionalita se připravuje.
             </div>
           </div>
         </div>
