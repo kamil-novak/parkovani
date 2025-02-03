@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react"
 
+// Esri
 import MapView from "@arcgis/core/views/MapView"
 import Popup from "@arcgis/core/widgets/Popup"
 import WebMap from "@arcgis/core/WebMap"
@@ -16,6 +17,10 @@ import Graphic from "@arcgis/core/Graphic"
 import * as geometryEngine from "@arcgis/core/geometry/geometryEngine"
 import * as reactiveUtils from "@arcgis/core/core/reactiveUtils"
 
+// Google Analytics
+import ReactGA from "react-ga4";
+
+// Components
 import AppWidget from "./widgets/AppWidget"
 
 // CSS
@@ -43,6 +48,8 @@ function Map(props) {
   const mapDiv = useRef(null)
   const appWidgetEl = useRef(null)
   const searchWidgetRef = useRef(null)
+  const basemapWidgetRef = useRef(null)
+  const locateWidgetRef = useRef(null)
 
   // Auxiliary functions
   function hexToRgb(hex) {
@@ -207,6 +214,7 @@ function Map(props) {
       const locateWidget = new Locate({
         view: viewInit
       })
+      locateWidgetRef.current = locateWidget
 
       // Legend
       const legendWidgetInit = new Legend({view: viewInit})
@@ -247,7 +255,7 @@ function Map(props) {
       // Basemap Toggle widget
       const basemapContainer = document.createElement("div")
       basemapContainer.classList.add("toggle-basemap-container")
-      new BasemapToggle({
+      const basemapWidget = new BasemapToggle({
         view: viewInit,
         container: basemapContainer,
         nextBasemap: new Basemap({
@@ -256,6 +264,7 @@ function Map(props) {
           }
         })
       })
+      basemapWidgetRef.current = basemapWidget
 
       // Search widget 
       const searchWidget = new Search({ 
@@ -318,34 +327,51 @@ function Map(props) {
   }, [mapDiv])
 
   useEffect(() => {
-      // Search widget expanding
-      if (!view) {return}
+    // GA4 listeners
+    if (!view) {return}
 
-      // Close button
-      const closeBtnOld = document.body.querySelector("search-close-btn")
-      if (closeBtnOld) {
-        closeBtnOld.remove()
+    locateWidgetRef.current.domNode?.addEventListener("click", () => {
+      ReactGA.event({category: "click", action: `Widget--Najdi_moji_polohu`, label: `Esri widget - Najdi moji polohu`})
+    })
+
+    basemapWidgetRef.current.domNode?.addEventListener("click", () => {
+      ReactGA.event({category: "click", action: `Widget--Prepnout_podkladovou_mapu`, label: `Esri widget - Přepnout podkladovou mapu`})
+    })
+
+  }, [view])
+
+  useEffect(() => {
+    // Search widget expanding
+    if (!view) {return}
+
+    // Close button
+    const closeBtnOld = document.body.querySelector("search-close-btn")
+    if (closeBtnOld) {
+      closeBtnOld.remove()
+    }
+    const closeBtn = document.createElement("div")
+    closeBtn.innerHTML = '<span class="esri-icon-left"></span>'
+    closeBtn.classList.add("search-close-btn")
+    searchWidgetRef.current.domNode?.firstChild?.firstChild.prepend(closeBtn)
+
+    // Expand widget after click
+    searchWidgetRef.current.domNode.querySelector(".esri-search__submit-button")?.addEventListener("click", () => {
+      if (!searchWidgetRef.current.domNode.classList.contains("search-expanded")) {
+        searchWidgetRef.current.domNode.classList.add("search-expanded")
+        searchWidgetRef.current.focus()
+
+        // GA4 listener
+        ReactGA.event({category: "click", action: `Widget--Hledat`, label: `Esri widget - Hledat`})
       }
-      const closeBtn = document.createElement("div")
-      closeBtn.innerHTML = '<span class="esri-icon-left"></span>'
-      closeBtn.classList.add("search-close-btn")
-      searchWidgetRef.current.domNode?.firstChild?.firstChild.prepend(closeBtn)
-  
-      // Expand widget after click
-      searchWidgetRef.current.domNode.querySelector(".esri-search__submit-button")?.addEventListener("click", () => {
-        if (!searchWidgetRef.current.domNode.classList.contains("search-expanded")) {
-          searchWidgetRef.current.domNode.classList.add("search-expanded")
-          searchWidgetRef.current.focus()
-        }
-      });
+    });
 
-      // Collapse widget after click
-      closeBtn.addEventListener("click", () => {
-        if (searchWidgetRef.current.domNode.classList.contains("search-expanded")) {
-          searchWidgetRef.current.domNode.classList.remove("search-expanded")
-          searchWidgetRef.current.clear()
-        }
-      })
+    // Collapse widget after click
+    closeBtn.addEventListener("click", () => {
+      if (searchWidgetRef.current.domNode.classList.contains("search-expanded")) {
+        searchWidgetRef.current.domNode.classList.remove("search-expanded")
+        searchWidgetRef.current.clear()
+      }
+    })
   }, [view])
 
   useEffect(() => {
@@ -369,6 +395,9 @@ function Map(props) {
               setSelectedZone(selectedFeature.attributes[props.config.appZones.oidAttr] + "--" + selectedFeature.layer.id)
               // Highlight feature in the map
               highlightZoneFeatures(selectedFeature.attributes[props.config.appZones.oidAttr], selectedFeature.layer.id, false)
+
+              // GA4 listener
+              ReactGA.event({category: "click", action: `Vyber_oblati_mapa--${selectedFeature.attributes[props.config.appZones.zoneCodeAttr]}`, label: `Výběr oblasti z mapy - ${selectedFeature.attributes[props.config.appZones.zoneCodeAttr]}`})
             }
             if (!popupVisible && !viewNavigating && !layerUpdating) {
               setSelectedZone(null)
