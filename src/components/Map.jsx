@@ -209,7 +209,9 @@ function Map(props) {
           }
         })
       })
-
+      // Set popup max height via config
+      document.documentElement.style.setProperty('--popup-max-height', `${props.config.popup.maxHeight}px`)
+   
       // Locate widget
       const locateWidget = new Locate({
         view: viewInit

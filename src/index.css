@@ -28,7 +28,7 @@
 }
 
 .esri-popup__main-container  {
-  max-height: 250px !important;
+  max-height: var(--popup-max-height) !important /* Variable is controled via JS (in the Map.jsx) */
  
 }
 
