@@ -6,7 +6,8 @@ import React, { useEffect, useState, useRef } from "react"
 
 // Esri
 import LocateVM from "@arcgis/core/widgets/Locate/LocateViewModel"  
-import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel"  
+import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel" 
+import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer" 
 
 // Calcite
 import "@esri/calcite-components/dist/components/calcite-text-area";
@@ -43,6 +44,10 @@ function FeedBack(props) {
   // const zonesRef = useRef(null)
 
   // State
+  const [sketchViewModel, setSketchViewModel] = useState(false) 
+  const [sketchLayer, setSketchLayer] = useState(false) 
+  const [sketchBtnState, setSketchBtnState] = useState("disabled") 
+  const [locateBtnState, setLocateBtnState] = useState("disabled") 
   const [loadingVisible, setLoadingVisible] = useState(false)
   const [formState, setFormState] = useState({
     place: {
@@ -129,6 +134,45 @@ function FeedBack(props) {
     }}))
   }
 
+  // Enable sketching
+  const enableSketching = () => {
+    props.view.graphics.removeAll()
+    sketchLayer.removeAll()
+    sketchViewModel.create("point")
+    setSketchBtnState("sketching")
+  } 
+
+  useEffect(() => { 
+    if (!props.view) { return }
+
+    // Sketch View Model
+    const sketchLayerInit = new GraphicsLayer({listMode: "hide"})
+    props.view.map.add(sketchLayerInit)
+    setSketchLayer(sketchLayerInit)
+    setSketchBtnState("active")
+    setLocateBtnState("active")
+
+    const sketchSymbol = {
+      type: "simple-marker",
+      style: "circle",
+      size: 15,
+      color: "#00F700",
+      outline: {
+        color: "#ffffff",
+        width: 1.5
+      }
+    }
+
+    setSketchViewModel( 
+      new SketchViewModel({
+        view: props.view,
+        layer: sketchLayerInit,
+        pointSymbol: sketchSymbol,
+        defaultUpdateOptions: {highlightOptions: {enabled: false}}
+      })
+    )
+  }, [props.view])
+
   useEffect(() => { 
     const savedEmail = localStorage.getItem(LOCAL_ST_EMAIL)
     if (savedEmail || typeof savedEmail === 'string') {
@@ -156,13 +200,14 @@ function FeedBack(props) {
         <div className="feedback-part-body">
           <div className="feedback-buttons">
             <div 
-              className="feedback-btn"
+              className={`feedback-btn ${sketchBtnState}`}
+              onClick={enableSketching}
             >
               <img src={iconPen} alt="zakreslit" />
               {props.config.appLabels.appWidgetFeedbackDrawPlace}
             </div>
             <div 
-              className="feedback-btn"
+              className={`feedback-btn ${locateBtnState}`}
             >
               <img src={iconGps} alt="lokalizovat" />
               {props.config.appLabels.appWidgetFeedbackLocatePlace}
