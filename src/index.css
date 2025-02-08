@@ -21,6 +21,8 @@
   --panel-mobile-width-delta: 65px;
   --esri-widget-panel-max-height: 100% !important;
   --calcite-ui-focus-color: none !important;
+  --calcite-text-area-border-color: var(--color-five) !important;
+  --calcite-color-border-input: var(--color-five) !important;
 }
 
 .esri-expand__panel {

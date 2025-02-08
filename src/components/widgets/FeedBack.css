@@ -1,0 +1,139 @@
+.feedback {
+  /* Widget variables */
+  --horizontal-gap: 5px;
+  position: relative;
+
+  /* Widget general settings */
+  .feedback-part {
+    margin: 15px 0px;
+  }
+
+  .feedback-part:first-child {
+    margin: 0px 0px 15px 0px;
+  }
+
+  .feedback-part:last-child {
+    margin: 15px 0px 0px 0px;
+  }
+
+  .feedback-part-body {
+    margin-top: 5px;
+  }
+
+  /* Loading screen */
+  .feedback-loading {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    height: 100%;
+    width: 100%;
+    z-index: 3;
+    background-color: rgba(255,255,255,.8);
+  }
+
+  .feedback-loading .spinner-main {
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+    overflow: hidden;
+    background: none;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+  }
+
+  .feedback-loading .spinner div {
+    box-sizing: content-box;
+    position: absolute;
+    width: 2.5em;
+    height: 2.5em;
+    border-radius: 50%;
+    animation: spinner 1s linear infinite;
+    top: 50%;
+    left: 50%;
+  }
+
+  .feedback-loading .spinner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform: translateZ(0) scale(1);
+    backface-visibility: hidden;
+    transform-origin: 0 0;
+  }
+  
+  .feedback-loading .spinner div {
+      border: 0.3em solid var(--color-five);
+      border-top-color: transparent;   
+  }
+
+  /* Input messages */
+  .feedback-part-footer calcite-input-message {
+    font-weight: 400;
+    color: var(--color-one);
+
+    img {
+      margin-top: -1px;
+      width: 12px;
+      height: auto;
+      padding-right: 3px;
+    }
+  }
+
+  /* Buttons */
+  .feedback-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    .feedback-btn {
+      padding: 5px 5px;
+      display: flex;
+      justify-content: start;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      white-space: wrap;
+      overflow: hidden;
+      border: 1px solid var(--color-five);
+      cursor: pointer;
+
+      img {
+        width: 13px;
+        height: auto;
+      }
+    }
+  }
+
+  .send-btn {
+    display: flex;
+    justify-content: center;
+    cursor: no-drop !important;
+    background-color: var(--color-nine);
+  }
+
+  .send-btn.active {
+    cursor: pointer !important;
+    color: var(--color-three);
+    background-color: var(--color-one);
+  }
+}
+
+/* Mobile adjustments */
+@media only screen and (max-width: 544px) {
+  .feedback { 
+
+  }
+}
+
+/* Loading spinner */
+@keyframes spinner {
+  0% { transform: translate(-50%,-50%) rotate(0deg); }
+  100% { transform: translate(-50%,-50%) rotate(360deg); }
+}
+

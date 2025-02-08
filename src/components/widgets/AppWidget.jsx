@@ -13,6 +13,9 @@ import "@esri/calcite-components/dist/components/calcite-filter";
 import { 
   CalciteIcon } from "@esri/calcite-components-react";
 
+// Components
+import FeedBack from "./FeedBack"
+
 // Images
 import iconTag from "./../../images/icon-tag.svg"
 import iconTagActive from "./../../images/icon-tag-active.svg"
@@ -198,7 +201,7 @@ function AppWidget(props) {
             </span>
             </div>
             <div className="section-content">
-              Funkcionalita se připravuje.
+              <FeedBack config={props.config} />
             </div>
           </div>
         </div>
