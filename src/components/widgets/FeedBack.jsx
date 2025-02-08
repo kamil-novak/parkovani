@@ -36,6 +36,7 @@ const MESSAGE_EMAIL_BAD_FORMAT = "Chybný email."
 const MESSAGE_EMAIL_OK = "email vložen."
 
 const LOCAL_ST_EMAIL = "parking_feedback_form_email"
+const MAX_DESC_CHARACTERS = 500
 
 function FeedBack(props) {
   // Ref
@@ -96,7 +97,7 @@ function FeedBack(props) {
   const validateDescription = (description) => {
     if (!description) return {message: MESSAGE_DESC_NONE, state: "NONE"}
 
-    const validation = description.length > 500 ? false : true
+    const validation = description.length > MAX_DESC_CHARACTERS ? false : true
 
     if (validation) return {message: MESSAGE_DESC_OK, state: "OK"}
     else return {message: MESSAGE_DESC_MANY_CHAR, state: "CAUTION" }
