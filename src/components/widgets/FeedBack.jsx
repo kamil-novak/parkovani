@@ -21,6 +21,7 @@ import iconPenActive from "./../../images/icon-pen-active.svg"
 import iconGps from "./../../images/icon-gps.svg"
 import iconCheck from "./../../images/icon-check.svg"
 import iconCheckActive from "./../../images/icon-check-active.svg"
+import iconCheckActiveBtn from "./../../images/icon-check-active-btn.svg"
 import iconInfo from "./../../images/icon-info.svg"
 import iconCaution from "./../../images/icon-caution.svg"
 
@@ -34,6 +35,8 @@ const MESSAGE_EMAIL_NONE = "email nevložen."
 const MESSAGE_EMAIL_BAD_FORMAT = "Chybný email."
 const MESSAGE_EMAIL_OK = "email vložen."
 
+const LOCAL_ST_EMAIL = "parking_feedback_form_email"
+
 function FeedBack(props) {
   // Ref
   // const zonesRef = useRef(null)
@@ -44,7 +47,7 @@ function FeedBack(props) {
     place: {
       value: "",
       message: MESSAGE_PLACE_NONE,
-      state: "NONE"
+      state: "OK"
     },
     description: {
       value: "",
@@ -52,19 +55,26 @@ function FeedBack(props) {
       state: "NONE"
     },
     email: {
-      value: localStorage.getItem("parking_feedback_form_email") ? localStorage.getItem("parking_feedback_form_email") : "",
+      value: localStorage.getItem(LOCAL_ST_EMAIL) ? localStorage.getItem(LOCAL_ST_EMAIL) : "",
       message: MESSAGE_EMAIL_NONE,
       state: "NONE"
     }
   })
 
+  // Whole form validation
+  const isFormValid = () => {
+    return formState.place.state === "OK" &&
+           formState.description.state === "OK" &&
+           formState.email.state === "OK";
+  }
+
   // Send feedback
   const sendFeedback = () => {
-    /* if (canSend) { */
-      localStorage.setItem("parking_feedback_form_email", formState.email.value)
+    if (isFormValid()) {
+      localStorage.setItem(LOCAL_ST_EMAIL, formState.email.value)
 
       console.log(props.config.appWidget.feedbackServiceUrl)
-    /* } */
+    }
   }
 
 
@@ -82,21 +92,44 @@ function FeedBack(props) {
     else return {message: MESSAGE_EMAIL_BAD_FORMAT, state: "CAUTION" }
   }
 
+  // Description validation
+  const validateDescription = (description) => {
+    if (!description) return {message: MESSAGE_DESC_NONE, state: "NONE"}
+
+    const validation = description.length > 500 ? false : true
+
+    if (validation) return {message: MESSAGE_DESC_OK, state: "OK"}
+    else return {message: MESSAGE_DESC_MANY_CHAR, state: "CAUTION" }
+  }
+
+  // Handle description
+  const handleDescription = (e) => {
+    const value = e.target.value
+    const validation = validateDescription(value)
+    setFormState((prev) => ({
+      ...prev, 
+      description: {
+        value,
+        message: validation.message,
+        state: validation.state
+    }}))
+  }
+
   // Handle email
   const handleEmail = (e) => {
-    const emailValue = e.target.value
-    const validation = validateEmail(emailValue)
+    const value = e.target.value
+    const validation = validateEmail(value)
     setFormState((prev) => ({
       ...prev, 
       email: {
-        value: emailValue,
+        value,
         message: validation.message,
         state: validation.state
     }}))
   }
 
   useEffect(() => { 
-    const savedEmail = localStorage.getItem("parking_feedback_form_email")
+    const savedEmail = localStorage.getItem(LOCAL_ST_EMAIL)
     if (savedEmail || typeof savedEmail === 'string') {
       const validation = validateEmail(savedEmail)
       setFormState((prev) => ({
@@ -151,11 +184,16 @@ function FeedBack(props) {
               placeholder="Popište..." 
               resize="vertical" 
               rows="4" 
-              scale="s">
-            </CalciteTextArea>
+              scale="s" 
+              value={formState.description.value}
+              onCalciteTextAreaInput={handleDescription}
+            />
         </div>
         <div className="feedback-part-footer">
-          <CalciteInputMessage scale="m"><img src={iconInfo} alt="zakreslit" />Popis nevložen.</CalciteInputMessage>
+          <CalciteInputMessage scale="m" className={`state-${formState.description.state}`}>
+            <img src={formState.description.state === "OK" ? iconCheckActive : formState.description.state === "NONE" ? iconInfo : iconCaution} alt="status" />
+            {formState.description.message}
+          </CalciteInputMessage>
         </div>
       </div>
       {/* Email feedback */}
@@ -185,10 +223,10 @@ function FeedBack(props) {
       <div className="feedback-part">
         <div className="feedback-part-body feedback-buttons">
           <div 
-            className="feedback-btn send-btn"
+            className={`feedback-btn send-btn ${isFormValid() && "active"}`}
             onClick={sendFeedback}  
             >
-            <img src={iconCheck} alt="odeslat"/>Odeslat
+            <img src={isFormValid() ? iconCheckActiveBtn : iconCheck} alt="odeslat"/>Odeslat
           </div>
         </div>
       </div>
