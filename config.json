@@ -13,7 +13,7 @@
     "appWidgetLayersTitle": "Seznam vrstev",
     "appWidgetFeedbackTitle": "Zpětná vazba",
     "appWidgetFeedbackPlaceTitle": "Vyberte místo v mapě, kterého se vaše zpětná vazba týká", 
-    "appWidgetFeedbackDrawPlace": "Zakreslit ručně", 
+    "appWidgetFeedbackDrawPlace": "Zakreslit ručně v mapě", 
     "appWidgetFeedbackLocatePlace": "Určit dle aktuální polohy", 
     "appWidgetFeedbackDescribeTitle": "Vaše sdělení", 
     "appWidgetFeedbackEmailTitle": "Váš email", 
@@ -36,7 +36,8 @@
 
   "appWidget": {
     "openOnStartIfDesktop": true,
-    "heightOnMobile": 250
+    "heightOnMobile": 250,
+    "feedbackServiceUrl": "https://.../FeatureServer/0"
   },
 
   "popup": {

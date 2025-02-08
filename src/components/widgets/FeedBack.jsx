@@ -17,11 +17,22 @@ import {
 
 // Images
 import iconPen from "./../../images/icon-pen.svg"
+import iconPenActive from "./../../images/icon-pen-active.svg"
 import iconGps from "./../../images/icon-gps.svg"
 import iconCheck from "./../../images/icon-check.svg"
 import iconCheckActive from "./../../images/icon-check-active.svg"
 import iconInfo from "./../../images/icon-info.svg"
 import iconCaution from "./../../images/icon-caution.svg"
+
+// Global variables
+const MESSAGE_PLACE_NONE = "Místo nevybráno."
+const MESSAGE_PLACE_OK = "Místo úspěšně vybráno."
+const MESSAGE_DESC_NONE = "Popis nevložen."
+const MESSAGE_DESC_MANY_CHAR = "Překročen povolený počet znaků."
+const MESSAGE_DESC_OK = "Popis vložen."
+const MESSAGE_EMAIL_NONE = "email nevložen."
+const MESSAGE_EMAIL_BAD_FORMAT = "Chybný email."
+const MESSAGE_EMAIL_OK = "email vložen."
 
 function FeedBack(props) {
   // Ref
@@ -29,9 +40,73 @@ function FeedBack(props) {
 
   // State
   const [loadingVisible, setLoadingVisible] = useState(false)
+  const [formState, setFormState] = useState({
+    place: {
+      value: "",
+      message: MESSAGE_PLACE_NONE,
+      state: "NONE"
+    },
+    description: {
+      value: "",
+      message: MESSAGE_DESC_NONE,
+      state: "NONE"
+    },
+    email: {
+      value: localStorage.getItem("parking_feedback_form_email") ? localStorage.getItem("parking_feedback_form_email") : "",
+      message: MESSAGE_EMAIL_NONE,
+      state: "NONE"
+    }
+  })
+
+  // Send feedback
+  const sendFeedback = () => {
+    /* if (canSend) { */
+      localStorage.setItem("parking_feedback_form_email", formState.email.value)
+
+      console.log(props.config.appWidget.feedbackServiceUrl)
+    /* } */
+  }
+
+
+  // Email validation
+  const validateEmail = (email) => {
+    if (!email) return {message: MESSAGE_EMAIL_NONE, state: "NONE"}
+
+    const validation = String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      )
+
+    if (validation) return {message: MESSAGE_EMAIL_OK, state: "OK"}
+    else return {message: MESSAGE_EMAIL_BAD_FORMAT, state: "CAUTION" }
+  }
+
+  // Handle email
+  const handleEmail = (e) => {
+    const emailValue = e.target.value
+    const validation = validateEmail(emailValue)
+    setFormState((prev) => ({
+      ...prev, 
+      email: {
+        value: emailValue,
+        message: validation.message,
+        state: validation.state
+    }}))
+  }
 
   useEffect(() => { 
-
+    const savedEmail = localStorage.getItem("parking_feedback_form_email")
+    if (savedEmail || typeof savedEmail === 'string') {
+      const validation = validateEmail(savedEmail)
+      setFormState((prev) => ({
+        ...prev, 
+        email: {
+          value: prev.email.value,
+          message: validation.message,
+          state: validation.state
+      }}))
+    }
   }, [])
 
   return (
@@ -90,21 +165,31 @@ function FeedBack(props) {
         </div>
         <div className="feedback-part-body">
           <CalciteInput 
-            className="beedback-input" 
+            className="feedback-input" 
             input-mode="email" 
             scale="s" 
             type="email" 
-            icon="envelope">
-          </CalciteInput>
+            icon="envelope"
+            value={formState.email.value}
+            onCalciteInputInput={handleEmail}
+           />
         </div>
         <div className="feedback-part-footer">
-          <CalciteInputMessage scale="m"><img src={iconInfo} alt="zakreslit" />e-mail nevložen.</CalciteInputMessage>
+          <CalciteInputMessage scale="m" className={`state-${formState.email.state}`}>
+            <img src={formState.email.state === "OK" ? iconCheckActive : formState.email.state === "NONE" ? iconInfo : iconCaution} alt="status" />
+            {formState.email.message}
+          </CalciteInputMessage>
         </div>
       </div>
       {/* Send feedback */}
       <div className="feedback-part">
         <div className="feedback-part-body feedback-buttons">
-          <div className="feedback-btn send-btn"><img src={iconCheck} alt="odeslat"/>Odeslat</div>
+          <div 
+            className="feedback-btn send-btn"
+            onClick={sendFeedback}  
+            >
+            <img src={iconCheck} alt="odeslat"/>Odeslat
+          </div>
         </div>
       </div>
     </div>

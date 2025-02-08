@@ -78,7 +78,7 @@ function AppWidget(props) {
                 ReactGA.event({category: "click", action: "sekce--temata", label: "Rozbalení/Sbalení sekce - Témata"})
               }}
               >
-              <h2>{props.config.appLabels.appWidgetThemesTitle}:</h2>
+              <h2>{props.config.appLabels.appWidgetThemesTitle}</h2>
               <span>
               {
                 sectionExpanded === "themes"
@@ -114,7 +114,7 @@ function AppWidget(props) {
                 ReactGA.event({category: "click", action: "sekce--oblasti", label: "Rozbalení/Sbalení sekce - Oblasti parkování"})
               }}
             >
-            <h2>{props.config.appLabels.appWidgetZonesTitle}:</h2>
+            <h2>{props.config.appLabels.appWidgetZonesTitle}</h2>
             <span>
               {
                 sectionExpanded === "zones"
@@ -166,7 +166,7 @@ function AppWidget(props) {
                 ReactGA.event({category: "click", action: "sekce--vrstvy", label: "Rozbalení/Sbalení sekce - Vrstvy"})
               }}
             >
-            <h2>{props.config.appLabels.appWidgetLayersTitle}:</h2>
+            <h2>{props.config.appLabels.appWidgetLayersTitle}</h2>
             <span>
               {
                 sectionExpanded === "layers"
@@ -191,7 +191,7 @@ function AppWidget(props) {
                 ReactGA.event({category: "click", action: "sekce--zpetna_vazba", label: "Rozbalení/Sbalení sekce - Zpětná vazba"})
               }}
             >
-            <h2>{props.config.appLabels.appWidgetFeedbackTitle}:</h2>
+            <h2>{props.config.appLabels.appWidgetFeedbackTitle}</h2>
             <span>
               {
                 sectionExpanded === "feedback"

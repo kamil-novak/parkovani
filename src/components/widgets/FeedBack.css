@@ -85,6 +85,10 @@
     }
   }
 
+  calcite-input-message.state-OK {
+    color: var(--color-eight);
+  }
+
   /* Buttons */
   .feedback-buttons {
     display: flex;
