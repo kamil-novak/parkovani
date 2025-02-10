@@ -32,11 +32,12 @@ const MESSAGE_PLACE_OK = "Místo úspěšně vybráno."
 const MESSAGE_DESC_NONE = "Popis nevložen."
 const MESSAGE_DESC_MANY_CHAR = "Překročen povolený počet znaků."
 const MESSAGE_DESC_OK = "Popis vložen."
-const MESSAGE_EMAIL_NONE = "email nevložen."
+const MESSAGE_EMAIL_NONE = "Email nevložen."
 const MESSAGE_EMAIL_BAD_FORMAT = "Chybný email."
-const MESSAGE_EMAIL_OK = "email vložen."
+const MESSAGE_EMAIL_OK = "Email vložen."
 
 const LOCAL_ST_EMAIL = "parking_feedback_form_email"
+const MAX_EMAIL_CHARACTERS = 250
 const MAX_DESC_CHARACTERS = 500
 
 function FeedBack(props) {
@@ -95,7 +96,7 @@ function FeedBack(props) {
       )
 
     if (validation) return {message: MESSAGE_EMAIL_OK, state: "OK"}
-    else return {message: MESSAGE_EMAIL_BAD_FORMAT, state: "CAUTION" }
+    else return {message: MESSAGE_EMAIL_BAD_FORMAT, state: "CAUTION"}
   }
 
   // Description validation
@@ -146,7 +147,7 @@ function FeedBack(props) {
     if (!props.view) { return }
 
     // Sketch View Model
-    const sketchLayerInit = new GraphicsLayer({listMode: "hide"})
+    const sketchLayerInit = new GraphicsLayer({listMode: "hide", id: "sketch-layer---system"})
     props.view.map.add(sketchLayerInit)
     setSketchLayer(sketchLayerInit)
     setSketchBtnState("active")
@@ -226,7 +227,7 @@ function FeedBack(props) {
         <div className="feedback-part-body">
             <CalciteTextArea 
               className="feedback-textarea" 
-              max-length="500" 
+              maxLength={MAX_DESC_CHARACTERS}
               placeholder="Popište..." 
               resize="vertical" 
               rows="4" 
@@ -250,6 +251,7 @@ function FeedBack(props) {
         <div className="feedback-part-body">
           <CalciteInput 
             className="feedback-input" 
+            maxLength={MAX_EMAIL_CHARACTERS}
             input-mode="email" 
             scale="s" 
             type="email" 
