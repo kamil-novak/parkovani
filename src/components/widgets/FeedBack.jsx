@@ -326,8 +326,8 @@ function FeedBack(props) {
               maxLength={MAX_DESC_CHARACTERS}
               placeholder="Popište..." 
               resize="vertical" 
-              rows="4" 
-              scale="s" 
+              rows={props.isMobile ? "3" : "4"}
+              scale={props.isMobile ? "m" : "s"}
               value={formState.description.value}
               onCalciteTextAreaInput={handleDescription}
             />
@@ -349,7 +349,7 @@ function FeedBack(props) {
             className="feedback-input" 
             maxLength={MAX_EMAIL_CHARACTERS}
             input-mode="email" 
-            scale="s" 
+            scale={props.isMobile ? "m" : "s"}
             type="email" 
             icon="envelope"
             value={formState.email.value}

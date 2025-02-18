@@ -201,7 +201,7 @@ function AppWidget(props) {
             </span>
             </div>
             <div className="section-content">
-              <FeedBack config={props.config} view={props.view} />
+              <FeedBack config={props.config} view={props.view} isMobile={props.isMobile} />
             </div>
           </div>
         </div>

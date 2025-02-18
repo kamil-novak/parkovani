@@ -159,7 +159,10 @@
 /* Mobile adjustments */
 @media only screen and (max-width: 544px) {
   .feedback { 
-
+    .feedback-btn {
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
   }
 }
 
