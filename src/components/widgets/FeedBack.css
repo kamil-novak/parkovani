@@ -20,58 +20,6 @@
     margin-top: 5px;
   }
 
-  /* Loading screen */
-  .feedback-loading {
-    position: absolute;
-    right: 0px;
-    top: 0px;
-    height: 100%;
-    width: 100%;
-    z-index: 3;
-    background-color: rgba(255,255,255,.8);
-  }
-
-  .feedback-loading .spinner-main {
-    width: 100%;
-    height: 100%;
-    display: inline-block;
-    overflow: hidden;
-    background: none;
-    position: relative;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    -webkit-transform: translate(-50%, -50%);
-    -moz-transform: translate(-50%, -50%);
-    -ms-transform: translate(-50%, -50%);
-    -o-transform: translate(-50%, -50%);
-  }
-
-  .feedback-loading .spinner div {
-    box-sizing: content-box;
-    position: absolute;
-    width: 2.5em;
-    height: 2.5em;
-    border-radius: 50%;
-    animation: spinner 1s linear infinite;
-    top: 50%;
-    left: 50%;
-  }
-
-  .feedback-loading .spinner {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    transform: translateZ(0) scale(1);
-    backface-visibility: hidden;
-    transform-origin: 0 0;
-  }
-  
-  .feedback-loading .spinner div {
-      border: 0.3em solid var(--color-five);
-      border-top-color: transparent;   
-  }
-
   /* Input messages */
   .feedback-part-footer calcite-input-message {
     font-weight: 400;
@@ -154,6 +102,26 @@
     background-color: var(--color-one);
     border: 1px solid var(--color-one);
   }
+
+  /* Feedback messages */
+  .feedback-btn.send-btn.feedback-message {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    left: 0px;
+    z-index: 100;
+  }
+
+  .feedback-btn.send-btn.feedback-message.success {
+    background-color: var(--color-ten);
+    color: var(--color-eight);
+    border: 1px solid var(--color-eight);
+  }
+  .feedback-btn.send-btn.feedback-message.error {
+    background-color: rgb(from var(--color-one) r g b / 10%);
+    color: var(--color-one);
+    border: 1px solid var(--color-one);
+  }
 }
 
 /* Mobile adjustments */
@@ -162,6 +130,10 @@
     .feedback-btn {
       padding-top: 10px;
       padding-bottom: 10px;
+    }
+    .feedback-btn.send-btn.feedback-message {
+      padding-top: 15px;
+      padding-bottom: 15px;
     }
   }
 }

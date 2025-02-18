@@ -2,7 +2,7 @@
 import "./FeedBack.css";
 
 // Modules
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useRef } from "react"
 
 // Esri
 import LocateVM from "@arcgis/core/widgets/Locate/LocateViewModel"  
@@ -30,6 +30,8 @@ import iconCheckActiveBtn from "./../../images/icon-check-active-btn.svg"
 import iconInfo from "./../../images/icon-info.svg"
 import iconCaution from "./../../images/icon-caution.svg"
 
+import iconLoading from "./../../images/icon-loading.svg"
+
 // Global variables
 const MESSAGE_PLACE_NONE = "Místo nevybráno."
 const MESSAGE_PLACE_OK = "Místo úspěšně vybráno."
@@ -45,16 +47,16 @@ const MAX_EMAIL_CHARACTERS = 250
 const MAX_DESC_CHARACTERS = 500
 
 function FeedBack(props) {
-  // Ref
-  // const zonesRef = useRef(null)
-
   // State
   const [sketchViewModel, setSketchViewModel] = useState(false) 
   const [sketchBtnState, setSketchBtnState] = useState("disabled") 
   const [locateBtnState, setLocateBtnState] = useState("disabled") 
   const [removeBtnState, setRemoveBtnState] = useState("disabled") 
   const [locateViewModel, setLocateViewModel] = useState(false) 
+  const [locatingActive, setLocatingActive] = useState(false) 
   const [loadingVisible, setLoadingVisible] = useState(false)
+  const [feedbackSuccessMessage, setFeedbackSuccessMessage] = useState(false)
+  const [feedbackErrorMessage, setFeedbackErrorMessage] = useState(false)
   const [formState, setFormState] = useState({
     place: {
       value: null,
@@ -72,6 +74,11 @@ function FeedBack(props) {
       state: "NONE"
     }
   })
+
+  // Refs
+  const descriptionTextAreaRef = useRef()
+  const emailInputAreaRef = useRef()
+
 
   const PLACE_SYMBOL = {
     type: "simple-marker",
@@ -92,14 +99,60 @@ function FeedBack(props) {
   }
 
   // Send feedback
-  const sendFeedback = () => {
+  const sendFeedback = async () => {
     if (isFormValid()) {
+      // Before sending...
+      setLoadingVisible(true)
+      setSketchBtnState("disabled")
+      setLocateBtnState("disabled")
+      setRemoveBtnState("disabled")
+      descriptionTextAreaRef.current.disabled = true
+      emailInputAreaRef.current.disabled = true
       localStorage.setItem(LOCAL_ST_EMAIL, formState.email.value)
+      await applyEdits ()
 
-      console.log(props.config.appWidget.feedbackServiceUrl)
+      // After sending
+      resetForm()
+      setLoadingVisible(false)
+      setFeedbackSuccessMessage(true)
+      setSketchBtnState("ready")
+      setLocateBtnState("ready")
+      setRemoveBtnState("ready")
+      descriptionTextAreaRef.current.disabled = false
+      emailInputAreaRef.current.disabled = false
+      setTimeout(() => {
+        setFeedbackSuccessMessage(false)
+      }, 5000)
     }
   }
 
+  // SMAZAT!!! - SIMULACE APPLY EDITS
+  const applyEdits = () => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, 3000)
+    })
+  }
+
+  // Reset form
+  const resetForm = () => {
+    removeFeedbackGrapgic()
+    setRemoveBtnState("disabled")
+    setFormState((prev) => ({
+      ...prev, 
+      place: {
+        value: null,
+        message: MESSAGE_PLACE_NONE,
+        state: "NONE"
+      },
+      description: {
+        value: "",
+        message: MESSAGE_DESC_NONE,
+        state: "NONE"
+      }
+    }))
+  }
 
   // Email validation
   const validateEmail = (email) => {
@@ -199,14 +252,16 @@ function FeedBack(props) {
   }
 
   // Enable locating
-  const enableLocating = async () => {
+  const handleLocate = async () => {
     // Locating...
     removeFeedbackGrapgic()
     setSketchBtnState("disabled")
-    setLocateBtnState("active")
+    setLocateBtnState("disabled")
+    setLocatingActive(true)
     const place = await locateViewModel.locate()
 
     // Located
+    setLocatingActive(false)
     setSketchBtnState("ready")
     setLocateBtnState("ready")
     handlePlaceCreated(new Graphic({
@@ -272,9 +327,6 @@ function FeedBack(props) {
 
   return (
     <div className="feedback">
-      {
-        loadingVisible && <div className="feedback-loading"><div className="spinner-main"><div className="spinner"><div></div></div></div></div>
-      }
       {/* Locate feedback */}
       <div className="feedback-part">
         <div className="feedback-part-header">
@@ -293,10 +345,10 @@ function FeedBack(props) {
             {/* Locate */}
             <div 
               className={`feedback-btn ${locateBtnState}`}
-              onClick={enableLocating}
+              onClick={handleLocate}
             >
               <img src={locateBtnState === "active" || locateBtnState === "ready" ? iconGpsActive : iconGps}  alt="lokalizovat" />
-              {props.config.appLabels.appWidgetFeedbackLocatePlace}
+              {locatingActive ? props.config.appLabels.appWidgetFeedbackLocatingPlace : props.config.appLabels.appWidgetFeedbackLocatePlace}
             </div> 
             {/* Remove */}
             <div 
@@ -322,6 +374,7 @@ function FeedBack(props) {
         </div>
         <div className="feedback-part-body">
             <CalciteTextArea 
+              ref={descriptionTextAreaRef}
               className="feedback-textarea" 
               maxLength={MAX_DESC_CHARACTERS}
               placeholder="Popište..." 
@@ -346,6 +399,7 @@ function FeedBack(props) {
         </div>
         <div className="feedback-part-body">
           <CalciteInput 
+            ref={emailInputAreaRef}
             className="feedback-input" 
             maxLength={MAX_EMAIL_CHARACTERS}
             input-mode="email" 
@@ -367,12 +421,26 @@ function FeedBack(props) {
       <div className="feedback-part">
         <div className="feedback-part-body feedback-buttons">
           <div 
-            className={`feedback-btn send-btn ${isFormValid() && "active"}`}
+            className={`feedback-btn send-btn ${isFormValid() && !loadingVisible ? "active" : ""}`}
             onClick={sendFeedback}  
             >
-            <img src={isFormValid() ? iconCheckActiveBtn : iconCheck} alt="odeslat"/>Odeslat
+            <img src={isFormValid() && !loadingVisible ? iconCheckActiveBtn : isFormValid() && loadingVisible ? iconLoading : iconCheck} alt="odeslat"/>{!loadingVisible ?props.config.appLabels.appWidgetFeedbackSendBtn : props.config.appLabels.appWidgetFeedbackSendingBtn}
           </div>
         </div>
+        {feedbackSuccessMessage && <div className="feedback-part-body feedback-buttons">
+          <div 
+            className="feedback-btn send-btn feedback-message success"
+            >
+            <img src={iconCheckActive} alt="zpětná vazba odeslána"/>{props.config.appLabels.appWidgetFeedbackSuccess}
+          </div>
+        </div>}
+        {feedbackErrorMessage && <div className="feedback-part-body feedback-buttons">
+          <div 
+            className="feedback-btn send-btn feedback-message error"
+            >
+            <img src={iconCaution} alt="zpětná vazba nebyla odeslána"/>{props.config.appLabels.appWidgetFeedbackError}
+          </div>
+        </div>}
       </div>
     </div>
   )
