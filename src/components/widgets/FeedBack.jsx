@@ -2,12 +2,12 @@
 import "./FeedBack.css";
 
 // Modules
-import React, { useEffect, useState, useRef } from "react"
+import React, { useEffect, useState } from "react"
 
 // Esri
 import LocateVM from "@arcgis/core/widgets/Locate/LocateViewModel"  
 import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel" 
-import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer" 
+import Graphic from "@arcgis/core/Graphic" 
 
 // Calcite
 import "@esri/calcite-components/dist/components/calcite-text-area";
@@ -53,6 +53,7 @@ function FeedBack(props) {
   const [sketchBtnState, setSketchBtnState] = useState("disabled") 
   const [locateBtnState, setLocateBtnState] = useState("disabled") 
   const [removeBtnState, setRemoveBtnState] = useState("disabled") 
+  const [locateViewModel, setLocateViewModel] = useState(false) 
   const [loadingVisible, setLoadingVisible] = useState(false)
   const [formState, setFormState] = useState({
     place: {
@@ -71,6 +72,17 @@ function FeedBack(props) {
       state: "NONE"
     }
   })
+
+  const PLACE_SYMBOL = {
+    type: "simple-marker",
+    style: "circle",
+    size: props.config.appWidget.feedbackMapSymbol.size,
+    color: props.config.appWidget.feedbackMapSymbol.color,
+    outline: {
+      color: props.config.appWidget.feedbackMapSymbol.outline.color,
+      width: props.config.appWidget.feedbackMapSymbol.outline.width
+    }
+  }
 
   // Whole form validation
   const isFormValid = () => {
@@ -141,9 +153,8 @@ function FeedBack(props) {
 
   // Enable sketching
   const enableSketching = () => {
-    // props.view.graphics.removeAll() DODĚLAT VYMAZÁNÍ GRAFIKY LOCATIONU
     // Remove old sketch
-    props.view.graphics.remove(formState.place.value)
+    removeFeedbackGrapgic()
     setFormState((prev) => ({
       ...prev, 
       place: {
@@ -159,11 +170,11 @@ function FeedBack(props) {
   } 
 
   // Handle when place is created in the map
-  const handlePlaceCreated = (e) => {
+  const handlePlaceCreated = (graphic) => {
     setFormState((prev) => ({
       ...prev, 
       place: {
-        value: e.graphic,
+        value: graphic,
         message: MESSAGE_PLACE_OK,
         state: "OK"
     }}))
@@ -174,7 +185,7 @@ function FeedBack(props) {
 
   // Handle when place is removed from map
   const handlePlaceRemoved = () => {
-    props.view.graphics.remove(formState.place.value)
+    removeFeedbackGrapgic()
     setFormState((prev) => ({
       ...prev, 
       place: {
@@ -187,6 +198,32 @@ function FeedBack(props) {
     setRemoveBtnState("disabled")
   }
 
+  // Enable locating
+  const enableLocating = async () => {
+    // Locating...
+    removeFeedbackGrapgic()
+    setSketchBtnState("disabled")
+    setLocateBtnState("active")
+    const place = await locateViewModel.locate()
+
+    // Located
+    setSketchBtnState("ready")
+    setLocateBtnState("ready")
+    handlePlaceCreated(new Graphic({
+      geometry: {
+        type: "point",
+        longitude: place.coords.longitude, 
+        latitude: place.coords.latitude
+      }
+    }))
+  }
+
+  // Remove feedback graphic
+  const removeFeedbackGrapgic = () => {
+    props.view.graphics.remove(formState.place.value)  
+    props.view.graphics.remove(locateViewModel.graphic) 
+  }
+
   useEffect(() => { 
     if (!props.view) { return }
 
@@ -197,23 +234,25 @@ function FeedBack(props) {
     const SketchViewModelInit = new SketchViewModel({
       view: props.view,
       layer: props.view.graphics,
-      pointSymbol: {
-        type: "simple-marker",
-        style: "circle",
-        size: props.config.appWidget.feedbackMapSymbol.size,
-        color: props.config.appWidget.feedbackMapSymbol.color,
-        outline: {
-          color: props.config.appWidget.feedbackMapSymbol.outline.color,
-          width: props.config.appWidget.feedbackMapSymbol.outline.width
-        }
-      },
+      pointSymbol: PLACE_SYMBOL,
       defaultUpdateOptions: {highlightOptions: {enabled: false}}
     })
 
     setSketchViewModel(SketchViewModelInit)
     SketchViewModelInit.on("create", (e) => {
-      handlePlaceCreated(e)
+      handlePlaceCreated(e.graphic)
     })
+
+    // Locate View Model
+    const locateVMInit = new LocateVM({
+      view: props.view,
+      scale: 500,
+      popupEnabled: false,
+      graphic: new Graphic({
+        symbol: PLACE_SYMBOL
+      })
+    })
+    setLocateViewModel(locateVMInit)
 
   }, [props.view])
 
@@ -254,6 +293,7 @@ function FeedBack(props) {
             {/* Locate */}
             <div 
               className={`feedback-btn ${locateBtnState}`}
+              onClick={enableLocating}
             >
               <img src={locateBtnState === "active" || locateBtnState === "ready" ? iconGpsActive : iconGps}  alt="lokalizovat" />
               {props.config.appLabels.appWidgetFeedbackLocatePlace}
