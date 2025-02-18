@@ -12,10 +12,22 @@
     "appWidgetZonesTitle": "Vyberte oblast parkování",
     "appWidgetLayersTitle": "Seznam vrstev",
     "appWidgetFeedbackTitle": "Zpětná vazba",
+    "appWidgetFeedbackPlaceTitle": "Vyberte místo v mapě, kterého se vaše zpětná vazba týká", 
+    "appWidgetFeedbackDrawPlace": "Zakreslit ručně", 
+    "appWidgetFeedbackDrawingPlace": "Klikněte na místo v mapě...", 
+    "appWidgetFeedbackLocatePlace": "Určit dle aktuální polohy", 
+    "appWidgetFeedbackLocatingPlace": "Lokalizuji...", 
+    "appWidgetFeedbackRemovePlace": "Smazat zákres",
+    "appWidgetFeedbackDescribeTitle": "Vaše sdělení", 
+    "appWidgetFeedbackEmailTitle": "Váš email", 
+    "appWidgetFeedbackSendBtn": "Odeslat", 
+    "appWidgetFeedbackSendingBtn": "Odesílám...", 
+    "appWidgetFeedbackSuccess": "Vaše zpětná vazba byla odeslána. Děkujeme.", 
+    "appWidgetFeedbackError": "Zpětnou vazbu se nepodařilo odeslat. Zkuste to prosím později.", 
     "zonesPopupTitle": "Oblast parkování",
     "zonesPopupCorrespondingZones": "S oprávněním pro tuto oblast můžete také parkovat v oblastech",
     "zonesPopupDraftZone": "návrh", 
-    "aboutWidget": "<h4>Autoři</h4><p><a href='https://jihlava.cz' target='_blank'>Statutární město Jihlava</a><br>odbor informatiky<br>gis@jihlava-city.cz<br>Verze 1.0.3</p>"
+    "aboutWidget": "<h4>Autoři</h4><p><a href='https://jihlava.cz' target='_blank'>Statutární město Jihlava</a><br>odbor informatiky<br>gis@jihlava-city.cz<br>Verze 1.0.4</p>"
   }, 
 
   "search": {
@@ -31,7 +43,20 @@
 
   "appWidget": {
     "openOnStartIfDesktop": true,
-    "heightOnMobile": 250
+    "heightOnMobile": 250,
+    "feedbackServiceUrl": "https://.../FeatureServer/0",
+    "feedbackMapSymbol": {
+      "size": 15,
+      "color": "#00F700",
+      "outline": {
+        "color": "#ffffff",
+        "width": 1.5
+      }
+    }
+  },
+
+  "popup": {
+    "maxHeight": 250
   },
 
   "appThemes": [
