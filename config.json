@@ -14,7 +14,9 @@
     "appWidgetFeedbackTitle": "Zpětná vazba",
     "appWidgetFeedbackPlaceTitle": "Vyberte místo v mapě, kterého se vaše zpětná vazba týká", 
     "appWidgetFeedbackDrawPlace": "Zakreslit v mapě", 
+    "appWidgetFeedbackDrawingPlace": "Klikněte na místo v mapě...", 
     "appWidgetFeedbackLocatePlace": "Určit dle aktuální polohy", 
+    "appWidgetFeedbackRemovePlace": "Smazat zákres",
     "appWidgetFeedbackDescribeTitle": "Vaše sdělení", 
     "appWidgetFeedbackEmailTitle": "Váš email", 
     "zonesPopupTitle": "Oblast parkování",
@@ -37,7 +39,15 @@
   "appWidget": {
     "openOnStartIfDesktop": true,
     "heightOnMobile": 250,
-    "feedbackServiceUrl": "https://.../FeatureServer/0"
+    "feedbackServiceUrl": "https://.../FeatureServer/0",
+    "feedbackMapSymbol": {
+      "size": 15,
+      "color": "#00F700",
+      "outline": {
+        "color": "#ffffff",
+        "width": 1.5
+      }
+    }
   },
 
   "popup": {

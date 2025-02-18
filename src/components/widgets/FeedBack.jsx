@@ -20,6 +20,10 @@ import {
 import iconPen from "./../../images/icon-pen.svg"
 import iconPenActive from "./../../images/icon-pen-active.svg"
 import iconGps from "./../../images/icon-gps.svg"
+import iconGpsActive from "./../../images/icon-gps-active.svg"
+import iconBin from "./../../images/icon-bin.svg"
+import iconBinActive from "./../../images/icon-bin-active.svg"
+
 import iconCheck from "./../../images/icon-check.svg"
 import iconCheckActive from "./../../images/icon-check-active.svg"
 import iconCheckActiveBtn from "./../../images/icon-check-active-btn.svg"
@@ -46,15 +50,15 @@ function FeedBack(props) {
 
   // State
   const [sketchViewModel, setSketchViewModel] = useState(false) 
-  const [sketchLayer, setSketchLayer] = useState(false) 
   const [sketchBtnState, setSketchBtnState] = useState("disabled") 
   const [locateBtnState, setLocateBtnState] = useState("disabled") 
+  const [removeBtnState, setRemoveBtnState] = useState("disabled") 
   const [loadingVisible, setLoadingVisible] = useState(false)
   const [formState, setFormState] = useState({
     place: {
-      value: "",
+      value: null,
       message: MESSAGE_PLACE_NONE,
-      state: "OK"
+      state: "NONE"
     },
     description: {
       value: "",
@@ -137,41 +141,80 @@ function FeedBack(props) {
 
   // Enable sketching
   const enableSketching = () => {
-    props.view.graphics.removeAll()
-    sketchLayer.removeAll()
+    // props.view.graphics.removeAll() DODĚLAT VYMAZÁNÍ GRAFIKY LOCATIONU
+    // Remove old sketch
+    props.view.graphics.remove(formState.place.value)
+    setFormState((prev) => ({
+      ...prev, 
+      place: {
+        value: null,
+        message: MESSAGE_PLACE_NONE,
+        state: "NONE"
+    }}))
+
+    // Add new sketch
     sketchViewModel.create("point")
-    setSketchBtnState("sketching")
+    setSketchBtnState("active")
+    setRemoveBtnState("disabled")
   } 
+
+  // Handle when place is created in the map
+  const handlePlaceCreated = (e) => {
+    setFormState((prev) => ({
+      ...prev, 
+      place: {
+        value: e.graphic,
+        message: MESSAGE_PLACE_OK,
+        state: "OK"
+    }}))
+    setSketchBtnState("ready")
+    setLocateBtnState("ready")
+    setRemoveBtnState("ready")
+  }
+
+  // Handle when place is removed from map
+  const handlePlaceRemoved = () => {
+    props.view.graphics.remove(formState.place.value)
+    setFormState((prev) => ({
+      ...prev, 
+      place: {
+        value: null,
+        message: MESSAGE_PLACE_NONE,
+        state: "NONE"
+    }}))
+    setSketchBtnState("ready")
+    setLocateBtnState("ready")
+    setRemoveBtnState("disabled")
+  }
 
   useEffect(() => { 
     if (!props.view) { return }
 
     // Sketch View Model
-    const sketchLayerInit = new GraphicsLayer({listMode: "hide", id: "sketch-layer---system"})
-    props.view.map.add(sketchLayerInit)
-    setSketchLayer(sketchLayerInit)
-    setSketchBtnState("active")
-    setLocateBtnState("active")
+    setSketchBtnState("ready")
+    setLocateBtnState("ready")
 
-    const sketchSymbol = {
-      type: "simple-marker",
-      style: "circle",
-      size: 15,
-      color: "#00F700",
-      outline: {
-        color: "#ffffff",
-        width: 1.5
-      }
-    }
+    const SketchViewModelInit = new SketchViewModel({
+      view: props.view,
+      layer: props.view.graphics,
+      pointSymbol: {
+        type: "simple-marker",
+        style: "circle",
+        size: props.config.appWidget.feedbackMapSymbol.size,
+        color: props.config.appWidget.feedbackMapSymbol.color,
+        outline: {
+          color: props.config.appWidget.feedbackMapSymbol.outline.color,
+          width: props.config.appWidget.feedbackMapSymbol.outline.width
+        }
+      },
+      defaultUpdateOptions: {highlightOptions: {enabled: false}}
+    })
 
-    setSketchViewModel( 
-      new SketchViewModel({
-        view: props.view,
-        layer: sketchLayerInit,
-        pointSymbol: sketchSymbol,
-        defaultUpdateOptions: {highlightOptions: {enabled: false}}
-      })
-    )
+    setSketchViewModel(SketchViewModelInit)
+    SketchViewModelInit.on("create", (e) => {
+      handlePlaceCreated(e)
+    })
+
   }, [props.view])
 
   useEffect(() => { 
@@ -200,23 +243,36 @@ function FeedBack(props) {
         </div>
         <div className="feedback-part-body">
           <div className="feedback-buttons">
+            {/* Draw */}
             <div 
               className={`feedback-btn ${sketchBtnState}`}
               onClick={enableSketching}
             >
-              <img src={iconPen} alt="zakreslit" />
-              {props.config.appLabels.appWidgetFeedbackDrawPlace}
+              <img src={sketchBtnState === "active" || sketchBtnState === "ready" ? iconPenActive : iconPen} alt="zakreslit" />
+              {sketchBtnState === "ready" ||  sketchBtnState === "disabled" ? props.config.appLabels.appWidgetFeedbackDrawPlace : props.config.appLabels.appWidgetFeedbackDrawingPlace}
             </div>
+            {/* Locate */}
             <div 
               className={`feedback-btn ${locateBtnState}`}
             >
-              <img src={iconGps} alt="lokalizovat" />
+              <img src={locateBtnState === "active" || locateBtnState === "ready" ? iconGpsActive : iconGps}  alt="lokalizovat" />
               {props.config.appLabels.appWidgetFeedbackLocatePlace}
-            </div>  
+            </div> 
+            {/* Remove */}
+            <div 
+              className={`feedback-btn ${removeBtnState} remove`}
+              onClick={handlePlaceRemoved}
+            >
+              <img src={removeBtnState === "ready" ? iconBinActive : iconBin}  alt="smazat zákres" />
+              {props.config.appLabels.appWidgetFeedbackRemovePlace}
+            </div>   
           </div>
         </div>
         <div className="feedback-part-footer">
-          <CalciteInputMessage scale="m"><img src={iconInfo} alt="zakreslit" />Místo nevybráno.</CalciteInputMessage>
+          <CalciteInputMessage scale="m" className={`state-${formState.place.state}`}>
+            <img src={formState.place.state === "OK" ? iconCheckActive : formState.place.state === "NONE" ? iconInfo : iconCaution} alt="status" />
+            {formState.place.message}
+          </CalciteInputMessage>
         </div>
       </div>
       {/* Describe feedback */}

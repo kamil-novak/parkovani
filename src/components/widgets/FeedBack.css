@@ -110,27 +110,49 @@
     white-space: nowrap;
     white-space: wrap;
     overflow: hidden;
-    border: 1px solid var(--color-five);
+    border: 1px solid transparent;
+  }
+  
+  .feedback-btn.disabled {
+    color: var(--calcite-color-text-2);
     background-color: var(--color-nine);
+    border: 1px solid transparent;
     cursor: no-drop !important;
   }
 
-  .feedback-btn.active {
+  .feedback-btn.ready {
+    color: var(--color-eight);
+    border: 1px solid var(--color-eight);
     background-color: transparent;
     cursor: pointer !important;
   }
 
-  .send-btn {
-    display: flex;
-    justify-content: center;
-    cursor: no-drop !important;
-    background-color: var(--color-nine);
+  .feedback-btn.ready.remove {
+    color: var(--color-one);
+    border: 1px solid var(--color-one);
+    background-color: transparent;
+    cursor: pointer !important;
   }
 
-  .send-btn.active {
+  .feedback-btn.active {
+    color: var(--color-eight);
+    border: 1px solid var(--color-eight);
+    background-color: var(--color-ten);
+    cursor: pointer !important;
+  }
+
+  .feedback-btn.send-btn {
+    display: flex;
+    justify-content: center;
+    background-color: var(--color-nine);
+    cursor: no-drop !important;
+  }
+
+  .feedback-btn.send-btn.active {
     cursor: pointer !important;
     color: var(--color-three);
     background-color: var(--color-one);
+    border: 1px solid var(--color-one);
   }
 }
 
