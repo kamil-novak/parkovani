@@ -117,7 +117,7 @@ function FeedBack(props) {
       setFeedbackSuccessMessage(true)
       setSketchBtnState("ready")
       setLocateBtnState("ready")
-      setRemoveBtnState("ready")
+      setRemoveBtnState("disabled")
       descriptionTextAreaRef.current.disabled = false
       emailInputAreaRef.current.disabled = false
       setTimeout(() => {
@@ -427,14 +427,14 @@ function FeedBack(props) {
             <img src={isFormValid() && !loadingVisible ? iconCheckActiveBtn : isFormValid() && loadingVisible ? iconLoading : iconCheck} alt="odeslat"/>{!loadingVisible ?props.config.appLabels.appWidgetFeedbackSendBtn : props.config.appLabels.appWidgetFeedbackSendingBtn}
           </div>
         </div>
-        {feedbackSuccessMessage && <div className="feedback-part-body feedback-buttons">
+        {feedbackSuccessMessage && <div className="feedback-buttons">
           <div 
             className="feedback-btn send-btn feedback-message success"
             >
             <img src={iconCheckActive} alt="zpětná vazba odeslána"/>{props.config.appLabels.appWidgetFeedbackSuccess}
           </div>
         </div>}
-        {feedbackErrorMessage && <div className="feedback-part-body feedback-buttons">
+        {feedbackErrorMessage && <div className="feedback-buttons">
           <div 
             className="feedback-btn send-btn feedback-message error"
             >
