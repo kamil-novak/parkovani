@@ -1,1 +1,0 @@
-import{cp as c}from"./index-lgQOPtME.js";import{c as m}from"./queryTopFeatures-CW6aGoL2.js";import n from"./TopFeaturesQuery-DOix1lV3.js";async function e(o,t,r){const a=c(o);return(await m(a,n.from(t),{...r})).data.count}export{e as executeForTopCount};
