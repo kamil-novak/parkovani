@@ -135,11 +135,12 @@ function App() {
       if (themeFc?.visibleLayers.includes(layer.title)) {
         layer.visible = true
       }
-  
-      if (layer.allSublayers) {
-      
+
+      if (layer.allSublayers || layer.allLayers) {
+        
         layer.when(() => {
-          layer.allSublayers.forEach((sublayer) => {
+          const subLyr = layer.allSublayers || layer.allLayers
+          subLyr.forEach((sublayer) => {
             sublayer.visible = false
             if (themeFc?.visibleLayers.includes(sublayer.title)) {
               sublayer.visible = true
@@ -157,10 +158,11 @@ function App() {
         getZonesLayer(view)
       })
 
-      if (layer.allSublayers) {
+      if (layer.allSublayers || layer.allLayers) {
         
         layer.when(() => {
-          layer.allSublayers.forEach((sublayer) => {
+          const subLyr = layer.allSublayers || layer.allLayers
+          subLyr.forEach((sublayer) => {
             const switchSublayerHandlerLocal = sublayer.watch("visible", () => {
               setActualTheme("[no-theme]")
               getZonesLayer(view)
@@ -201,26 +203,50 @@ function App() {
             zonesLayerViewsInit.push(layerView)
           })
         }
-        // If zones in sublayer
-        if (layer.allSublayers) {
-          layer.when(async () => {
-            for (const subLayer of layer.allSublayers.items) {
+        // If zones in sublayer or gruplayer
+        if (layer.allSublayers || layer.allLayers) {
+          
+          await layer.when(async () => {
+            for (const subLayer of layer.allSublayers?.items || layer.allLayers?.items) {
               if (config.appZones.fromLayers.includes(subLayer.title) ) {
-                subLayer.popupEnabled = true
-                subLayer.popupTemplate = zonesPopupTemplate
-                subLayer.outFields = ["*"]
-                zonesLayersInit.push(subLayer)
-                const zonesFeaturesInit = await getZoneFeatures(subLayer)
-                zonesFeaturesInitAll.push(...zonesFeaturesInit)
+                // GrupLayer
+                if (layer.type === "group") {
+                  await subLayer.when(async () => {
+                    subLayer.popupEnabled = true
+                    subLayer.popupTemplate = zonesPopupTemplate
+                    subLayer.outFields = ["*"]
+                    zonesLayersInit.push(subLayer)
+                    const zonesFeaturesInit = await getZoneFeatures(subLayer)
+                    zonesFeaturesInitAll.push(...zonesFeaturesInit)
 
-                view.whenLayerView(subLayer).then((subLayerView) => {
-                  subLayerView.highlightOptions = {
-                    color: [0,0,0,0],
-                    haloOpacity: 1,
-                    fillOpacity: 1
-                  }
-                  zonesLayerViewsInit.push(subLayerView)
-                })
+                    view.whenLayerView(subLayer).then((subLayerView) => {
+                      subLayerView.highlightOptions = {
+                        color: [0,0,0,0],
+                        haloOpacity: 1,
+                        fillOpacity: 1
+                      }
+                      zonesLayerViewsInit.push(subLayerView)
+                    })
+                  })
+                } 
+                // SubLayer
+                else {
+                  subLayer.popupEnabled = true
+                  subLayer.popupTemplate = zonesPopupTemplate
+                  subLayer.outFields = ["*"]
+                  zonesLayersInit.push(subLayer)
+                  const zonesFeaturesInit = await getZoneFeatures(subLayer)
+                  zonesFeaturesInitAll.push(...zonesFeaturesInit)
+                  
+                  view.whenLayerView(subLayer).then((subLayerView) => {
+                    subLayerView.highlightOptions = {
+                      color: [0,0,0,0],
+                      haloOpacity: 1,
+                      fillOpacity: 1
+                    }
+                    zonesLayerViewsInit.push(subLayerView)
+                  })
+                }
               }
             }
           })
