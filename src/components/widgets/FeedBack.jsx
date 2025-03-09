@@ -8,6 +8,7 @@ import React, { useEffect, useState, useRef } from "react"
 import LocateVM from "@arcgis/core/widgets/Locate/LocateViewModel"  
 import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel" 
 import Graphic from "@arcgis/core/Graphic" 
+import FeatureLayer from "@arcgis/core/layers/FeatureLayer"
 
 // Calcite
 import "@esri/calcite-components/dist/components/calcite-text-area";
@@ -109,30 +110,58 @@ function FeedBack(props) {
       descriptionTextAreaRef.current.disabled = true
       emailInputAreaRef.current.disabled = true
       localStorage.setItem(LOCAL_ST_EMAIL, formState.email.value)
-      await applyEdits ()
+      const sendResponse = await sendData()
 
       // After sending
       resetForm()
       setLoadingVisible(false)
-      setFeedbackSuccessMessage(true)
+      if (sendResponse !== "ERROR") {
+        setFeedbackSuccessMessage(true)
+      } else {
+        setFeedbackErrorMessage(true)
+      }
       setSketchBtnState("ready")
       setLocateBtnState("ready")
       setRemoveBtnState("disabled")
       descriptionTextAreaRef.current.disabled = false
       emailInputAreaRef.current.disabled = false
       setTimeout(() => {
+        setFeedbackErrorMessage(false)
         setFeedbackSuccessMessage(false)
       }, 5000)
     }
   }
 
-  // SMAZAT!!! - SIMULACE APPLY EDITS
-  const applyEdits = () => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve()
-      }, 3000)
+  // Send data through Feature layer
+  const sendData = async () => {
+    const featureLayer = new FeatureLayer({
+      url: props.config.appWidget.feedbackServiceUrl
     })
+
+    const attributes = {
+      [props.config.appWidget.feedbackAttributes.typeAttr]: props.config.appWidget.feedbackAttributes.typeAttrValue,
+      [props.config.appWidget.feedbackAttributes.emailAttr]: formState.email.value,
+      [props.config.appWidget.feedbackAttributes.zadalAttr]: props.config.appWidget.feedbackAttributes.zadalAttrValue,
+      [props.config.appWidget.feedbackAttributes.descriptionAttr]: formState.description.value,
+      [props.config.appWidget.feedbackAttributes.dateAttr]: Date.now()
+    }
+
+    const geometry = formState.place.value.geometry
+
+    const feature = {
+      geometry: geometry,
+      attributes: attributes
+    }
+
+    try {
+      const response = await featureLayer.applyEdits({
+        addFeatures: [feature]
+      })
+      return response
+    }
+    catch {
+      return "ERROR"
+    }
   }
 
   // Reset form

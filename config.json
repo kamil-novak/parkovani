@@ -27,7 +27,7 @@
     "zonesPopupTitle": "Oblast parkování",
     "zonesPopupCorrespondingZones": "S oprávněním pro tuto oblast můžete také parkovat v oblastech",
     "zonesPopupDraftZone": "návrh", 
-    "aboutWidget": "<h4>Autoři</h4><p><a href='https://jihlava.cz' target='_blank'>Statutární město Jihlava</a><br></p><h4>Kontakt</h4><p><u>Informační linka</u><br>565 591 543<br><u>Kontaktní e-mail</u><br>parkovani@jihlava-city.cz<br><u>Čerpání volných hodin rezidentů a abonentů</u><br><a href='https://jihlava.cz/volnehodiny' target='_blank'>jihlava.cz/volnehodiny</a></p><p>Verze 1.0.5</p>"
+    "aboutWidget": "<h4>Autoři</h4><p><a href='https://jihlava.cz' target='_blank'>Statutární město Jihlava</a><br></p><h4>Kontakt</h4><p><u>Informační linka</u><br>565 591 543<br><u>Kontaktní e-mail</u><br>parkovani@jihlava-city.cz<br><u>Čerpání volných hodin rezidentů a abonentů</u><br><a href='https://jihlava.cz/volnehodiny' target='_blank'>jihlava.cz/volnehodiny</a></p><p>Verze 1.0.6</p>"
   }, 
 
   "search": {
@@ -44,7 +44,16 @@
   "appWidget": {
     "openOnStartIfDesktop": true,
     "heightOnMobile": 250,
-    "feedbackServiceUrl": "https://.../FeatureServer/0",
+    "feedbackServiceUrl": "https://gis.jihlava-city.cz/server1/rest/services/verejnost/verejnost_hlaseni_zavad/FeatureServer/0",
+    "feedbackAttributes": {
+      "typeAttr": "typ",
+      "typeAttrValue": "parkování",
+      "emailAttr": "email",
+      "zadalAttr": "zadal",
+      "zadalAttrValue": "občan",
+      "dateAttr": "datum",
+      "descriptionAttr": "poznamka"
+    },
     "feedbackMapSymbol": {
       "size": 15,
       "color": "#00F700",
