@@ -1,0 +1,1 @@
+import{cp as c}from"./index-DlYLAng9.js";import{c as m}from"./queryTopFeatures-Di9-CQ83.js";import n from"./TopFeaturesQuery-BiFAsl-o.js";async function e(o,t,r){const a=c(o);return(await m(a,n.from(t),{...r})).data.count}export{e as executeForTopCount};

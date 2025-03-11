@@ -27,7 +27,7 @@
     "zonesPopupTitle": "Oblast parkování",
     "zonesPopupCorrespondingZones": "S oprávněním pro tuto oblast můžete také parkovat v oblastech",
     "zonesPopupDraftZone": "návrh", 
-    "aboutWidget": "<h4>Autoři</h4><p><a href='https://jihlava.cz' target='_blank'>Statutární město Jihlava</a><br></p><h4>Kontakt</h4><p><u>Informační linka</u><br>565 591 543<br><u>Kontaktní e-mail</u><br>parkovani@jihlava-city.cz<br><u>Čerpání volných hodin rezidentů a abonentů</u><br><a href='https://jihlava.cz/volnehodiny' target='_blank'>jihlava.cz/volnehodiny</a></p><p>Verze 1.0.6</p>"
+    "aboutWidget": "<h4>Autoři</h4><p><a href='https://jihlava.cz' target='_blank'>Statutární město Jihlava</a><br></p><h4>Kontakt</h4><p><u>Informační linka</u><br>565 591 543<br><u>Kontaktní e-mail</u><br>parkovani@jihlava-city.cz<br><u>Čerpání volných hodin rezidentů a abonentů</u><br><a href='https://jihlava.cz/volnehodiny' target='_blank'>jihlava.cz/volnehodiny</a></p><p>Verze 1.0.7</p>"
   }, 
 
   "search": {
@@ -84,19 +84,19 @@
     {
       "label": "Dojíždějící",
       "name": "dojizdejici",
-      "visibleLayers": ["oblasti parkování (join)", "aktuálně platné oblasti parkování", "parkování"],
+      "visibleLayers": ["Parkování", "pro dojíždějící", "parkomaty", "Parkoviště", "režim 3 Střednědobý", "volné parkování"],
       "showLayerList": true
     },
     {
       "label": "Stání pro ZTP",
       "name": "ztp",
-      "visibleLayers": ["Parkování", "stání ZTP"],
+      "visibleLayers": ["Parkoviště", "stání ZTP"],
       "showLayerList": true
     },
     {
       "label": "Stání pro motorky",
       "name": "motorky",
-      "visibleLayers": ["Parkování", "stání pro motorky"],
+      "visibleLayers": ["Parkoviště", "stání pro motorky"],
       "showLayerList": true
     }
   ],

@@ -1,0 +1,1 @@
+import{cp as m}from"./index-DlYLAng9.js";import{m as s}from"./queryTopFeatures-Di9-CQ83.js";import c from"./TopFeaturesQuery-BiFAsl-o.js";async function i(o,r,t){const a=m(o);return(await s(a,c.from(r),{...t})).data.objectIds}export{i as executeForTopIds};
