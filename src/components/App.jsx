@@ -136,16 +136,27 @@ function App() {
         layer.visible = true
       }
 
-      if (layer.allSublayers || layer.allLayers) {
-        
+      // Sublayer
+      if (layer.allSublayers) {
         layer.when(() => {
-          const subLyr = layer.allSublayers || layer.allLayers
+          const subLyr = layer.allSublayers
           subLyr.forEach((sublayer) => {
             sublayer.visible = false
             if (themeFc?.visibleLayers.includes(sublayer.title)) {
               sublayer.visible = true
             }
           })
+        })
+      }
+
+      // Gruplayer
+      if (layer.allLayers) {
+        const subLyr = layer.allLayers
+        subLyr.forEach((sublayer) => {
+          sublayer.visible = false
+          if (themeFc?.visibleLayers.includes(sublayer.title)) {
+            sublayer.visible = true
+          }
         })
       }
     })
