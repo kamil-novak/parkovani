@@ -143,6 +143,7 @@ function FeedBack(props) {
       [props.config.appWidget.feedbackAttributes.emailAttr]: formState.email.value,
       [props.config.appWidget.feedbackAttributes.zadalAttr]: props.config.appWidget.feedbackAttributes.zadalAttrValue,
       [props.config.appWidget.feedbackAttributes.descriptionAttr]: formState.description.value,
+      [props.config.appWidget.feedbackAttributes.idUliceAttr]: props.config.appWidget.feedbackAttributes.idUliceAttrValue,
       [props.config.appWidget.feedbackAttributes.dateAttr]: Date.now()
     }
 
