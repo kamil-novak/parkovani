@@ -1,0 +1,1 @@
+import{cp as c}from"./index-BiySnpy3.js";import{c as m}from"./queryTopFeatures-0-W1TEO9.js";import n from"./TopFeaturesQuery-LILdCVLg.js";async function e(o,t,r){const a=c(o);return(await m(a,n.from(t),{...r})).data.count}export{e as executeForTopCount};

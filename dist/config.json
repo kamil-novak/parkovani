@@ -18,6 +18,8 @@
     "appWidgetFeedbackLocatePlace": "Určit dle aktuální polohy", 
     "appWidgetFeedbackLocatingPlace": "Lokalizuji...", 
     "appWidgetFeedbackRemovePlace": "Smazat zákres",
+    "appWidgetFeedbackNextBtn": "Pokračovat",
+    "appWidgetFeedbackFormTitle": "Detail sdělení",
     "appWidgetFeedbackDescribeTitle": "Vaše sdělení", 
     "appWidgetFeedbackEmailTitle": "Váš email", 
     "appWidgetFeedbackSendBtn": "Odeslat", 
