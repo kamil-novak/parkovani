@@ -25,6 +25,7 @@ function AppWidget(props) {
   const zonesRef = useRef(null)
   const layerListRef = useRef(null)
   const appWidgetRef = useRef(false)
+  const feedbackContentRef = useRef(null)
 
   // State
   const [sectionExpanded, setSectionExpanded] = useState("")
@@ -186,7 +187,16 @@ function AppWidget(props) {
             <div 
               className="section-title" 
               onClick={() => {
-                sectionExpanded === "feedback" ? setSectionExpanded(null) : setSectionExpanded("feedback")
+                if (sectionExpanded === "feedback") {
+                  setSectionExpanded(null)
+                } else {
+                  setSectionExpanded("feedback")
+                  if (props.isMobile ) {
+                    setTimeout(() => {
+                      feedbackContentRef.current?.scrollIntoView({ behavior: "smooth", block: "end" })
+                    }, 0)
+                  }
+                }
                 // GA listener
                 ReactGA.event({category: "click", action: "sekce--zpetna_vazba", label: "Rozbalení/Sbalení sekce - Zpětná vazba"})
               }}
@@ -203,6 +213,7 @@ function AppWidget(props) {
             <div className="section-content">
               <FeedBack config={props.config} view={props.view} isMobile={props.isMobile} />
             </div>
+            { props.isMobile && <div ref={feedbackContentRef}></div> }
           </div>
         </div>
       </div>

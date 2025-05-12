@@ -23,8 +23,8 @@ import iconPen from "./../../images/icon-pen.svg"
 import iconPenActive from "./../../images/icon-pen-active.svg"
 import iconGps from "./../../images/icon-gps.svg"
 import iconGpsActive from "./../../images/icon-gps-active.svg"
-import iconBin from "./../../images/icon-bin.svg"
-import iconBinActive from "./../../images/icon-bin-active.svg"
+import iconRefresh from "./../../images/icon-refresh.svg"
+import iconRefreshActive from "./../../images/icon-refresh-active.svg"
 
 import iconCheck from "./../../images/icon-check.svg"
 import iconCheckActive from "./../../images/icon-check-active.svg"
@@ -362,57 +362,61 @@ function FeedBack(props) {
   return (
     <div className="feedback">
       {/* Locate feedback */}
-      <div className="feedback-part">
-        <div className="feedback-part-header">
-          {props.config.appLabels.appWidgetFeedbackPlaceTitle}
-        </div>
-        <div className="feedback-part-body">
-          <div className="feedback-buttons">
-            {/* Draw */}
-            <div 
-              className={`feedback-btn ${sketchBtnState}`}
-              onClick={enableSketching}
-            >
-              <img src={sketchBtnState === "active" || sketchBtnState === "ready" ? iconPenActive : iconPen} alt="zakreslit" />
-              {sketchBtnState === "ready" ||  sketchBtnState === "disabled" ? props.config.appLabels.appWidgetFeedbackDrawPlace : props.config.appLabels.appWidgetFeedbackDrawingPlace}
+      {removeBtnState === "disabled" && <div className="feedback-step">
+        <div className="feedback-part">
+          <div className="feedback-part-header">
+            {props.config.appLabels.appWidgetFeedbackPlaceTitle}
+          </div>
+          <div className="feedback-part-body">
+            <div className="feedback-buttons">
+              {/* Draw */}
+              <div 
+                className={`feedback-btn ${sketchBtnState}`}
+                onClick={enableSketching}
+              >
+                <img src={sketchBtnState === "active" || sketchBtnState === "ready" ? iconPenActive : iconPen} alt="zakreslit" />
+                {sketchBtnState === "ready" ||  sketchBtnState === "disabled" ? props.config.appLabels.appWidgetFeedbackDrawPlace : props.config.appLabels.appWidgetFeedbackDrawingPlace}
+              </div>
+              {/* Locate */}
+              <div 
+                className={`feedback-btn ${locateBtnState}`}
+                onClick={handleLocate}
+              >
+                <img src={locateBtnState === "active" || locateBtnState === "ready" ? iconGpsActive : iconGps}  alt="lokalizovat" />
+                {locatingActive ? props.config.appLabels.appWidgetFeedbackLocatingPlace : props.config.appLabels.appWidgetFeedbackLocatePlace}
+              </div> 
             </div>
-            {/* Locate */}
-            <div 
-              className={`feedback-btn ${locateBtnState}`}
-              onClick={handleLocate}
-            >
-              <img src={locateBtnState === "active" || locateBtnState === "ready" ? iconGpsActive : iconGps}  alt="lokalizovat" />
-              {locatingActive ? props.config.appLabels.appWidgetFeedbackLocatingPlace : props.config.appLabels.appWidgetFeedbackLocatePlace}
-            </div> 
+          </div>
+        </div>
+      </div>}
+      
+      {/* Next step */}
+      {removeBtnState === "ready" && <div className="feedback-step">
+        <div className="feedback-part">
+          <div className="feedback-part-body feedback-buttons">
+            <div className="feedback-part-header">
+              <img src={iconCheckActive} alt="check ikona" style={{paddingRight: "5px", top: "3px", position: "relative"}}/>
+              {props.config.appLabels.appWidgetFeedbackPlaceLocated}
+            </div>
             {/* Remove */}
             <div 
               className={`feedback-btn ${removeBtnState} remove`}
               onClick={handlePlaceRemoved}
             >
-              <img src={removeBtnState === "ready" ? iconBinActive : iconBin}  alt="smazat zákres" />
+              <img src={removeBtnState === "ready" ? iconRefreshActive : iconRefresh}  alt={props.config.appLabels.appWidgetFeedbackRemovePlace} />
               {props.config.appLabels.appWidgetFeedbackRemovePlace}
-            </div>   
+            </div>  
+            {/* Next button */}
+            <div 
+              className={`feedback-btn send-btn ${removeBtnState === "ready" ? "active" : ""}`}
+              onClick={()=> {removeBtnState === "ready" ? setFormVisibility(true) : null}}  
+              >
+              <img src={removeBtnState === "ready" ? iconNextActive : iconNext} alt={props.config.appLabels.appWidgetFeedbackNextBtn}/>
+              {props.config.appLabels.appWidgetFeedbackNextBtn}
+            </div>
           </div>
         </div>
-        <div className="feedback-part-footer">
-          <CalciteInputMessage scale="m" className={`state-${formState.place.state}`}>
-            <img src={formState.place.state === "OK" ? iconCheckActive : formState.place.state === "NONE" ? iconInfo : iconCaution} alt="status" />
-            {formState.place.message}
-          </CalciteInputMessage>
-        </div>
-      </div>
-      {/* Next button */}
-      <div className="feedback-part last-child">
-        <div className="feedback-part-body feedback-buttons">
-          <div 
-            className={`feedback-btn send-btn ${removeBtnState === "ready" ? "active" : ""}`}
-            onClick={()=> {removeBtnState === "ready" ? setFormVisibility(true) : null}}  
-            >
-            <img src={removeBtnState === "ready" ? iconNextActive : iconNext} alt="pokračovat"/>
-            {props.config.appLabels.appWidgetFeedbackNextBtn}
-          </div>
-        </div>
-      </div>
+      </div>}
 
       {/* Form */}
       { formVisibility && <div className="feedback-form-overlay">

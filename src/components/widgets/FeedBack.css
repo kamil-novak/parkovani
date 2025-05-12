@@ -4,6 +4,7 @@
   --pnalel-width: 650px;
   position: relative;
 
+  /* Feedback form panel */
   .feedback-form-overlay {
     position: fixed;
     top: 45px;
@@ -22,6 +23,7 @@
       padding: 20px 15px;
       box-sizing: border-box;
       overflow-y: scroll;
+      position: relative;
 
       .feedback-form-header {
         text-align: right;
@@ -42,18 +44,8 @@
   }
 
   /* Widget general settings */
-  .feedback-part {
-    margin: 15px 0px;
-  }
-
-  .feedback-part:first-child {
-    margin: 0px 0px 15px 0px;
-  }
-
-  .feedback-part:last-child {
-    border-top: 1px solid var(--color-five);
-    padding-top: 15px;
-    margin: 30px 0px 0px 0px;
+  .feedback-step {
+    margin: 10px 0px 10px 0px;
   }
 
   .feedback-part-body {
@@ -92,7 +84,7 @@
   .feedback-btn {
     padding: 5px 5px;
     display: flex;
-    justify-content: start;
+    justify-content: center;
     align-items: center;
     gap: 6px;
     white-space: nowrap;
@@ -131,7 +123,6 @@
 
   .feedback-btn.send-btn {
     display: flex;
-    justify-content: center;
     background-color: var(--color-nine);
     cursor: no-drop !important;
   }
