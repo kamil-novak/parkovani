@@ -420,89 +420,91 @@ function FeedBack(props) {
 
       {/* Form */}
       { formVisibility && <div className="feedback-form-overlay">
-        <div className="feedback-form">
-          <div className="feedback-form-header">
-            <div className="feedback-form-title">
-              {props.config.appLabels.appWidgetFeedbackFormTitle}
+        <div className="feedback-form-container">
+          <div className="feedback-form">
+            <div className="feedback-form-header">
+              <div className="feedback-form-title">
+                {props.config.appLabels.appWidgetFeedbackFormTitle}
+              </div>
+              <div className="feedback-form-close" onClick={() => setFormVisibility(false)}>
+                <CalciteIcon icon="x" scale="l" title="Zavřít" text-label="Zavřít" aria-hidden="false" aria-label="Zavřít" role="img" calcite-hydrated=""></CalciteIcon>
+              </div>
             </div>
-            <div className="feedback-form-close" onClick={() => setFormVisibility(false)}>
-              <CalciteIcon icon="x" scale="l" title="Zavřít" text-label="Zavřít" aria-hidden="false" aria-label="Zavřít" role="img" calcite-hydrated=""></CalciteIcon>
+            {/* Describe feedback */}
+            <div className="feedback-part">
+              <div className="feedback-part-header">
+                {props.config.appLabels.appWidgetFeedbackDescribeTitle}
+              </div>
+              <div className="feedback-part-body">
+                  <CalciteTextArea 
+                    ref={descriptionTextAreaRef}
+                    className="feedback-textarea" 
+                    maxLength={MAX_DESC_CHARACTERS}
+                    placeholder="Popište..." 
+                    resize="vertical" 
+                    rows={props.isMobile ? "3" : "4"}
+                    scale={"m"}
+                    value={formState.description.value}
+                    onCalciteTextAreaInput={handleDescription}
+                  />
+              </div>
+              <div className="feedback-part-footer">
+                <CalciteInputMessage scale="m" className={`state-${formState.description.state}`}>
+                  <img src={formState.description.state === "OK" ? iconCheckActive : formState.description.state === "NONE" ? iconInfo : iconCaution} alt="status" />
+                  {formState.description.message}
+                </CalciteInputMessage>
+              </div>
             </div>
-          </div>
-          {/* Describe feedback */}
-          <div className="feedback-part">
-            <div className="feedback-part-header">
-              {props.config.appLabels.appWidgetFeedbackDescribeTitle}
-            </div>
-            <div className="feedback-part-body">
-                <CalciteTextArea 
-                  ref={descriptionTextAreaRef}
-                  className="feedback-textarea" 
-                  maxLength={MAX_DESC_CHARACTERS}
-                  placeholder="Popište..." 
-                  resize="vertical" 
-                  rows={props.isMobile ? "3" : "4"}
+            {/* Email feedback */}
+            <div className="feedback-part">
+              <div className="feedback-part-header">
+                {props.config.appLabels.appWidgetFeedbackEmailTitle}
+              </div>
+              <div className="feedback-part-body">
+                <CalciteInput 
+                  ref={emailInputAreaRef}
+                  className="feedback-input" 
+                  maxLength={MAX_EMAIL_CHARACTERS}
+                  input-mode="email" 
                   scale={"m"}
-                  value={formState.description.value}
-                  onCalciteTextAreaInput={handleDescription}
+                  type="email" 
+                  icon="envelope"
+                  value={formState.email.value}
+                  onCalciteInputInput={handleEmail}
                 />
-            </div>
-            <div className="feedback-part-footer">
-              <CalciteInputMessage scale="m" className={`state-${formState.description.state}`}>
-                <img src={formState.description.state === "OK" ? iconCheckActive : formState.description.state === "NONE" ? iconInfo : iconCaution} alt="status" />
-                {formState.description.message}
-              </CalciteInputMessage>
-            </div>
-          </div>
-          {/* Email feedback */}
-          <div className="feedback-part">
-            <div className="feedback-part-header">
-              {props.config.appLabels.appWidgetFeedbackEmailTitle}
-            </div>
-            <div className="feedback-part-body">
-              <CalciteInput 
-                ref={emailInputAreaRef}
-                className="feedback-input" 
-                maxLength={MAX_EMAIL_CHARACTERS}
-                input-mode="email" 
-                scale={"m"}
-                type="email" 
-                icon="envelope"
-                value={formState.email.value}
-                onCalciteInputInput={handleEmail}
-              />
-            </div>
-            <div className="feedback-part-footer">
-              <CalciteInputMessage scale="m" className={`state-${formState.email.state}`}>
-                <img src={formState.email.state === "OK" ? iconCheckActive : formState.email.state === "NONE" ? iconInfo : iconCaution} alt="status" />
-                {formState.email.message}
-              </CalciteInputMessage>
-            </div>
-          </div>
-          {/* Send feedback */}
-          <div className="feedback-part">
-            <div className="feedback-part-body feedback-buttons">
-              <div 
-                className={`feedback-btn send-btn ${isFormValid() && !loadingVisible ? "active" : ""}`}
-                onClick={sendFeedback}  
-                >
-                <img src={isFormValid() && !loadingVisible ? iconCheckActiveBtn : isFormValid() && loadingVisible ? iconLoading : iconCheck} alt="odeslat"/>{!loadingVisible ?props.config.appLabels.appWidgetFeedbackSendBtn : props.config.appLabels.appWidgetFeedbackSendingBtn}
+              </div>
+              <div className="feedback-part-footer">
+                <CalciteInputMessage scale="m" className={`state-${formState.email.state}`}>
+                  <img src={formState.email.state === "OK" ? iconCheckActive : formState.email.state === "NONE" ? iconInfo : iconCaution} alt="status" />
+                  {formState.email.message}
+                </CalciteInputMessage>
               </div>
             </div>
-            {feedbackSuccessMessage && <div className="feedback-buttons">
-              <div 
-                className="feedback-btn send-btn feedback-message success"
-                >
-                <img src={iconCheckActive} alt="zpětná vazba odeslána"/>{props.config.appLabels.appWidgetFeedbackSuccess}
+            {/* Send feedback */}
+            <div className="feedback-part">
+              <div className="feedback-part-body feedback-buttons">
+                <div 
+                  className={`feedback-btn send-btn ${isFormValid() && !loadingVisible ? "active" : ""}`}
+                  onClick={sendFeedback}  
+                  >
+                  <img src={isFormValid() && !loadingVisible ? iconCheckActiveBtn : isFormValid() && loadingVisible ? iconLoading : iconCheck} alt="odeslat"/>{!loadingVisible ?props.config.appLabels.appWidgetFeedbackSendBtn : props.config.appLabels.appWidgetFeedbackSendingBtn}
+                </div>
               </div>
-            </div>}
-            {feedbackErrorMessage && <div className="feedback-buttons">
-              <div 
-                className="feedback-btn send-btn feedback-message error"
-                >
-                <img src={iconCaution} alt="zpětná vazba nebyla odeslána"/>{props.config.appLabels.appWidgetFeedbackError}
-              </div>
-            </div>}
+              {feedbackSuccessMessage && <div className="feedback-buttons">
+                <div 
+                  className="feedback-btn send-btn feedback-message success"
+                  >
+                  <img src={iconCheckActive} alt="zpětná vazba odeslána"/>{props.config.appLabels.appWidgetFeedbackSuccess}
+                </div>
+              </div>}
+              {feedbackErrorMessage && <div className="feedback-buttons">
+                <div 
+                  className="feedback-btn send-btn feedback-message error"
+                  >
+                  <img src={iconCaution} alt="zpětná vazba nebyla odeslána"/>{props.config.appLabels.appWidgetFeedbackError}
+                </div>
+              </div>}
+            </div>
           </div>
         </div>
       </div> }
