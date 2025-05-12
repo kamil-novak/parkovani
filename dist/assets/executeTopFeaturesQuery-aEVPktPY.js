@@ -1,1 +1,0 @@
-import{cp as p,cY as s}from"./index-BiySnpy3.js";import{p as c}from"./queryTopFeatures-0-W1TEO9.js";import i from"./TopFeaturesQuery-LILdCVLg.js";async function x(r,o,t,a){const m=p(r),e={...a},{data:f}=await c(m,i.from(o),t,e);return s.fromJSON(f)}export{x as executeTopFeaturesQuery};
