@@ -1,5 +1,0 @@
-import{A as t,d as o}from"./action-CCoGrUbS.js";import"./index-Arlk-CID.js";import"./loader-DXY7imm9.js";/*!
- * All material copyright ESRI, All Rights Reserved, unless otherwise specified.
- * See https://github.com/Esri/calcite-design-system/blob/dev/LICENSE.md for details.
- * v2.13.2
- */const n=t,s=o;export{n as CalciteAction,s as defineCustomElement};

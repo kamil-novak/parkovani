@@ -1,1 +1,0 @@
-import{cp as m}from"./index-Arlk-CID.js";import{m as s}from"./queryTopFeatures-CMAjenLl.js";import c from"./TopFeaturesQuery-Dk2sobXg.js";async function i(o,r,t){const a=m(o);return(await s(a,c.from(r),{...t})).data.objectIds}export{i as executeForTopIds};
