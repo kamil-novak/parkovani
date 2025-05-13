@@ -16,7 +16,8 @@ export default defineConfig({
       chunkSizeWarningLimit: 2000
     },
     server: {
-      open: true
+      open: true,
+      host: true
     },
     base: './'
 })
