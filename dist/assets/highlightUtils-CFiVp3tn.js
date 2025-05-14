@@ -1,0 +1,1 @@
+import{H as o}from"./languageUtils-BP_8Lr6c.js";import{aI as n,cg as e}from"./index-AP6R8_GB.js";function f(r){return i(r)||o(r)?[r]:n.isCollection(r)?r.toArray():Array.isArray(r)?r:s}function i(r){return typeof r=="number"||typeof r=="string"}const s=[],c=e();export{f as n,c as s};
