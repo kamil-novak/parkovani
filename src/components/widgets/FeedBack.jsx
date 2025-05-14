@@ -33,6 +33,8 @@ import iconInfo from "./../../images/icon-info.svg"
 import iconCaution from "./../../images/icon-caution.svg"
 import iconNext from "./../../images/icon-next.svg"
 import iconNextActive from "./../../images/icon-next-active.svg"
+import graphicFeedbackSuccess from "./../../images/graphic-feedback-success.svg"
+import graphicFeedbackError from "./../../images/graphic-feedback-error.svg"
 
 import iconLoading from "./../../images/icon-loading.svg"
 
@@ -129,11 +131,15 @@ function FeedBack(props) {
       setRemoveBtnState("disabled")
       descriptionTextAreaRef.current.disabled = false
       emailInputAreaRef.current.disabled = false
-      setTimeout(() => {
-        setFeedbackErrorMessage(false)
-        setFeedbackSuccessMessage(false)
-      }, 5000)
     }
+  }
+
+  // Reset feedback tool
+  const resetFeedbackTool = () => {
+    setFormVisibility(false)
+    handlePlaceRemoved()
+    setFeedbackErrorMessage(false)
+    setFeedbackSuccessMessage(false)
   }
 
   // Send data through Feature layer
@@ -158,7 +164,7 @@ function FeedBack(props) {
       attributes: attributes
     }
 
-    try {
+    /* try {
       const response = await featureLayer.applyEdits({
         addFeatures: [feature]
       })
@@ -166,7 +172,13 @@ function FeedBack(props) {
     }
     catch {
       return "ERROR"
-    }
+    } */
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        // Pro simulaci chyby změňte na: resolve("ERROR")
+        resolve("OK")
+      }, 3000)
+    })
   }
 
   // Reset form
@@ -240,20 +252,26 @@ function FeedBack(props) {
 
   // Enable sketching
   const enableSketching = () => {
-    // Remove old sketch
-    removeFeedbackGrapgic()
-    setFormState((prev) => ({
-      ...prev, 
-      place: {
-        value: null,
-        message: MESSAGE_PLACE_NONE,
-        state: "NONE"
-    }}))
+    if (sketchBtnState === "ready") {
+      // Remove old sketch
+      removeFeedbackGrapgic()
+      setFormState((prev) => ({
+        ...prev, 
+        place: {
+          value: null,
+          message: MESSAGE_PLACE_NONE,
+          state: "NONE"
+      }}))
 
-    // Add new sketch
-    sketchViewModel.create("point")
-    setSketchBtnState("active")
-    setRemoveBtnState("disabled")
+      // Add new sketch
+      sketchViewModel.create("point")
+      setSketchBtnState("active")
+      setRemoveBtnState("disabled")
+    }
+    if (sketchBtnState === "active") {
+      sketchViewModel.cancel()
+      handlePlaceRemoved()
+    }
   } 
 
   // Handle when place is created in the map
@@ -482,24 +500,38 @@ function FeedBack(props) {
                 className={`feedback-btn send-btn ${isFormValid() && !loadingVisible ? "active" : ""}`}
                 onClick={sendFeedback}  
                 >
-                <img src={isFormValid() && !loadingVisible ? iconCheckActiveBtn : isFormValid() && loadingVisible ? iconLoading : iconCheck} alt="odeslat"/>{!loadingVisible ?props.config.appLabels.appWidgetFeedbackSendBtn : props.config.appLabels.appWidgetFeedbackSendingBtn}
+                <img src={isFormValid() && !loadingVisible ? iconCheckActiveBtn : iconCheck} alt="odeslat"/>{props.config.appLabels.appWidgetFeedbackSendBtn}
               </div>
             </div>
-            {feedbackSuccessMessage && <div className="feedback-buttons">
-              <div 
-                className="feedback-btn send-btn feedback-message success"
-                >
-                <img src={iconCheckActive} alt="zpětná vazba odeslána"/>{props.config.appLabels.appWidgetFeedbackSuccess}
-              </div>
-            </div>}
-            {feedbackErrorMessage && <div className="feedback-buttons">
-              <div 
-                className="feedback-btn send-btn feedback-message error"
-                >
-                <img src={iconCaution} alt="zpětná vazba nebyla odeslána"/>{props.config.appLabels.appWidgetFeedbackError}
-              </div>
-            </div>}
           </div>
+          {/* loading */}
+          {loadingVisible &&  <div className="feedback-send-loading">
+            <div className="feedback-send-spinner-main">
+              <div className="feedback-send-spinner">
+                <div></div>
+              </div>
+            </div>
+          </div>}
+          {/* Result */}
+          { (feedbackSuccessMessage || feedbackErrorMessage) &&
+            <div className="feedback-result-screen">
+              <div class="feedback-result-container">
+                <div class="feedback-result-image-container">
+                  {feedbackSuccessMessage && <img src={graphicFeedbackSuccess} alt="grafika"/> || 
+                  feedbackErrorMessage && <img src={graphicFeedbackError} alt="grafika"/> }
+                </div>
+                <div class="feedback-result-text">
+                  {feedbackSuccessMessage && props.config.appLabels.appWidgetFeedbackSuccess || feedbackErrorMessage && props.config.appLabels.appWidgetFeedbackError}
+                </div>
+                <div 
+                  className={"feedback-btn finish-form-btn"}
+                  onClick={resetFeedbackTool}  
+                >
+                  <img src={iconCheckActiveBtn} alt="ikona"/>{props.config.appLabels.appWidgetFeedbackNextBtn}
+              </div>
+              </div>
+            </div> 
+          }
         </div>
       </div> }
     </div>
