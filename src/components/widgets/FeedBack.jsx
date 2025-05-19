@@ -164,7 +164,7 @@ function FeedBack(props) {
       attributes: attributes
     }
 
-    /* try {
+    try {
       const response = await featureLayer.applyEdits({
         addFeatures: [feature]
       })
@@ -172,13 +172,7 @@ function FeedBack(props) {
     }
     catch {
       return "ERROR"
-    } */
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        // Pro simulaci chyby změňte na: resolve("ERROR")
-        resolve("OK")
-      }, 3000)
-    })
+    }
   }
 
   // Reset form
