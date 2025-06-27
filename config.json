@@ -1,5 +1,5 @@
 {
-  "ga4Id": "G-X4WHFTE4SD",
+  "ga4Id": "G-89FJ5P7PKD",
   
   "appLogoLink": "https://www.jihlava.cz/parkovani",
   "portal": "https://gis.jihlava-city.cz/portal",
@@ -30,7 +30,7 @@
     "zonesPopupTitle": "Oblast parkování",
     "zonesPopupCorrespondingZones": "S oprávněním pro tuto oblast můžete také parkovat v oblastech",
     "zonesPopupDraftZone": "návrh", 
-    "aboutWidget": "<h4>Autoři</h4><p><a href='https://jihlava.cz' target='_blank'>Statutární město Jihlava</a><br></p><h4>Kontakt</h4><p>Informační linka<br><a href='tel:565591543'>565 591 543</a><br>Kontaktní e-mail<br><a href='mailto:parkovani@jihlava-city.cz'>parkovani@jihlava-city.cz</a><br>Webové stránky<br><a href='https://jihlava.cz/parkovani' target='_blank'>jihlava.cz/parkovani</a></p><p>Verze 1.0.9</p>"
+    "aboutWidget": "<h4>Autoři</h4><p><a href='https://jihlava.cz' target='_blank'>Statutární město Jihlava</a><br></p><h4>Kontakt</h4><p>Informační linka<br><a href='tel:565591543'>565 591 543</a><br>Kontaktní e-mail<br><a href='mailto:parkovani@jihlava-city.cz'>parkovani@jihlava-city.cz</a><br>Webové stránky<br><a href='https://jihlava.cz/parkovani' target='_blank'>jihlava.cz/parkovani</a></p><p>Verze 1.0.10</p>"
   }, 
 
   "search": {
@@ -77,32 +77,44 @@
     {
       "label": "Oblasti parkování",
       "name": "oblasti_parkovani",
-      "visibleLayers": ["Parkování", "oblasti parkování aktuální", "oblasti parkování připravované","režim 1 Rezidentní", "režim 2 Návštěvnický", "režim 3 Střednědobý", "stání ZTP", "stání pro motorky", "K+R", "volné parkování", "parkovací kotouč", "kapacitní parkoviště mimo systém parkování", "obytná zóna", "sdílená zóna", "zóna 30", "MHD - zastávky", "MHD - trasy", "bikesharing", "cykloopatření"],
-      "showLayerList": true
+      "visibleLayers": ["Parkování", "oblasti parkování aktuální", "oblasti parkování připravované","parkomaty","infoboxy","Parkoviště","režim 1 modrý", "režim 2 oranžový", "režim 3 fialový", "volné parkování", "parkovací kotouč"],
+      "showLayerList": true,
+      "showInThemeSwitcher": true
     },
     {
       "label": "Režimy parkování",
       "name": "rezimy",
-      "visibleLayers": ["Parkoviště", "režim 1 Rezidentní", "režim 2 Návštěvnický", "režim 3 Střednědobý", "Parkování", "oblasti parkování aktuální", "parkomaty"],
-      "showLayerList": true
+      "visibleLayers": ["Parkoviště", "režim 1 modrý", "režim 2 oranžový", "režim 3 fialový", "Parkování", "oblasti parkování aktuální", "parkomaty"],
+      "showLayerList": true,
+      "showInThemeSwitcher": true
     },
     {
       "label": "Dojíždějící",
       "name": "dojizdejici",
-      "visibleLayers": ["Parkování", "pro dojíždějící", "parkomaty", "Parkoviště", "režim 3 Střednědobý", "volné parkování", "obytná zóna", "sdílená zóna", "zóna 30", "MHD - zastávky", "MHD - trasy", "bikesharing", "cykloopatření"],
-      "showLayerList": true
+      "visibleLayers": ["Parkování", "pro dojíždějící", "parkomaty", "Parkoviště", "režim 3 modrý", "volné parkování", "obytná zóna", "sdílená zóna", "zóna 30", "MHD - zastávky", "MHD - trasy", "bikesharing", "cykloopatření"],
+      "showLayerList": true,
+      "showInThemeSwitcher": true
     },
     {
       "label": "Stání pro ZTP",
       "name": "ztp",
       "visibleLayers": ["Parkoviště", "stání ZTP", "oblasti parkování aktuální", "parkomaty", "infoboxy", "obytná zóna", "sdílená zóna", "zóna 30", "MHD - zastávky", "MHD - trasy", "bikesharing", "cykloopatření"],
-      "showLayerList": true
+      "showLayerList": true,
+      "showInThemeSwitcher": true
     },
     {
       "label": "Stání pro motorky",
       "name": "motorky",
       "visibleLayers": ["Parkoviště", "stání pro motorky", "oblasti parkování aktuální", "parkomaty", "infoboxy", "obytná zóna", "sdílená zóna", "zóna 30", "MHD - zastávky", "MHD - trasy", "bikesharing", "cykloopatření"],
-      "showLayerList": true
+      "showLayerList": true,
+      "showInThemeSwitcher": true
+    },
+    {
+      "label": "Tajné téma",
+      "name": "secret_theme",
+      "visibleLayers": ["Parkování", "Parkoviště", "stání pro motorky"],
+      "showLayerList": true,
+      "showInThemeSwitcher": false
     }
   ],
 

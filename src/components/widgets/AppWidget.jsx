@@ -90,7 +90,8 @@ function AppWidget(props) {
             </div>
             <div className="section-content flex-list-column">
               { 
-                props.config && props.config.appThemes.map((theme) => { 
+                props.config && props.config.appThemes.map((theme) => {
+                  if (! theme.showInThemeSwitcher) return
                   return(
                     <div 
                       key={theme.name}
